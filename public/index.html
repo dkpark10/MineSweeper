@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <title>Mine Sweeper</title>
+    <meta charset="utf-8">
+    <script src = 'createButton.js'></script>
+    <script src = 'asyncCommunication.js'></script>
+    <style>
+      #buttonGroup button {
+        background-color: #4CAF50;
+        border: 1px solid green;
+        color: white;
+        padding: 10px 24px;
+        cursor: pointer;
+        float: left;
+      }
+      #buttonGroup button:not(:last-child) {
+        border-right: none;
+      }
+      #buttonGroup:after {
+        content: "";
+        clear: both;
+        display: table;
+      }
+      #buttonGroup button:hover {
+        background-color: #3e8e41;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="minediv">
+    </div>
+  </body>
+</html>
