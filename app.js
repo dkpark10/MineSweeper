@@ -15,7 +15,9 @@ app.use(bodyparser.json());
 
 app.use(compression());
 app.use(helmet());
-app.use(express.static(path.join(__dirname + '/public')));
+
+app.set("view engine", "ejs");
+app.use('/static', express.static(__dirname + '/public'));
 
 app.use('/', idxrouter);
 
@@ -25,7 +27,6 @@ app.use((request,response,next) => {
 
 app.use((error,request,response, next) =>{
   console.error(error.stack);
-  console.log(path.join(__dirname + 'public'));
   response.status(500).send('Something broke');
 })
 
