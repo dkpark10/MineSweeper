@@ -6,6 +6,7 @@ const compression = require('compression');
 const port = 8080;
 const bodyparser = require('body-parser');
 const path = require('path');
+const ejs = require('ejs');
 
 const idxrouter = require('./Router/idxrouter');
 // const rankrouter = require('./Router/rankrouter');
@@ -16,8 +17,10 @@ app.use(bodyparser.json());
 app.use(compression());
 app.use(helmet());
 
-app.set("view engine", "ejs");
-app.use('/static', express.static(__dirname + '/public'));
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+
+app.use(express.static(__dirname + '/public')); 
 
 app.use('/', idxrouter);
 

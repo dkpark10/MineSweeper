@@ -16,10 +16,7 @@ function buttonUp(){
 }
 
 function buttonIdParsing(buttonId){
-  const coord = buttonId.split('?');
-  const ret = {};
-  ret.y = coord[0];
-  ret.x = coord[1];
-  
-  return ret;
+  const string = 'buttonCell';
+  const coord = buttonId.substr(string.length).split('?');
+  return {y:coord[0], x:coord[1]};
 }

@@ -4,7 +4,7 @@ window.onload = function () {
     mineDivButton.id = 'buttonGroup';
     for (let j = 0; j < 30; j++) {
       const button = document.createElement('button');
-      button.id = `${i}?${j}`;
+      button.id = `buttonCell${i}?${j}`;
       button.addEventListener('click', buttonUp);
       mineDivButton.appendChild(button);
     }
