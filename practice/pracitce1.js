@@ -1,7 +1,12 @@
-function Test(){
+let arr = [];
+let row = 5;
+let col = 3;
+let value = {mine:0,status:2};
 
-  return {x:12, y:23};
+function Test(arr,row,col,value){
+  arr = Array.from(Array(row), () => new Array(col).fill(value));
+  console.log(arr);
 }
 
-const ret = Test();
-console.log(ret.x, ret.y);
+Test(arr,row,col,value);
+console.log(arr);

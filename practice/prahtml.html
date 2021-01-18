@@ -1,39 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
   <head>
+    <title>Mine Sweeper</title>
+    <style>
+      #buttonGroup button {
+        background-color: ivory;
+        border: 1px solid darkkhaki;
+        color: fuchsia;
+        font-weight: bold;
+        font-size: 16px;
+        padding: 8px 16px;
+        cursor: pointer;
+        float: left;
+      }
+      #buttonGroup button:not(:last-child) {
+        border-right: none;
+      }
+      #buttonGroup:after {
+        content: "";
+        clear: both;
+        display: table;
+      }
+      #buttonGroup button:hover {
+        background-color: burlywood;
+      }
+    </style>
+    <script type="text/javascript" src="pracitce1.js"></script>
     <meta charset="utf-8">
-    <title>json 받자</title>
   </head>
   <body>
-    <div id="root">
-      데이터가 붙을 곳입니다.
+    <div id = 'buttonGroup'>
+      <button>1</button>
+      <button>2</button>
+      <button>3</button>
+      <button>4</button>
     </div>
- 
-    <button onclick="getData()">json 통신하기</button>
-    <h1>새로고침 확인 텍스트 넣기 : </h1>
- 
-    <script type="text/javascript">
-      const attach = document.getElementById('root');
- 
-      let getData = function(){
-          let httpRequest;
-          if(window.XMLHttpRequest){ //Chrome, Safari..
-            httpRequest = new XMLHttpRequest();
-          }
- 
-          httpRequest.onreadystatechange = function(){
-            if(httpRequest.readyState === 4){
-              /* 서버에 대한 요청 응답 처리 상태 : readyState */
-              if(httpRequest.status === 200){
-                /* 서버 응답 코드 : status */
-                attach.innerHTML = httpRequest.responseText;
-              }
-            }
-          }
- 
-          httpRequest.open('GET', '/dataGet', true);
-          httpRequest.send();
-      }
-    </script>
   </body>
 </html>
