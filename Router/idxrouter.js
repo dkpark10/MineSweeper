@@ -1,21 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const minestatus = require('../lib/mineStatus');
 const buttonHandler = require('../lib/buttonHandler');
 const template = require('../lib/template');
 const fs = require('fs');
 const path = require('path');
+const mineData = require('../lib/mineData');
+
+const directionY = [0,0,1,-1];
+const directionX = [1,-1,0,0];
 
 router.get('/', (request, response) => {
   if(request.session.mine === undefined){
-    console.log('/에 들어왔어용 ~~');
-    let row = minestatus.row;
-    let col = minestatus.col;
-    let value = {ismine : 0, status : minestatus.status.init}; 
-    minestatus.map = Array.from(Array(row), () => new Array(col).fill(value));
-    console.log(`sibal check ${minestatus.map}`);
-    minestatus.visited = Array.from(Array(row), () => new Array(col).fill(false));
-    request.session.mine = minestatus;
+    let row = mineData.row , col = minedata.col;
+    let value = {isPlanted : 0, status : 0}; 
+    mineData.map = Array.from(Array(row), () => new Array(col).fill(value));
+    mineData.visited = Array.from(Array(row), () => new Array(col).fill(false));
+    buttonHandler.plantMine(mineData);
+    request.session.mine = mineData;
   }
   response.render("index", {});
 });
@@ -23,10 +24,8 @@ router.get('/', (request, response) => {
 router.post('/buttonhandleing', (request, response ) => {
   console.log('/버튼핸들링에 들어옴 ~~');
   const body = request.body;
-  let mine = request.session.mine;
+  let sessMine = request.session.mine;
   let coord = {y:Number(body.y), x:Number(body.x)};
-  console.log(mine.map);
-  response.send('test');
 });
 
 router.post('/ranking', (request, response ) => {
