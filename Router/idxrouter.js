@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const buttonHandler = require('../lib/buttonHandler');
-const template = require('../lib/template');
+// const template = require('../lib/template');
 const fs = require('fs');
 const path = require('path');
 const mineData = require('../lib/mineData');
@@ -11,11 +11,10 @@ const directionX = [1,-1,0,0];
 
 router.get('/', (request, response) => {
   if(request.session.mine === undefined){
-    let row = mineData.row , col = minedata.col;
-    let value = {isPlanted : 0, status : 0}; 
-    mineData.map = Array.from(Array(row), () => new Array(col).fill(value));
-    mineData.visited = Array.from(Array(row), () => new Array(col).fill(false));
+    mineData.setInitVisited();
+    mineData.setInitMap();
     buttonHandler.plantMine(mineData);
+
     request.session.mine = mineData;
   }
   response.render("index", {});
