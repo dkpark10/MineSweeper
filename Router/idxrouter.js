@@ -12,8 +12,9 @@ const directionX = [1,-1,0,0];
 router.get('/', (request, response) => {
   if(request.session.mine === undefined){
     mineData.setInitVisited();
-    mineData.setInitMap();
+    mineData.setInitMineBoard();
     buttonHandler.plantMine(mineData);
+    mineData.initNumberOfBoard();
 
     request.session.mine = mineData;
   }
@@ -23,8 +24,9 @@ router.get('/', (request, response) => {
 router.post('/buttonhandleing', (request, response ) => {
   console.log('/버튼핸들링에 들어옴 ~~');
   const body = request.body;
-  let sessMine = request.session.mine;
+  let sessionMine = request.session.mine;
   let coord = {y:Number(body.y), x:Number(body.x)};
+
 });
 
 router.post('/ranking', (request, response ) => {
