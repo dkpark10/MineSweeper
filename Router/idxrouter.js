@@ -6,30 +6,41 @@ const fs = require('fs');
 const path = require('path');
 const mineData = require('../lib/mineData');
 
-const directionY = [0,0,1,-1];
-const directionX = [1,-1,0,0];
+const directionY = [0, 0, 1, -1];
+const directionX = [1, -1, 0, 0];
 
 router.get('/', (request, response) => {
-  if(request.session.mine === undefined){
+
+  if (request.session.mine === undefined) {
+    
     mineData.setInitVisited();
     mineData.setInitMineBoard();
     buttonHandler.plantMine(mineData);
     mineData.initNumberOfBoard();
 
-    request.session.mine = mineData;
+    request.session.mine = {
+      mineBoard           : mineData.getMineBoard(),
+      visited             : mineData.getVisited(),
+      markBoard           : mineData.getMarkBoard(),
+      aroundNumberOfBOard : mineData.getNumberOfBoard()
+    };
   }
   response.render("index", {});
 });
 
-router.post('/buttonhandleing', (request, response ) => {
+router.post('/buttonhandleing', (request, response) => {
   console.log('/버튼핸들링에 들어옴 ~~');
-  const body = request.body;
-  let sessionMine = request.session.mine;
-  let coord = {y:Number(body.y), x:Number(body.x)};
 
+  let sessionMine = request.session.mine;
+  let coord = { y: Number(request.body.y), x: Number(request.body.x) };
+  
+  buttonHandler.isBombClick(coord, sessionMine);
+
+  let jsonData = {};
+  response.status(200).json(jsonData);
 });
 
-router.post('/ranking', (request, response ) => {
+router.post('/ranking', (request, response) => {
   response.send("test~~~");
 });
 

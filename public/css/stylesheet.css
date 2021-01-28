@@ -3,8 +3,8 @@
   border: 1px solid #5D5D5D;
   color: #0100FF;
   font-weight: bold;
-  font-size: 9px;
-  padding: 6px 10px;
+  font-size: 12px;
+  padding: 12px 13px;
   float: left;
 }
 .buttonGroup button:not(:last-child) {

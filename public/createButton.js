@@ -5,7 +5,7 @@ window.onload = function () {
     for (let j = 0; j < 30; j++) {
       const button = document.createElement('button');
       button.id = `buttonCell${i}?${j}`;
-      button.addEventListener('click', buttonUp);
+      button.addEventListener('click', buttonClick);
       mineDivButton.appendChild(button);
     }
     document.getElementById('minediv').appendChild(mineDivButton);
