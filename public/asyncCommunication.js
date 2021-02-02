@@ -9,19 +9,22 @@ function buttonClick(){
   const jsonData = buttonIdParsing(buttonId);
   const xhr = new XMLHttpRequest();
 
-  if(isInit === true){
-    startTime = new Date();
-    startShowingTime();
-    isInit === false;
-  }
-
   xhr.open('POST', '/buttonhandleing');
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(JSON.stringify(jsonData));  
 
   xhr.addEventListener('load', function(){
-    document.getElementById(buttonId).disabled = true;
+    const result = JSON.parse(xhr.responseText);
+    if(result.number > 0)
+      document.getElementById(buttonId).style.color = colorOfButtonNumber[result.number - 1];
+    document.getElementById(buttonId).innerText = result.number;
   });
+}
+
+function buttonIdParsing(buttonId){
+  const string = 'buttonCell';
+  const coord = buttonId.substr(string.length).split('?');
+  return {y:coord[0], x:coord[1]};
 }
 
 function getPassedSecond(endTime){
@@ -36,10 +39,4 @@ function startShowingTime(){
     const timeDiffrence = getPassedSecond(new Date);
     document.getElementById('showTime').innerText = timeDiffrence;
   }, msSecond);
-}
-
-function buttonIdParsing(buttonId){
-  const string = 'buttonCell';
-  const coord = buttonId.substr(string.length).split('?');
-  return {y:coord[0], x:coord[1]};
 }

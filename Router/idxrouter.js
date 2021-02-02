@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const buttonHandler = require('../lib/buttonHandler');
-const difficulty = require('../lib/difficulty');
+const initMineData = require('../lib/initMineData');
 const mineData = require('../lib/mineData');
 const fs = require('fs');
 const path = require('path');
@@ -9,10 +9,9 @@ const path = require('path');
 router.get('/', (request, response) => {
 
   if (request.session.mine === undefined) {
-    buttonHandler.setMineData(difficulty);
-    buttonHandler.plantMine(difficulty);
-    buttonHandler.setAroundNumberOfCell(difficulty);
-    request.session.mine = difficulty;
+    buttonHandler.plantMine(initMineData);
+    buttonHandler.setAroundNumberOfCell(initMineData);
+    request.session.mine = initMineData;
   }
   response.render("index", {});
 });
@@ -25,11 +24,10 @@ router.post('/buttonhandleing', (request, response) => {
     response.end();
   }
   else{
-    const sessionMineData = request.session.mine;
+    const sess = request.session.mine;
     const coord = { y: Number(request.body.y), x: Number(request.body.x) };
-    const minedata = mineData(sessionMineData);
-    buttonHandler.chainCollision(minedata, coord);
-    response.status(200).json(jsonData);
+    buttonHandler.chainCollision(sess,coord);
+    response.status(200).json({number: sess.aroundNumberOfBoard[coord.y][coord.x]});
   }
 });
 

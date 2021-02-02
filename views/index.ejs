@@ -4,13 +4,22 @@
     <title>Mine Sweeper</title>
     <link rel="stylesheet" type="text/css" href="/css/stylesheet.css">
     <script type="text/javascript" src="/asyncCommunication.js"></script>
-    <script type="text/javascript" src="/createButton.js"></script>
+    <script type="text/javascript" src="/enrollButtonEvent.js"></script>
     <meta charset="utf-8">
   </head>
   <body>
-    <a href ="/ranking">rank</a>
-    <p id = 'showTime'></p>
-    <div id="minediv">
+    <!-- <a href ="/ranking">rank</a>
+    <p id = 'showTime'></p> -->
+    <div id='minediv'>
+      <div class = 'buttonGroup'>
+        <% for(let i=0; i<16; i++){ %>
+          <p>
+          <% for(let j=0; j<30; j++){ %>
+            <button id = 'buttonCell<%=i%>?<%=j%>'></button>
+          <%}%>
+          </p>
+        <%}%>
+      </div>
     </div>
   </body>
 </html>
