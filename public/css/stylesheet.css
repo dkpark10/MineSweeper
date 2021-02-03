@@ -7,12 +7,17 @@
   transform: translate(-50%, -50%);
 }
 .buttonGroup button {
-  background-image: linear-gradient(to bottom, #FAFAFA,#E7E7E7);
+  background-image: linear-gradient(to bottom, #FFFFFF,#E7E7E7);
   border: 1px solid #5D5D5D;
   font-weight: bold;
-  font-size: 15px;
-  padding: 16px 17px;
+  font-size: 13px;
   float: left;
+  width: 25px;
+  height: 25px;
+  line-height: 21px;
+  font-size: 13px;
+  padding-bottom: 6px;
+  display: inline-block;
 }
 .buttonGroup button:not(:last-child) {
   border-right: none;

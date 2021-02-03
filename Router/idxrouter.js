@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const buttonHandler = require('../lib/buttonHandler');
 const initMineData = require('../lib/initMineData');
-const mineData = require('../lib/mineData');
 const fs = require('fs');
 const path = require('path');
 
@@ -26,7 +25,8 @@ router.post('/buttonhandleing', (request, response) => {
   else{
     const sess = request.session.mine;
     const coord = { y: Number(request.body.y), x: Number(request.body.x) };
-    buttonHandler.chainCollision(sess,coord);
+    // buttonHandler.isClickedMine(sess,coord);
+    buttonHandler.breadthFirstSearch(sess,coord);
     response.status(200).json({number: sess.aroundNumberOfBoard[coord.y][coord.x]});
   }
 });
