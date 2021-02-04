@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const buttonHandler = require('../lib/buttonHandler');
 const initMineData = require('../lib/initMineData');
-const fs = require('fs');
-const path = require('path');
 
 router.get('/', (request, response) => {
 
@@ -15,20 +13,32 @@ router.get('/', (request, response) => {
   response.render("index", {});
 });
 
-router.post('/buttonhandleing', (request, response) => {
+router.post('/leftClickHandle', (request, response) => {
 
   let jsonData = {};
   if (request.session.mine === undefined) {
     response.status(200).json(jsonData);
-    response.end();
   }
   else{
     const sess = request.session.mine;
     const coord = { y: Number(request.body.y), x: Number(request.body.x) };
-    // buttonHandler.isClickedMine(sess,coord);
-    buttonHandler.breadthFirstSearch(sess,coord);
-    response.status(200).json({number: sess.aroundNumberOfBoard[coord.y][coord.x]});
+    let minedata = buttonHandler.mineData(sess);
+    
+    if(buttonHandler.isClickedMine(minedata, coord)){
+      response.status(200).json({status:'clickMine'});
+    }
+    else if(buttonHandler.isClickedFlag(minedata.coord)){
+      response.status(200).json({status:'clickFlag'});
+    }
+    else{
+
+    }
+    mineData = null;
   }
+});
+
+router.post('/rightClickHandle', (request,response) =>{
+
 });
 
 router.post('/ranking', (request, response) => {

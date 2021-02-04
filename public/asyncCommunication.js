@@ -9,16 +9,17 @@ function buttonClick(){
   const jsonData = buttonIdParsing(buttonId);
   const xhr = new XMLHttpRequest();
 
-  xhr.open('POST', '/buttonhandleing');
+  xhr.open('POST', '/leftClickHandle');
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(JSON.stringify(jsonData));  
 
   xhr.addEventListener('load', function(){
     const result = JSON.parse(xhr.responseText);
-    if(result.number > 0){
-      document.getElementById(buttonId).style.color = colorOfButtonNumber[result.number - 1];
-      document.getElementById(buttonId).innerText = result.number;
-    }
+    console.log(result);
+    // if(result.number > 0){
+    //   document.getElementById(buttonId).style.color = colorOfButtonNumber[result.number - 1];
+    //   document.getElementById(buttonId).innerText = result.number;
+    // }
   });
 }
 
