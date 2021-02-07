@@ -25,15 +25,18 @@ router.post('/leftClickHandle', (request, response) => {
     let minedata = buttonHandler.mineData(sess);
     
     if(buttonHandler.isClickedMine(minedata, coord)){
-      response.status(200).json({status:'clickMine'});
+      response.status(200).json({ coord: coord, status: 'clickMine' });
     }
-    else if(buttonHandler.isClickedFlag(minedata.coord)){
-      response.status(200).json({status:'clickFlag'});
+    else if(buttonHandler.isClickedFlag(minedata,coord)){
+      response.status(200).json({ coord: coord, status: 'clickFlag' });
+    }
+    else if(buttonHandler.isAroundMineMoreThanOne(minedata.coord)){
+      response.status(200).json({ coord: coord, status: 'disabled ',number: minedata.getNumberOfMine[coord.y][coord.x] });
     }
     else{
-
+       response.status(200).json(buttonHandler.breadthFirstSearch(minedata, coord));
     }
-    mineData = null;
+    minedata = null;
   }
 });
 
