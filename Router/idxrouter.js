@@ -10,7 +10,7 @@ router.get('/', (request, response) => {
     buttonHandler.setAroundNumberOfCell(initMineData);
     request.session.mine = initMineData;
   }
-  response.render("index", {});
+  response.render("index", {mine: initMineData.mineBoard});
 });
 
 router.post('/leftClickHandle', (request, response) => {
@@ -25,16 +25,16 @@ router.post('/leftClickHandle', (request, response) => {
     let minedata = buttonHandler.mineData(sess);
     
     if(buttonHandler.isClickedMine(minedata, coord)){
-      response.status(200).json({ coord: coord, status: 'clickMine' });
+      response.status(200).json({ coord: coord, status: 'clickMine', number:false, board:minedata.getMineBoard()});
     }
     else if(buttonHandler.isClickedFlag(minedata,coord)){
-      response.status(200).json({ coord: coord, status: 'clickFlag' });
+      response.status(200).json({ coord: coord, status: 'clickFlag', number: false}); 
     }
-    else if(buttonHandler.isAroundMineMoreThanOne(minedata.coord)){
-      response.status(200).json({ coord: coord, status: 'disabled ',number: minedata.getNumberOfMine[coord.y][coord.x] });
+    else if (buttonHandler.isAroundMineMoreThanOne(minedata, coord)) {
+      response.status(200).json({ coord: coord, status: 'disabled ', number: minedata.getAroundNumberOfBoard()[coord.y][coord.x] });
     }
     else{
-       response.status(200).json(buttonHandler.breadthFirstSearch(minedata, coord));
+      response.status(200).json(buttonHandler.breadthFirstSearch(minedata, coord));
     }
     minedata = null;
   }

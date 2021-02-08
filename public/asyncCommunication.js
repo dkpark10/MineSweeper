@@ -16,10 +16,6 @@ function buttonClick(){
   xhr.addEventListener('load', function(){
     const result = JSON.parse(xhr.responseText);
     console.log(result);
-    // if(result.number > 0){
-    //   document.getElementById(buttonId).style.color = colorOfButtonNumber[result.number - 1];
-    //   document.getElementById(buttonId).innerText = result.number;
-    // }
   });
 }
 
