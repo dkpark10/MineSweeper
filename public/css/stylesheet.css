@@ -27,7 +27,7 @@
   clear: both;
   display: table;
 }
-.buttonGroup button:hover {
+.buttonGroup button:hover:enabled {
   background-image: linear-gradient(to bottom, #E0DBE9,#FFF6FB);
 }
 .buttonGroup button:active {

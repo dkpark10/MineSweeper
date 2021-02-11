@@ -12,10 +12,10 @@
     <p id = 'showTime'></p> -->
     <div id='minediv'>
       <div class = 'buttonGroup'>
-        <% for(let i=0; i<10; i++){ %>
+        <% for(let i=0; i<5; i++){ %>
           <p>
-          <% for(let j=0; j<10; j++){ %>
-            <button id = 'buttonCell<%=i%>?<%=j%>'></button>
+          <% for(let j=0; j<5; j++){ %>
+            <button id = 'buttonCell<%=i%>?<%=j%>'><%= mine[i][j] %></button>
           <%}%>
           </p>
         <%}%>

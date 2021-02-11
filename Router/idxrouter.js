@@ -10,14 +10,13 @@ router.get('/', (request, response) => {
     buttonHandler.setAroundNumberOfCell(initMineData);
     request.session.mine = initMineData;
   }
-  response.render("index", {mine: initMineData.mineBoard});
+  response.render("index", {mine:request.session.mine.mineBoard});
 });
 
 router.post('/leftClickHandle', (request, response) => {
 
-  let jsonData = {};
   if (request.session.mine === undefined) {
-    response.status(200).json(jsonData);
+    response.status(200).json({});
   }
   else{
     const sess = request.session.mine;
@@ -36,12 +35,27 @@ router.post('/leftClickHandle', (request, response) => {
     else{
       response.status(200).json(buttonHandler.breadthFirstSearch(minedata, coord));
     }
-    minedata = null;
+
+    request.session.mine = minedata;
+    minedata = null;                    // 클로저 사용 후 메모리 해제
   }
 });
 
 router.post('/rightClickHandle', (request,response) =>{
+  
+  if(request.session.mine === undefined){
+    response.status(200).json({});
+  }
+  else{
+    const sess = request.session.mine;
+    const coord = { y: Number(request.body.y), x: Number(request.body.x) };
+    let minedata = buttonHandler.mineData(sess);
 
+    response.status(200).json(buttonHandler.setFlagMark(minedata, coord));
+
+    request.session.mine = minedata;
+    minedata = null;                    // 클로저 사용 후 메모리 해제
+  }
 });
 
 router.post('/ranking', (request, response) => {
