@@ -4,7 +4,7 @@ const cellID = 'buttonCell';
 let startTime = null;
 
 const colorOfButtonNumber = [null, '#FF7388', '#614BF4', '#E8FF64', '#DC1C38', '#7EEE62', '#0DEBEB', '#A566F8', '#A9350B'];
-const mouseEvent = { LEFTCLICK: 1, RIGHTCLICK: 3 };
+const mouseEvent = { LEFTCLICK: 1, MIDDLECLICK:2, RIGHTCLICK: 3 };
 
 function buttonClick(event) {
 
@@ -20,11 +20,21 @@ function buttonClick(event) {
     xhr.addEventListener('load', function () {
       const responseData = JSON.parse(xhr.responseText);
       if (responseData.responsedata.status === 'clickMine') {
+        // to do...
         let n = 23;
       }
       else {
         changeButtonToDisabled(responseData.responsedata);
       }
+    });
+  }
+  else if (event.which === mouseEvent.MIDDLECLICK){
+    
+    xhr.open('POST', '/middleClickHandle');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify(jsonData));
+
+    xhr.addEventListener('load', function () {
     });
   }
   else if (event.which === mouseEvent.RIGHTCLICK) {
@@ -35,15 +45,19 @@ function buttonClick(event) {
 
     xhr.addEventListener('load', function () {
       const responseData = JSON.parse(xhr.responseText);
+      const y = responseData.coord.y, x = responseData.coord.x;
+
+      console.log(responseData);
       if (responseData.status === 'setFlag') {
-        console.log('깃발세팅');
+        document.getElementById(`${cellID}${y}?${x}`).innerHTML = '<img src="flag.png"/>';
       }
       else{
-        console.log('깃발해제');
+        document.getElementById(`${cellID}${y}?${x}`).innerHTML = '';
       }
     });
   }
 }
+
 function changeButtonToDisabled(responsedata) {
 
   for (element of responsedata) {

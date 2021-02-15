@@ -41,6 +41,23 @@ router.post('/leftClickHandle', (request, response) => {
   }
 });
 
+router.post('/middleClickHandle', (request,response) =>{
+  
+  if(request.session.mine === undefined){
+    response.status(200).json({});
+  }
+  else{
+    const sess = request.session.mine;
+    const coord = { y: Number(request.body.y), x: Number(request.body.x) };
+    let minedata = buttonHandler.mineData(sess);
+
+    buttonHandler.isRightStickFlag(minedata, coord);
+
+    request.session.mine = minedata;
+    minedata = null;                    // 클로저 사용 후 메모리 해제
+  }
+});
+
 router.post('/rightClickHandle', (request,response) =>{
   
   if(request.session.mine === undefined){
