@@ -24,18 +24,14 @@ router.post('/leftClickHandle', (request, response) => {
     let minedata = buttonHandler.mineData(sess);
     
     if(buttonHandler.isClickedMine(minedata, coord)){
-      response.status(200).json({ coord: coord, status: 'clickMine', number:false, board:minedata.getMineBoard()});
+      response.status(200).json({ coord: coord, status: 'clickMine', number: 0, board: minedata.getMineBoard() });
     }
-    else if(buttonHandler.isClickedFlag(minedata,coord)){
-      response.status(200).json({ coord: coord, status: 'clickFlag', number: false}); 
-    }
-    else if (buttonHandler.isAroundMineMoreThanOne(minedata, coord)) {
-      response.status(200).json({ coord: coord, status: 'disabled ', number: minedata.getAroundNumberOfBoard()[coord.y][coord.x] });
+    else if(buttonHandler.isClickedFlag(minedata, coord)){
+      response.status(200).json({ coord: coord, status: 'clickFlag', number: 0 });
     }
     else{
       response.status(200).json(buttonHandler.breadthFirstSearch(minedata, coord));
     }
-
     request.session.mine = minedata;
     minedata = null;                    // 클로저 사용 후 메모리 해제
   }
@@ -51,7 +47,12 @@ router.post('/middleClickHandle', (request,response) =>{
     const coord = { y: Number(request.body.y), x: Number(request.body.x) };
     let minedata = buttonHandler.mineData(sess);
 
-    buttonHandler.isRightStickFlag(minedata, coord);
+    if(buttonHandler.isRightStickFlag(minedata, coord) === false){
+      response.status(200).json({ coord: coord, status: 'clickMine', number:false, board:minedata.getMineBoard()});
+    }
+    else {
+
+    }
 
     request.session.mine = minedata;
     minedata = null;                    // 클로저 사용 후 메모리 해제

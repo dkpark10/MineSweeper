@@ -19,11 +19,12 @@ function buttonClick(event) {
 
     xhr.addEventListener('load', function () {
       const responseData = JSON.parse(xhr.responseText);
-      if (responseData.responsedata.status === 'clickMine') {
+      if (responseData.status === 'clickMine') {
         // to do...
         let n = 23;
-      }
-      else {
+      }else if(responseData.status === 'clickFlag'){
+        ;
+      }else {
         changeButtonToDisabled(responseData.responsedata);
       }
     });
@@ -63,6 +64,8 @@ function changeButtonToDisabled(responsedata) {
   for (element of responsedata) {
     const y = element.coord[0]; const x = element.coord[1];
     const number = element.number === 0 ? '' : element.number;
+
+    console.log(number);
 
     if (number !== 0)
       document.getElementById(`${cellID}${y}?${x}`).style.color = colorOfButtonNumber[number];
