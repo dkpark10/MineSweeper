@@ -1,7 +1,11 @@
+'use strict';
+
 const express = require('express');
 const router = express.Router();
 const buttonHandler = require('../lib/buttonHandler');
 const initMineData = require('../lib/initMineData');
+const requestIP = require('request-ip');
+
 
 router.get('/', (request, response) => {
 
@@ -9,6 +13,8 @@ router.get('/', (request, response) => {
     buttonHandler.plantMine(initMineData);
     buttonHandler.setAroundNumberOfCell(initMineData);
     request.session.mine = initMineData;
+
+    console.log(requestIP.getClientIp(request))
   }
   response.render("index", {mine:request.session.mine.mineBoard});
 });
@@ -24,10 +30,10 @@ router.post('/leftClickHandle', (request, response) => {
     let minedata = buttonHandler.mineData(sess);
     
     if(buttonHandler.isClickedMine(minedata, coord)){
-      response.status(200).json({ coord: coord, status: 'clickMine', number: 0, board: minedata.getMineBoard() });
+      response.status(200).json({ coord: coord, status: 'END', number: 0, board: minedata.getMineBoard() });
     }
     else if(buttonHandler.isClickedFlag(minedata, coord)){
-      response.status(200).json({ coord: coord, status: 'clickFlag', number: 0 });
+      response.status(200).json({ coord: coord, status: 'NOTHING', number: 0 });
     }
     else{
       response.status(200).json(buttonHandler.breadthFirstSearch(minedata, coord));
@@ -47,11 +53,16 @@ router.post('/middleClickHandle', (request,response) =>{
     const coord = { y: Number(request.body.y), x: Number(request.body.x) };
     let minedata = buttonHandler.mineData(sess);
 
-    if(buttonHandler.isRightStickFlag(minedata, coord) === false){
-      response.status(200).json({ coord: coord, status: 'clickMine', number:false, board:minedata.getMineBoard()});
+    const responseJson = buttonHandler.isRightStickFlag(minedata, coord);
+    if( responseJson.status === 'END' || responseJson.status === 'NOTHING' ){
+      response.status(200).json(responseJson);
     }
-    else {
-
+    else{
+      const temp = responseJson.responsedata.slice();
+      temp.forEach( element => {
+        responseJson.responsedata.concat(buttonHandler.breadthFirstSearch(minedata, {y:element.coord[0], x:element.coord[1]}));
+      });
+      response.status(200).json(responseJson);
     }
 
     request.session.mine = minedata;
