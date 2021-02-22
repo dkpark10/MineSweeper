@@ -6,27 +6,6 @@ let startTime = null;
 const colorOfButtonNumber = [null, '#FF7388', '#614BF4', '#E8FF64', '#DC1C38', '#7EEE62', '#0DEBEB', '#A566F8', '#A9350B'];
 const mouseEvent = { LEFTCLICK: 1, MIDDLECLICK:2, RIGHTCLICK: 3 };
 
-function dbClick(){
-
-  const jsonData = buttonIdParsing(this.id);
-  const xhr = new XMLHttpRequest();
-  xhr.open('POST', '/middleClickHandle');
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.send(JSON.stringify(jsonData));
-
-  xhr.addEventListener('load', function () {
-    const responseData = JSON.parse(xhr.responseText);
-    console.log('들어오냐????');
-    if (responseData.status === 'END') {
-      // to do...
-    } else if (responseData.status === 'NOTHING') {
-      ;
-    } else {
-      changeButtonToDisabled(responseData.responsedata);
-    }
-  });
-}
-
 function buttonClick(event) {
 
   const jsonData = buttonIdParsing(this.id);
@@ -46,7 +25,7 @@ function buttonClick(event) {
       }else if(responseData.status === 'NOTHING'){
         ;
       }else {
-        changeButtonToDisabled(responseData.responsedata);
+        changeButtonToDisabled(responseData.returndata);
       }
     });
   }
@@ -63,7 +42,7 @@ function buttonClick(event) {
       }else if(responseData.status === 'NOTHING'){
         ;
       }else {
-        changeButtonToDisabled(responseData.responsedata);
+        changeButtonToDisabled(responseData.returndata);
       }
     });
   }

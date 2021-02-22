@@ -13,8 +13,6 @@ router.get('/', (request, response) => {
     buttonHandler.plantMine(initMineData);
     buttonHandler.setAroundNumberOfCell(initMineData);
     request.session.mine = initMineData;
-
-    console.log(requestIP.getClientIp(request))
   }
   response.render("index", {mine:request.session.mine.mineBoard});
 });
