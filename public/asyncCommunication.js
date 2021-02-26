@@ -3,7 +3,7 @@ const msSecond = 1000;
 const cellID = 'buttonCell';
 let startTime = null;
 
-const colorOfButtonNumber = [null, '#FF7388', '#614BF4', '#E8FF64', '#DC1C38', '#7EEE62', '#0DEBEB', '#A566F8', '#A9350B'];
+const colorOfButtonNumber = [null, '#FF7388', '#614BF4', '##FFFF35', '#DC1C38', '#7EEE62', '#0DEBEB', '#A566F8', '#A9350B'];
 const mouseEvent = { LEFTCLICK: 1, MIDDLECLICK:2, RIGHTCLICK: 3 };
 
 function buttonClick(event) {
@@ -38,7 +38,7 @@ function buttonClick(event) {
     xhr.addEventListener('load', function () {
       const responseData = JSON.parse(xhr.responseText);
       if (responseData.status === 'END') {
-        // to do...
+        // to do... 게임 끝남
       }else if(responseData.status === 'NOTHING'){
         ;
       }else {
@@ -76,8 +76,9 @@ function changeButtonToDisabled(responsedata) {
 
     if (number !== 0)
       document.getElementById(`${cellID}${y}?${x}`).style.color = colorOfButtonNumber[number];
-    document.getElementById(`${cellID}${y}?${x}`).innerText = number;
-    document.getElementById(`${cellID}${y}?${x}`).disabled = true;
+    if (element.status === 'DISABLED')
+      document.getElementById(`${cellID}${y}?${x}`).disabled = true;
+      document.getElementById(`${cellID}${y}?${x}`).innerText = number;
   });
 }
 
