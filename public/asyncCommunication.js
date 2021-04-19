@@ -61,7 +61,7 @@ function buttonClick(event) {
       }
       else if(responseData.status === 'RELIVEFLAG'){
         console.log('들어와요????');
-        document.getElementById(`${cellID}${y}?${x}`).innerHTML = ' ';
+        document.getElementById(`${cellID}${y}?${x}`).innerHTML = `${responseData.number}`;
       }
     });
   }

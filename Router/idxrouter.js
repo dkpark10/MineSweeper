@@ -3,37 +3,81 @@
 const express = require('express');
 const router = express.Router();
 const buttonHandler = require('../lib/buttonHandler');
-const initMineData = require('../lib/initMineData');
+const difficulty = require('../lib/difficulty');
 const requestIP = require('request-ip');
+
+
+function deleteSession(request) {
+  request.session.destroy(function () {
+    request.session;
+  });
+}
 
 
 router.get('/', (request, response) => {
 
-  if (request.session.mine === undefined) {
-    buttonHandler.plantMine(initMineData);
-    buttonHandler.setAroundNumberOfCell(initMineData);
-    request.session.mine = initMineData;
-  }
-  response.render("index", {mine:request.session.mine.mineBoard});
+  const initMineData = (function(init){
+    let instance;
+    const row = init.row;
+    const col = init.col;
+    const numberofMine = init.numberOfMine;
+    const mineBoard = Array.from(Array(init.row), () => Array(init.col).fill(0));
+    const visited =  Array.from(Array(init.row), () => Array(init.col).fill(false));
+    const flagBoard = Array.from(Array(init.row), () => Array(init.col).fill(0));
+    const aroundNumberOfBoard = Array.from(Array(init.row), () => Array(init.col).fill(0));
+    let extraCell = (init.row * init.col) - init.numberOfMine;
+  
+    function initiate() {
+      return {
+        row:                  row,
+        col:                  col,
+        numberOfMine:         numberofMine,
+        mineBoard:            mineBoard,
+        visited:              visited,
+        flagBoard:            flagBoard,
+        aroundNumberOfBoard:  aroundNumberOfBoard,
+        extraCell:            extraCell
+      };
+    }
+  
+    return {
+      getInstance: function() {
+        if(!instance)
+          instance = initiate();
+        
+        return instance;
+      }
+    }
+  })(difficulty);
+
+  const initializer = initMineData.getInstance();
+
+  buttonHandler.plantMine(initializer);
+  buttonHandler.setAroundNumberOfCell(initializer);
+  request.session.mine = initializer;
+
+
+  response.render("index", { mine: request.session.mine.mineBoard });
 });
+
 
 router.post('/leftClickHandle', (request, response) => {
 
   if (request.session.mine === undefined) {
     response.status(200).json({});
   }
-  else{
+  else {
     const sess = request.session.mine;
     const coord = { y: Number(request.body.y), x: Number(request.body.x) };
     let minedata = buttonHandler.mineData(sess);
-    
-    if(buttonHandler.isClickedMine(minedata, coord)){
+
+    if (buttonHandler.isClickedMine(minedata, coord)) {
       response.status(200).json({ coord: coord, status: 'END', number: 0, board: minedata.getMineBoard() });
     }
-    else if(buttonHandler.isClickedFlag(minedata, coord)){
+    else if (buttonHandler.isClickedFlag(minedata, coord)) {
       response.status(200).json({ coord: coord, status: 'NOTHING', number: 0 });
     }
-    else{
+    else {
       response.status(200).json(buttonHandler.breadthFirstSearch(minedata, coord));
     }
     request.session.mine = minedata;
@@ -41,24 +85,25 @@ router.post('/leftClickHandle', (request, response) => {
   }
 });
 
-router.post('/middleClickHandle', (request,response) =>{
-  
-  if(request.session.mine === undefined){
+
+router.post('/middleClickHandle', (request, response) => {
+
+  if (request.session.mine === undefined) {
     response.status(200).json({});
   }
-  else{
+  else {
     const sess = request.session.mine;
     const coord = { y: Number(request.body.y), x: Number(request.body.x) };
     let minedata = buttonHandler.mineData(sess);
 
     const responseJson = buttonHandler.isRightStickFlag(minedata, coord);
-    if( responseJson.status === 'END' || responseJson.status === 'NOTHING' ){
+    if (responseJson.status === 'END' || responseJson.status === 'NOTHING') {
       response.status(200).json(responseJson);
     }
-    else{
+    else {
       const temp = responseJson.responsedata.slice();
-      temp.forEach( element => {
-        responseJson.responsedata.concat(buttonHandler.breadthFirstSearch(minedata, {y:element.coord[0], x:element.coord[1]}));
+      temp.forEach(element => {
+        responseJson.responsedata.concat(buttonHandler.breadthFirstSearch(minedata, { y: element.coord[0], x: element.coord[1] }));
       });
       response.status(200).json(responseJson);
     }
@@ -68,12 +113,12 @@ router.post('/middleClickHandle', (request,response) =>{
   }
 });
 
-router.post('/rightClickHandle', (request,response) =>{
-  
-  if(request.session.mine === undefined){
+router.post('/rightClickHandle', (request, response) => {
+
+  if (request.session.mine === undefined) {
     response.status(200).json({});
   }
-  else{
+  else {
     const sess = request.session.mine;
     const coord = { y: Number(request.body.y), x: Number(request.body.x) };
     let minedata = buttonHandler.mineData(sess);
