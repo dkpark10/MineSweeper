@@ -14,6 +14,12 @@ function deleteSession(request) {
 }
 
 
+// 새로 고침시 전역에 선언하면 이전의 값을 그대로 저장하고 있다.
+// 반드시 콜백 안에서 데이터를 초기화하고 작성 !!!!!!!!!!!!!!
+// 새로 고침시 http 프로토콜 특성인 휘발성에 따라 데이터가 소실될것이로 생각 
+// 하지만 아님 나의 착각...
+
+
 router.get('/', (request, response) => {
 
   const initMineData = (function(init){
@@ -50,12 +56,12 @@ router.get('/', (request, response) => {
     }
   })(difficulty);
 
+  
   const initializer = initMineData.getInstance();
 
   buttonHandler.plantMine(initializer);
   buttonHandler.setAroundNumberOfCell(initializer);
   request.session.mine = initializer;
-
 
   response.render("index", { mine: request.session.mine.mineBoard });
 });
@@ -71,11 +77,16 @@ router.post('/leftClickHandle', (request, response) => {
     const coord = { y: Number(request.body.y), x: Number(request.body.x) };
     let minedata = buttonHandler.mineData(sess);
 
-    if (buttonHandler.isClickedMine(minedata, coord)) {
-      response.status(200).json({ coord: coord, status: 'END', number: 0, board: minedata.getMineBoard() });
+    // 왼클릭에 대한 이벤트 
+    // 깃발여부를 확인한다. 지뢰더라도 깃발이면 그냥 리턴
+    // 깃발이 아닌데 지뢰를 클릭했다면 게임오버
+    // 깃발도 지뢰도 아니라면 연쇄충돌 BFS 로 탐색
+
+    if (buttonHandler.isClickedFlag(minedata, coord) === true) {
+      response.status(200).json({ coord: coord, status: 'NOTHING', number: 0 , board : undefined});
     }
-    else if (buttonHandler.isClickedFlag(minedata, coord)) {
-      response.status(200).json({ coord: coord, status: 'NOTHING', number: 0 });
+    else if (buttonHandler.isClickedMine(minedata, coord) === true) {
+      response.status(200).json({ coord: coord, status: 'END', number: 0, board: minedata.getMineBoard() });
     }
     else {
       response.status(200).json(buttonHandler.breadthFirstSearch(minedata, coord));

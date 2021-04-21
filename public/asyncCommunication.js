@@ -21,7 +21,7 @@ function buttonClick(event) {
       const responseData = JSON.parse(xhr.responseText);
       if (responseData.status === 'END') {
         // to do...
-        let n = 23;
+        console.log('click mine;;;;');
       }else if(responseData.status === 'NOTHING'){
         ;
       }else {
@@ -61,7 +61,7 @@ function buttonClick(event) {
       }
       else if(responseData.status === 'RELIVEFLAG'){
         console.log('들어와요????');
-        document.getElementById(`${cellID}${y}?${x}`).innerHTML = `${responseData.number}`;
+        document.getElementById(`${cellID}${y}?${x}`).innerHTML = ` `;
       }
     });
   }
@@ -71,7 +71,8 @@ function changeButtonToDisabled(responsedata) {
 
   responsedata.forEach(element => {
 
-    const y = element.coord[0]; const x = element.coord[1];
+    const y = element.coord[0]; 
+    const x = element.coord[1];
     const number = element.number === 0 ? '' : element.number;
 
     if (number !== 0)
