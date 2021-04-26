@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "strict": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "lib":["es2015","dom","DOM.Iterable"],   // async, promise 객체가 필요하므로 필수 옵션
+  },
+  "exclude": ["node_modules"],       // 변환하지 않을 폴더 경로
+  "include": ["../lib/*.ts", "./Router/*.ts", "./practice/*.ts"]
+} 

@@ -1,5 +1,6 @@
 window.onload = function () {
-  document.addEventListener('contextmenu', function(event){
+
+  document.addEventListener('contextmenu', function(event){   // 오른쪽 마우스 막음
     event.preventDefault();
   });
   
