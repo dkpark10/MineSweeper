@@ -1,50 +1,62 @@
 'use strict';
 
-declare function require(param: any): any;
-import {Request, Response, NextFunction} from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 const express: any = require('express');
-const router:any = express.router();
+const router: any = express.Router();
 const app: any = express();
 
-import { test } from '../lib/ptdifficulty';
+import { MineData, difficulty, MineBoard, cloneObject, Coord, ResponseJSON, EventStatus } from '../lib/commonutility';
+import { easy, normal, hard, test } from '../lib/ptdifficulty';
 import { ButtonHandler } from '../lib/pbuttonHandler';
-import { MineData, difficulty } from '../lib/ptinterface';
 
+let buttonHandler: ButtonHandler;
 router.get('/', function (request: Request, response: Response, nextfunction: NextFunction) {
 
-  const initMineData = (function (init: difficulty) {
-    
-    let instance: object = new Object();
-    const row: number = init.row;
-    const col: number = init.col;
-    const numberofMine: number = init.numberOfMine;
-    const mineBoard: boolean[][] = Array.from(Array(init.row), () => Array(init.col).fill(0));
-    const visited: number[] =  Array.from(Array(init.row), () => Array(init.col).fill(false));
-    const flagBoard: number[] = Array.from(Array(init.row), () => Array(init.col).fill(0));
-    const aroundNumberOfBoard: number[] = Array.from(Array(init.row), () => Array(init.col).fill(0));
-    let extraCell: number = (init.row * init.col) - init.numberOfMine;
-  
-    function initiate() {
-      return {
-        row:                  row,
-        col:                  col,
-        numberOfMine:         numberofMine,
-        mineBoard:            mineBoard,
-        visited:              visited,
-        flagBoard:            flagBoard,
-        aroundNumberOfBoard:  aroundNumberOfBoard,
-        extraCell:            extraCell
-      };
-    }
-  
-    return {
-      getInstance: function() {
-        if(!instance)
-          instance = initiate();
-        
-        return instance;
-      }
-    }
-  })(test);
+  const mineBoard : MineBoard = {
+    mine:0,
+    flag:false,
+    visited:false,
+    aroundNumber:0
+  };
+
+  const mineData: MineData = {
+    row: test.row,
+    col: test.col,
+    numberOfMine: test.numberOfMine,
+    extraCell: (test.row * test.col) - test.numberOfMine,
+    board: Array.from({length:test.row}, () => cloneObject(mineBoard))
+          .map(() => Array.from({length:test.col}, () => cloneObject(mineBoard)))
+  };
+
+  buttonHandler = ButtonHandler.getInstance(mineData);
+  let responseBoard: number[][];
+  if (request.session.mine === undefined) {
+    buttonHandler.plantMine();
+
+    // 지뢰밭 배열 추출
+    responseBoard = mineData.board.map((ele1:MineBoard[]) => {
+      return ele1.map((ele2: MineBoard) => ele2.mine);
+    });
+
+    request.session.mine = mineData;
+    response.render("index", { mine: responseBoard });
+  }
 });
+
+
+router.post('/leftClickHandle', (request: Request, response: Response, nextfunction: NextFunction) => {
+
+  const sess: MineData = request.session.mine;
+  const coord: Coord = { y: Number(request.body.y), x: Number(request.body.x) };
+  
+  let responseJson: ResponseJSON;
+  if(buttonHandler.isClickFlag(coord.y, coord.x)){
+    responseJson = { y: y, x: x, status: EventStatus.NOTHING, num: -1 }; 
+    response.status(200).json(responseJson);
+  } 
+  else if(){
+
+  }
+});
+export = router;

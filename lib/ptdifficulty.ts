@@ -1,8 +1,4 @@
-interface difficulty {
-  row: number;
-  col: number;
-  numberOfMine: number;
-}
+import { difficulty } from './commonutility';
 
 const easy: difficulty = { row: 10, col: 10, numberOfMine: 10 };
 const normal: difficulty = { row: 16, col: 16, numberOfMine: 40 };

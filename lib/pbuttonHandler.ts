@@ -5,21 +5,21 @@
 // 지뢰가 아닌 칸이지만 주위에 지뢰가 있는경우 disabled를 셋팅하면 안됨 
 
 
-import { MineBoard, MineData, Coord, EventStatus, ResponseJSON } from './ptinterface'
+import { MineBoard, MineData, Coord, EventStatus, ResponseJSON, cloneObject } from './commonutility'
 
 export class ButtonHandler {
 
-  private readonly row: number;
-  private readonly col: number;
-  private readonly numberOfMine: number;
+  private static instance : ButtonHandler;
+  private row: number;
+  private col: number;
+  private numberOfMine: number;
   private extraCell: number;
   private board: MineBoard[][];
 
   public readonly directionY: number[] = [0, 0, 1, -1, -1, -1, 1, 1];
   public readonly directionX: number[] = [1, -1, 0, 0, -1, 1, -1, 1];
 
-  constructor(sessionData: MineData) {
-
+  private constructor(sessionData: MineData) { 
     this.row = sessionData.row;
     this.col = sessionData.col;
     this.numberOfMine = sessionData.numberOfMine;
@@ -27,16 +27,19 @@ export class ButtonHandler {
     this.board = sessionData.board;
   }
 
-  getRow(): number { return this.row; }
-  getCol(): number { return this.col; }
-  getNumberOfMine(): number { return this.numberOfMine; }
-  getExtraCell(): number { return this.extraCell; }
-  getBoard(): MineBoard[][] { return this.board; }
+  public static getInstance(sessionData: MineData) {
+    return this.instance || (this.instance = new this(sessionData));
+  }
 
-  setExtraCell(arg: number) { this.extraCell = arg; }
-  setBoard(arg: MineBoard[][]) { this.board = arg; }
+  public getRow(): number { return this.row; }
+  public getCol(): number { return this.col; }
+  public getNumberOfMine(): number { return this.numberOfMine; }
+  public getExtraCell(): number { return this.extraCell; }
+  public getBoard(): MineBoard[][] { return this.board; }
+  public setExtraCell(arg: number) { this.extraCell = arg; }
+  public setBoard(arg: MineBoard[][]) { this.board = arg; }
 
-  plantMine() {
+  public plantMine() {
 
     let extraNumberOfMine: number = this.numberOfMine;
 
@@ -47,14 +50,14 @@ export class ButtonHandler {
       const randomForCol: number = Math.floor(Math.random() * 100);
       const randomCol: number = randomForCol % this.col;
 
-      if (this.board[randomRow][randomCol].mine === false) {
-        this.board[randomRow][randomCol].mine = true;
+      if (this.board[randomRow][randomCol].mine === 0) {
+        this.board[randomRow][randomCol].mine = 1;
         extraNumberOfMine--;
       }
     }
   }
 
-  setFlag(y: number, x: number): ResponseJSON {
+  public setFlag(y: number, x: number): ResponseJSON {
 
     const isFlag = this.board[y][x].flag;
     let ret: ResponseJSON;
@@ -74,22 +77,22 @@ export class ButtonHandler {
     return ret;
   }
 
-  isClickMine(y: number, x: number): boolean {
+  public isClickMine(y: number, x: number): boolean {
 
     if (this.board[y][x].flag === true) {          // 지뢰라도 깃발이라면 넘김
       return false;
-    } else if (this.board[y][x].mine === true) {
+    } else if (this.board[y][x].mine === 1) {
       return true;
     }
 
     return false;
   }
 
-  isClickFlag(y: number, x: number): boolean {
+  public  isClickFlag(y: number, x: number): boolean {
     return this.board[y][x].flag === true ? true : false;
   }
 
-  chainConflict(y: number, x: number): ResponseJSON[] {
+  public  chainConflict(y: number, x: number): ResponseJSON[] {
 
     let ret: ResponseJSON[] = new Array();
     let q: Array<Coord> = new Array();
@@ -137,20 +140,20 @@ export class ButtonHandler {
     return ret;
   }
 
-  calculAroundMineNumberOfCell(y: number, x: number): number {
+  public calculAroundMineNumberOfCell(y: number, x: number): number {
 
     let ret: number = 0;
     for (let i: number = y - 1; i <= y + 1; i++) {
       for (let j: number = x - 1; j <= x + 1; j++) {
         if (this.checkOutofRange(i, j)) continue;
-        if (this.board[y][x].mine === true)
+        if (this.board[y][x].mine === 1)
           ret++;
       }
     }
     return ret;
   }
 
-  setAroundMineNumberOfCell() {
+  public  setAroundMineNumberOfCell() {
 
     const row: number = this.row;
     const col: number = this.col;
@@ -162,7 +165,7 @@ export class ButtonHandler {
     }
   }
 
-  checkOutofRange(y: number, x: number): boolean {         // 범위 밖이면 true
+  public checkOutofRange(y: number, x: number): boolean {         // 범위 밖이면 true
     return y < 0 || x < 0 || y >= this.row || x >= this.col;
   }
 }
