@@ -37,7 +37,7 @@ export interface ResponseJSON {
   y: number;
   x: number;
   status: EventStatus;
-  num: number;
+  num: number | undefined;
 }
 
 export function cloneObject(obj: any) {

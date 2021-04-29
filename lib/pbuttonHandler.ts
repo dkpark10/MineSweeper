@@ -88,25 +88,19 @@ export class ButtonHandler {
     return false;
   }
 
-  public  isClickFlag(y: number, x: number): boolean {
+  public isClickFlag(y: number, x: number): boolean {
     return this.board[y][x].flag === true ? true : false;
   }
 
-  public  chainConflict(y: number, x: number): ResponseJSON[] {
+  // 연쇄충돌을 일으킨다.
+  public chainConflict(y: number, x: number): ResponseJSON[] {
 
     let ret: ResponseJSON[] = new Array();
     let q: Array<Coord> = new Array();
-    const cellNumber: number = this.board[y][x].aroundNumber;
     
     q.push({ y: y, x: x });
     this.board[y][x].visited = true;
-    ret.push(
-      {
-        y: y,
-        x: x, 
-        status: cellNumber ? EventStatus.NUMBERCELL : EventStatus.DISABLED, 
-        num : cellNumber
-      });
+    ret.push({ y: y, x: x, status: EventStatus.DISABLED, num: undefined });
     
     while (q.length) {
 
@@ -122,20 +116,30 @@ export class ButtonHandler {
         if(this.checkOutofRange(nexty, nextx)) continue;
 
         if (this.board[y][x].aroundNumber === 0 && this.board[y][x].visited !== false) {
-          
-          const nextCellNumber: number = this.board[nexty][nextx].aroundNumber;
-          ret.push(
-            {
-              y: nexty,
-              x: nextx, 
-              status: nextCellNumber ? EventStatus.NUMBERCELL : EventStatus.DISABLED, 
-              num : nextCellNumber
-            });
+          ret.push({ y: nexty, x: nextx, status: EventStatus.DISABLED, num: undefined });
           this.board[nexty][nextx].visited = true;
           q.push({ y: nexty, x: nextx });
         }
       }
     }
+
+    ret.map((element: ResponseJSON) => {
+      
+      const y: number = element.y;
+      const x: number = element.x;
+
+      for (let dir: number = 0; dir < 8; dir++) {
+        
+        const nexty: number = y + this.directionY[dir];
+        const nextx: number = x + this.directionX[dir];
+        
+        if(this.checkOutofRange(nexty, nextx)) continue;
+        if(this.board[nexty][nextx].visited === true) continue;
+
+        
+        this.board[nexty][nextx].visited = true;        
+      }
+    });
 
     return ret;
   }
