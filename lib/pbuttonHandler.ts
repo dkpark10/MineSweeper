@@ -132,12 +132,13 @@ export class ButtonHandler {
         
         const nexty: number = y + this.directionY[dir];
         const nextx: number = x + this.directionX[dir];
+        const numOfCell: number = this.board[nexty][nextx].aroundNumber;
         
         if(this.checkOutofRange(nexty, nextx)) continue;
         if(this.board[nexty][nextx].visited === true) continue;
-
-        
+   
         this.board[nexty][nextx].visited = true;        
+        ret.push({ y: nexty, x: nextx, status: EventStatus.NUMBERCELL, num: numOfCell });
       }
     });
 

@@ -31,9 +31,12 @@ router.get('/', function (request: Request, response: Response, nextfunction: Ne
     board: tempBoard
   };
 
+  // 싱글톤 
   buttonHandler = ButtonHandler.getInstance(mineData);
+  
   let responseBoard: number[][];
   if (request.session.mine === undefined) {
+    console.log('들어와??????????????//');
     buttonHandler.plantMine();
 
     // 지뢰밭 배열 추출
@@ -67,7 +70,7 @@ router.post('/leftClickHandle', (request: Request, response: Response, nextfunct
     response.status(200).json(responseJson);
   }
   else{
-    
+    buttonHandler.chainConflict(coord.y, coord.x);
   }
   
 });

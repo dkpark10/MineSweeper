@@ -22,9 +22,11 @@ router.get('/', function (request, response, nextfunction) {
         extraCell: (ptdifficulty_1.test.row * ptdifficulty_1.test.col) - ptdifficulty_1.test.numberOfMine,
         board: tempBoard
     };
+    // 싱글톤 
     buttonHandler = pbuttonHandler_1.ButtonHandler.getInstance(mineData);
     var responseBoard;
     if (request.session.mine === undefined) {
+        console.log('들어와??????????????//');
         buttonHandler.plantMine();
         // 지뢰밭 배열 추출
         responseBoard = mineData.board.map(function (ele1) {
@@ -44,6 +46,11 @@ router.post('/leftClickHandle', function (request, response, nextfunction) {
     }
     else if (buttonHandler.isClickMine(coord.y, coord.x)) {
         responseJson = { y: coord.y, x: coord.x, status: commonutility_1.EventStatus.END, num: -1 };
+        response.status(200).json(responseJson);
+    }
+    else if (buttonHandler.getBoard()[coord.y][coord.x].aroundNumber > 0) {
+        var numOfCell = buttonHandler.getBoard()[coord.y][coord.x].aroundNumber;
+        responseJson = { y: coord.y, x: coord.x, status: commonutility_1.EventStatus.NUMBERCELL, num: numOfCell };
         response.status(200).json(responseJson);
     }
     else {
