@@ -28,6 +28,7 @@ router.get('/', function (request, response, nextfunction) {
     if (request.session.mine === undefined) {
         console.log('들어와??????????????//');
         buttonHandler.plantMine();
+        buttonHandler.setAroundMineNumberOfCell();
         // 지뢰밭 배열 추출
         responseBoard = mineData.board.map(function (ele1) {
             return ele1.map(function (ele2) { return ele2.mine; });

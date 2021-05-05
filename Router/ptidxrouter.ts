@@ -36,8 +36,8 @@ router.get('/', function (request: Request, response: Response, nextfunction: Ne
   
   let responseBoard: number[][];
   if (request.session.mine === undefined) {
-    console.log('들어와??????????????//');
     buttonHandler.plantMine();
+    buttonHandler.setAroundMineNumberOfCell();
 
     // 지뢰밭 배열 추출
     responseBoard = mineData.board.map((ele1: MineBoard[]) => {
@@ -74,4 +74,5 @@ router.post('/leftClickHandle', (request: Request, response: Response, nextfunct
   }
   
 });
+
 export = router;

@@ -3,6 +3,9 @@ window.onload = function () {
     document.addEventListener('contextmenu', function (e) {
         e.preventDefault();
     });
+    document.addEventListener('auxclick', function (e) {
+        e.preventDefault();
+    });
     for (var i = 0; i < 5; i++) {
         for (var j = 0; j < 5; j++) {
             var buttonID = "buttonCell" + i + "?" + j;
@@ -17,9 +20,9 @@ var cellid = 'buttonCell';
 var colorofButtonNumber = [null, '#FF7388', '#614BF4', '##FFFF35', '#DC1C38', '#7EEE62', '#0DEBEB', '#A566F8', '#A9350B'];
 var mouseEvent;
 (function (mouseEvent) {
-    mouseEvent[mouseEvent["LEFTCLICK"] = 0] = "LEFTCLICK";
-    mouseEvent[mouseEvent["MIDDLECLICK"] = 1] = "MIDDLECLICK";
-    mouseEvent[mouseEvent["RIGHTCLICK"] = 2] = "RIGHTCLICK";
+    mouseEvent[mouseEvent["LEFTCLICK"] = 1] = "LEFTCLICK";
+    mouseEvent[mouseEvent["MIDDLECLICK"] = 2] = "MIDDLECLICK";
+    mouseEvent[mouseEvent["RIGHTCLICK"] = 3] = "RIGHTCLICK";
 })(mouseEvent || (mouseEvent = {}));
 ;
 var EventStatus;
@@ -37,9 +40,8 @@ function buttonIDparsing(buttonId) {
 }
 function buttonClickEvent(e) {
     var requestCoord = buttonIDparsing(this.id);
+    console.log(requestCoord);
     var xhr = new XMLHttpRequest();
-    console.log(`${e.which}, ${mouseEvent.LEFTCLICK}`);
-
     if (e.which === mouseEvent.LEFTCLICK) {
         xhr.open('POST', '/leftClickHandle');
         xhr.setRequestHeader('Content-Type', 'application/json');

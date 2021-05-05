@@ -4,6 +4,10 @@ window.onload = function () {
   document.addEventListener('contextmenu', function(e : MouseEvent){   // 오른쪽 마우스 막음
     e.preventDefault();
   });
+
+  document.addEventListener('auxclick', function (e) {        // 휠클릭 막음
+    e.preventDefault();
+});
   
   for (let i: number = 0; i < 5; i++) {
     for (let j: number = 0; j < 5; j++) {
@@ -22,7 +26,7 @@ const colorofButtonNumber: [null, string, string, string, string, string, string
   [null, '#FF7388', '#614BF4', '##FFFF35', '#DC1C38', '#7EEE62', '#0DEBEB', '#A566F8', '#A9350B'];
 
 enum mouseEvent {
-  LEFTCLICK,
+  LEFTCLICK = 1,
   MIDDLECLICK,
   RIGHTCLICK
 };
@@ -61,11 +65,10 @@ function buttonClickEvent(this: HTMLButtonElement, e: MouseEvent) {
 
   if (e.which === mouseEvent.LEFTCLICK) {
 
-    xhr.open('POST', '/leftClickHandle');
+    xhr.open('post', '/leftClickHandle');
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(requestCoord));
 
-    console.log('??????/1111111');
     xhr.addEventListener('load', () => {
 
       console.log('??????/22222222');

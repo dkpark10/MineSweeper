@@ -151,7 +151,7 @@ export class ButtonHandler {
     for (let i: number = y - 1; i <= y + 1; i++) {
       for (let j: number = x - 1; j <= x + 1; j++) {
         if (this.checkOutofRange(i, j)) continue;
-        if (this.board[y][x].mine === 1)
+        if (this.board[i][j].mine === 1)
           ret++;
       }
     }
