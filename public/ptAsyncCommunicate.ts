@@ -1,18 +1,17 @@
 'use strict';
-window.onload = function () {
 
-  document.addEventListener('contextmenu', function(e : MouseEvent){   // 오른쪽 마우스 막음
+window.onload = function () {
+  document.addEventListener('contextmenu', function (e: MouseEvent) {   // 오른쪽 마우스 막음
+    e.preventDefault();
+  });
+  document.addEventListener('auxclick', function (e) {        // 휠클릭 막음
     e.preventDefault();
   });
 
-  document.addEventListener('auxclick', function (e) {        // 휠클릭 막음
-    e.preventDefault();
-});
-  
   for (let i: number = 0; i < 5; i++) {
     for (let j: number = 0; j < 5; j++) {
       const buttonID = `buttonCell${i}?${j}`;
-      const buttonElement : HTMLButtonElement = document.getElementById(buttonID) as HTMLButtonElement;
+      const buttonElement: HTMLButtonElement = document.getElementById(buttonID) as HTMLButtonElement;
       buttonElement.addEventListener('mousedown', buttonClickEvent);
     }
   }
@@ -27,7 +26,7 @@ const colorofButtonNumber: [null, string, string, string, string, string, string
 
 enum mouseEvent {
   LEFTCLICK = 1,
-  MIDDLECLICK,
+  WHEELCLICK,
   RIGHTCLICK
 };
 
@@ -49,7 +48,7 @@ interface ResponseJSON {
   y: number;
   x: number;
   status: EventStatus;
-  num: number | undefined;
+  num: number;
 }
 
 function buttonIDparsing(buttonId: string): Coord {
@@ -57,7 +56,7 @@ function buttonIDparsing(buttonId: string): Coord {
   return { y: Number(coord[0]), x: Number(coord[1]) };
 }
 
-
+// 버튼클릭 콜백이벤트 1: 자기자신 2: 마우스 이벤트를 디폴트로 받음
 function buttonClickEvent(this: HTMLButtonElement, e: MouseEvent) {
 
   const requestCoord: Coord = buttonIDparsing(this.id as string);
@@ -65,28 +64,95 @@ function buttonClickEvent(this: HTMLButtonElement, e: MouseEvent) {
 
   if (e.which === mouseEvent.LEFTCLICK) {
 
-    xhr.open('post', '/leftClickHandle');
+    xhr.open('post', '/leftclickhandle');
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(requestCoord));
+    xhr.addEventListener('load', leftClickHandleling);
+  }
+  else if (e.which === mouseEvent.RIGHTCLICK) {
+    
+    xhr.open('post', '/rightclickhandle');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify(requestCoord));
+    xhr.addEventListener('load', rightClickHandleling);
+  }
+  else if(e.which === mouseEvent.WHEELCLICK){
 
-    xhr.addEventListener('load', () => {
+    xhr.open('post', '/wheelclickhandle');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify(requestCoord));
+    xhr.addEventListener('load', wheelClickHandleling);
+  }
+  else {
+    ;
+  }
+}
 
-      console.log('??????/22222222');
 
-      const responseData: ResponseJSON = JSON.parse(xhr.responseText);
-      if (responseData.status === EventStatus.END) {
-        // to do...
-        console.log('click mine;;;;');
-      } else if (responseData.status === EventStatus.NOTHING) {
-        ;
-      } else if (responseData.status === EventStatus.NUMBERCELL) {
-        const y: number = responseData.y;
-        const x: number = responseData.x;
-        const num: number = responseData.num as number;
-        const buttonCell = document.getElementById(`${cellid}${y}?${x}`) as HTMLButtonElement;
+function leftClickHandleling(this: XMLHttpRequest) {
+  
+  const responseData: ResponseJSON[] = JSON.parse(this.responseText).responsedata;
+
+  responseData.forEach((element: ResponseJSON) => {
+    if (element.status === EventStatus.END) {
+      // to do...
+      console.log('click mine;;;;');
+    } else if (element.status === EventStatus.NOTHING) {
+      ;
+    } else {
+      const y: number = element.y;
+      const x: number = element.x;
+      const num: number = element.num;
+      const buttonCell = document.getElementById(`${cellid}${y}?${x}`) as HTMLButtonElement;
+
+      if (element.status === EventStatus.DISABLED) {
+        buttonCell.disabled = true;
+      } else if (element.status === EventStatus.NUMBERCELL) {
         buttonCell.style.color = colorofButtonNumber[num] as string;
         buttonCell.innerText = num.toString();
       }
-    });
+    }
+  });
+}
+
+
+function rightClickHandleling(this: XMLHttpRequest) {
+  
+  const responseData: ResponseJSON = JSON.parse(this.responseText);
+  const y: number = responseData.y;
+  const x: number = responseData.x;
+  const buttonCell = document.getElementById(`${cellid}${y}?${x}`) as HTMLButtonElement;
+  if (responseData.status === EventStatus.SETFLAG) {
+    buttonCell.innerHTML = '<img src = "flag.png"/>';
   }
+  else if (responseData.status === EventStatus.RELIVEFLAG) {
+    buttonCell.innerHTML = '';
+  }
+}
+
+
+function wheelClickHandleling(this: XMLHttpRequest) {
+  
+  const responseData: ResponseJSON[] = JSON.parse(this.responseText).responsedata;
+
+  responseData.forEach((element: ResponseJSON) => {
+    if (element.status === EventStatus.END) {
+      // to do...
+      console.log('click mine;;;;');
+    } else if (element.status === EventStatus.NOTHING) {
+      ;
+    } else {
+      const y: number = element.y;
+      const x: number = element.x;
+      const num: number = element.num;
+      const buttonCell = document.getElementById(`${cellid}${y}?${x}`) as HTMLButtonElement;
+
+      if (element.status === EventStatus.DISABLED) {
+        buttonCell.disabled = true;
+      } else if (element.status === EventStatus.NUMBERCELL) {
+        buttonCell.style.color = colorofButtonNumber[num] as string;
+        buttonCell.innerText = num.toString();
+      }
+    }
+  }); 
 }

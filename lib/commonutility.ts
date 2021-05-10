@@ -9,7 +9,7 @@ export interface Coord {
   x: number;
 }
 
-export interface MineBoard {
+export interface  MineBoard {
   mine: number;
   flag: boolean;
   visited: boolean;
@@ -37,7 +37,7 @@ export interface ResponseJSON {
   y: number;
   x: number;
   status: EventStatus;
-  num: number | undefined;
+  num: number;
 }
 
 export function cloneObject(obj: any) {

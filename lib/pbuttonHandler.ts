@@ -73,7 +73,6 @@ export class ButtonHandler {
       this.board[y][x].flag = false;
       ret = { y: y, x: x, status: EventStatus.RELIVEFLAG, num: 0 };
     }
-
     return ret;
   }
 
@@ -100,7 +99,7 @@ export class ButtonHandler {
     
     q.push({ y: y, x: x });
     this.board[y][x].visited = true;
-    ret.push({ y: y, x: x, status: EventStatus.DISABLED, num: undefined });
+    ret.push({ y: y, x: x, status: EventStatus.DISABLED, num: -1 });
     
     while (q.length) {
 
@@ -114,9 +113,10 @@ export class ButtonHandler {
         const nextx: number = currentx + this.directionX[dir];
 
         if(this.checkOutofRange(nexty, nextx)) continue;
+        if(this.board[nexty][nextx].flag === true) continue;
 
-        if (this.board[y][x].aroundNumber === 0 && this.board[y][x].visited !== false) {
-          ret.push({ y: nexty, x: nextx, status: EventStatus.DISABLED, num: undefined });
+        if (this.board[nexty][nextx].aroundNumber === 0 && this.board[nexty][nextx].visited === false) {
+          ret.push({ y: nexty, x: nextx, status: EventStatus.DISABLED, num: -1 });
           this.board[nexty][nextx].visited = true;
           q.push({ y: nexty, x: nextx });
         }
@@ -132,10 +132,12 @@ export class ButtonHandler {
         
         const nexty: number = y + this.directionY[dir];
         const nextx: number = x + this.directionX[dir];
-        const numOfCell: number = this.board[nexty][nextx].aroundNumber;
         
         if(this.checkOutofRange(nexty, nextx)) continue;
+        if(this.board[nexty][nextx].flag === true) continue;
         if(this.board[nexty][nextx].visited === true) continue;
+
+        const numOfCell: number = this.board[nexty][nextx].aroundNumber;
    
         this.board[nexty][nextx].visited = true;        
         ret.push({ y: nexty, x: nextx, status: EventStatus.NUMBERCELL, num: numOfCell });
@@ -143,6 +145,64 @@ export class ButtonHandler {
     });
 
     return ret;
+  }
+
+  public wheelClickHandle(y: number, x:number): ResponseJSON[] {
+
+    let ret: ResponseJSON[] = new Array();
+
+    // 휠클릭했을 때 방문한곳과, 깃발이 없어야 한다.
+    if(this.board[y][x].flag === true && this.board[y][x].visited !== false){
+      return [{ y: y, x: x, status: EventStatus.NOTHING, num: -1 }];
+    }
+
+    // 게임오버
+    if(this.isRightSetFlag(y,x) === false){
+      return [{ y: y, x: x, status: EventStatus.END, num: -1 }];
+    }
+
+    for(let i:number = y - 1; i<= y + 1; i++){
+      for(let j:number = x - 1; j<= x + 1; j++){
+
+        if (i == y && x == j) continue;
+        if(this.checkOutofRange(i,j)) continue;
+
+        if(this.board[i][j].visited === true || this.board[i][j].flag === true) 
+          continue;
+
+        if(this.board[i][j].aroundNumber > 0){
+          const numbercell: number = this.board[i][j].aroundNumber;
+          ret.push({ y: i, x: j, status: EventStatus.NUMBERCELL, num: numbercell });
+        }
+        else {
+          ret = ret.concat(this.chainConflict(i,j));
+        }
+      }
+    }
+
+    return ret;
+  }
+
+  public isRightSetFlag(y: number, x: number): boolean {
+    
+    let flagcnt:number = 0;
+    const aroundNumberofCell :number = this.board[y][x].aroundNumber;
+
+    for(let i:number = y - 1; i<= y + 1; i++){
+      for(let j:number = x - 1; j<= x + 1; j++){
+
+        if(i == y && j == x) continue;
+        if(this.checkOutofRange(i,j)) continue;
+
+        if(this.board[i][j].visited === true) continue;
+        
+        if(this.board[i][j].flag === true && this.board[i][j].mine === 1){
+          flagcnt++;
+        }
+      }
+    }
+
+    return flagcnt === aroundNumberofCell ? true : false;
   }
 
   public calculAroundMineNumberOfCell(y: number, x: number): number {

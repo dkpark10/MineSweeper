@@ -33,7 +33,7 @@ app.use('/', idxrouter);
 // app.use('/ranking', rankrouter);
 
 app.use((request: Request, response:Response, next: NextFunction) => {
-  response.status(404).send('Not Found');
+  response.render("notfound", {});
 })
 
 app.use((error: Error, request: Request, response: Response, next: NextFunction) => {

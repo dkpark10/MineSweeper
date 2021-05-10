@@ -24,7 +24,7 @@ app.use(express.static(__dirname + '/public'));
 app.use('/', idxrouter);
 // app.use('/ranking', rankrouter);
 app.use(function (request, response, next) {
-    response.status(404).send('Not Found');
+    response.render("notfound", {});
 });
 app.use(function (error, request, response, next) {
     console.error(error.stack);

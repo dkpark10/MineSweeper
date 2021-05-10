@@ -20,15 +20,13 @@ router.get('/', function (request: Request, response: Response, nextfunction: Ne
     aroundNumber: 0
   };
 
-  const tempBoard: MineBoard[][] = Array.from({ length: test.row }, () => {})
-    .map(() => Array.from({ length: test.col }, () => cloneObject(mineBoard))); 
-
   const mineData: MineData = {
     row: test.row,
     col: test.col,
     numberOfMine: test.numberOfMine,
     extraCell: (test.row * test.col) - test.numberOfMine,
-    board: tempBoard
+    board: Array.from({ length: test.row }, () => {})
+          .map(() => Array.from({ length: test.col }, () => cloneObject(mineBoard)))
   };
 
   // 싱글톤 
@@ -38,41 +36,62 @@ router.get('/', function (request: Request, response: Response, nextfunction: Ne
   if (request.session.mine === undefined) {
     buttonHandler.plantMine();
     buttonHandler.setAroundMineNumberOfCell();
-
-    // 지뢰밭 배열 추출
-    responseBoard = mineData.board.map((ele1: MineBoard[]) => {
-      return ele1.map((ele2: MineBoard) => ele2.mine);
-    });
-
-    request.session.mine = mineData;
-    response.render("index", { mine: responseBoard });
   }
+
+  // 지뢰밭 배열 추출
+  responseBoard = mineData.board.map((ele1: MineBoard[]) => {
+    return ele1.map((ele2: MineBoard) => ele2.mine);
+  });
+
+  request.session.mine = mineData;
+  response.render("index", { row: test.row, col: test.col, mine: responseBoard });
 });
 
 
-router.post('/leftClickHandle', (request: Request, response: Response, nextfunction: NextFunction) => {
+router.post('/leftclickhandle', (request: Request, response: Response, nextfunction: NextFunction) => {
 
   const sess: MineData = request.session.mine;
   const coord: Coord = { y: Number(request.body.y), x: Number(request.body.x) };
+  let responseJson: { [key: string]: ResponseJSON[] | undefined } = {};
 
-  let responseJson: ResponseJSON | ResponseJSON[];
   if (buttonHandler.isClickFlag(coord.y, coord.x)) {
-    responseJson = { y: coord.y, x: coord.x, status: EventStatus.NOTHING, num: -1 } as ResponseJSON;
+    responseJson['responsedata'] =  [{ y: coord.y, x: coord.x, status: EventStatus.NOTHING, num: -1 }];
     response.status(200).json(responseJson);
   }
   else if (buttonHandler.isClickMine(coord.y, coord.x)) {
-    responseJson = { y: coord.y, x: coord.x, status: EventStatus.END, num: -1 } as ResponseJSON;
+    responseJson['responsedata'] =  [{ y: coord.y, x: coord.x, status: EventStatus.END, num: -1 }];
     response.status(200).json(responseJson);
   }
   else if(buttonHandler.getBoard()[coord.y][coord.x].aroundNumber > 0 ){
     const numOfCell: number = buttonHandler.getBoard()[coord.y][coord.x].aroundNumber;
-    responseJson = { y: coord.y, x: coord.x, status: EventStatus.NUMBERCELL, num: numOfCell } as ResponseJSON;
+    buttonHandler.getBoard()[coord.y][coord.x].visited = true;
+    responseJson['responsedata'] = [{ y: coord.y, x: coord.x, status: EventStatus.NUMBERCELL, num: numOfCell }];
     response.status(200).json(responseJson);
   }
   else{
-    buttonHandler.chainConflict(coord.y, coord.x);
+    responseJson['responsedata'] = buttonHandler.chainConflict(coord.y, coord.x);
+    response.status(200).json(responseJson);
   }
-  
+});
+
+
+router.post('/rightclickhandle', (request: Request, response: Response, nextfunction: NextFunction) => {
+
+  const sess: MineData = request.session.mine;
+  const coord: Coord = { y: Number(request.body.y), x: Number(request.body.x) };
+
+  response.status(200).json(buttonHandler.setFlag(coord.y, coord.x));
+});
+
+
+router.post('/wheelclickhandle', (request: Request, response: Response, nextfunction: NextFunction) => {
+
+  const sess: MineData = request.session.mine;
+  const coord: Coord = { y: Number(request.body.y), x: Number(request.body.x) };
+
+  let responseJson: { [key: string]: ResponseJSON[] | undefined } = {};
+  responseJson['responsedata'] = buttonHandler.wheelClickHandle(coord.y, coord.x);
+  response.status(200).json(responseJson);
 });
 
 export = router;
