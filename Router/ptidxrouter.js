@@ -13,14 +13,16 @@ router.get('/', function (request, response, nextfunction) {
         visited: false,
         aroundNumber: 0
     };
-    var mineData = {
-        row: ptdifficulty_1.test.row,
-        col: ptdifficulty_1.test.col,
-        numberOfMine: ptdifficulty_1.test.numberOfMine,
-        extraCell: (ptdifficulty_1.test.row * ptdifficulty_1.test.col) - ptdifficulty_1.test.numberOfMine,
-        board: Array.from({ length: ptdifficulty_1.test.row }, function () { })
-            .map(function () { return Array.from({ length: ptdifficulty_1.test.col }, function () { return commonutility_1.cloneObject(mineBoard); }); })
-    };
+    var mineData = (function (arg) {
+        return {
+            row: arg.row,
+            col: arg.col,
+            numberOfMine: arg.numberOfMine,
+            extraCell: (arg.row * arg.col) - arg.numberOfMine,
+            board: Array.from({ length: arg.row }, function () { })
+                .map(function () { return Array.from({ length: arg.col }, function () { return commonutility_1.cloneObject(mineBoard); }); })
+        };
+    })(ptdifficulty_1.easy);
     // 싱글톤 
     buttonHandler = pbuttonHandler_1.ButtonHandler.getInstance(mineData);
     var responseBoard;
@@ -33,7 +35,7 @@ router.get('/', function (request, response, nextfunction) {
         return ele1.map(function (ele2) { return ele2.mine; });
     });
     request.session.mine = mineData;
-    response.render("index", { row: ptdifficulty_1.test.row, col: ptdifficulty_1.test.col, mine: responseBoard });
+    response.render("index", { row: mineData.row, col: mineData.col, mine: responseBoard });
 });
 router.post('/leftclickhandle', function (request, response, nextfunction) {
     var sess = request.session.mine;

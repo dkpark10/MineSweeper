@@ -12,16 +12,20 @@
   <body>
     <!-- <a href ="/ranking">rank</a>
     <p id = 'showTime'></p> -->
-    <div id='minediv'>
-      <div class = 'buttonGroup'>
-        <% for(let i=0; i< row ; i++){ %>
-          <p>
-          <% for(let j=0; j< col ; j++){ %>
-            <button id = 'buttonCell<%=i%>?<%=j%>'><%= mine[i][j] %></button>
-          <%}%>
-          </p>
-        <%}%>
+    <div class = 'buttonGroup'>
+      <div id = 'gameinfo'>
+        <span id = 'difficulty'></span>
+        <span id = 'timer'></span>
+        <img src = '/flag.png'/>
+        <span id = 'extraflag'></span>
       </div>
+      <% for(let i=0; i< row ; i++){ %>
+        <p>
+        <% for(let j=0; j< col ; j++){ %>
+          <button id = 'buttonCell<%=i%>?<%=j%>'><%= mine[i][j] %></button>
+        <%}%>
+        </p>
+      <%}%>
     </div>
   </body>
 </html>

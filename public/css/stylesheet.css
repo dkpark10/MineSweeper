@@ -1,3 +1,10 @@
+*{
+  box-sizing: border-box; /* 패딩, 보더속성을 넓이에 반영하지 않는다. */
+}
+body{
+  width: 100%;
+  height: 100%;
+}
 .buttonGroup{
   margin: 1;
   position: absolute;
@@ -17,7 +24,6 @@
   line-height: 21px;
   font-size: 13px;
   padding-bottom: 6px;
-  display: inline-block;
 }
 .buttonGroup button:not(:last-child) {
   border-right: none;
@@ -26,10 +32,34 @@
   content: "";
   clear: both;
   display: table;
-}
+} 
 .buttonGroup button:hover:enabled {
   background-image: linear-gradient(to bottom, #E0DBE9,#FFF6FB);
 }
 .buttonGroup button:active {
   background-image: linear-gradient(to bottom, #D4F4FA,#BDBDBD);
+}
+.buttonGroup #gameinfo{
+  height: 25px;
+  margin-bottom: 0px;
+  background-color: #28366b;
+  border: solid #28366b; border-width: 3px 0px 3px;
+}
+#gameinfo #difficulty{
+  height: 95%;
+  width: 60px;
+  border: 1px solid #ff0000;
+  display: inline-block;
+}
+#gameinfo #timer{
+  height: 95%;
+  width: 40px;
+  border: 1px solid cyan;
+  display: inline-block;
+}
+#gameinfo #extraflag{
+  height: 95%;
+  width: 40px;
+  border: 1px solid darkorange;
+  display: inline-block;
 }

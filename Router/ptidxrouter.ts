@@ -20,18 +20,20 @@ router.get('/', function (request: Request, response: Response, nextfunction: Ne
     aroundNumber: 0
   };
 
-  const mineData: MineData = {
-    row: test.row,
-    col: test.col,
-    numberOfMine: test.numberOfMine,
-    extraCell: (test.row * test.col) - test.numberOfMine,
-    board: Array.from({ length: test.row }, () => {})
-          .map(() => Array.from({ length: test.col }, () => cloneObject(mineBoard)))
-  };
+  const mineData: MineData = (function (arg: difficulty) {
+    return {
+      row: arg.row,
+      col: arg.col,
+      numberOfMine: arg.numberOfMine,
+      extraCell: (arg.row * arg.col) - arg.numberOfMine,
+      board: Array.from({ length: arg.row }, () => { })
+        .map(() => Array.from({ length: arg.col }, () => cloneObject(mineBoard)))
+    }
+  })(easy);
 
   // 싱글톤 
   buttonHandler = ButtonHandler.getInstance(mineData);
-  
+
   let responseBoard: number[][];
   if (request.session.mine === undefined) {
     buttonHandler.plantMine();
@@ -44,7 +46,7 @@ router.get('/', function (request: Request, response: Response, nextfunction: Ne
   });
 
   request.session.mine = mineData;
-  response.render("index", { row: test.row, col: test.col, mine: responseBoard });
+  response.render("index", { row: mineData.row, col: mineData.col, mine: responseBoard });
 });
 
 
@@ -55,20 +57,20 @@ router.post('/leftclickhandle', (request: Request, response: Response, nextfunct
   let responseJson: { [key: string]: ResponseJSON[] | undefined } = {};
 
   if (buttonHandler.isClickFlag(coord.y, coord.x)) {
-    responseJson['responsedata'] =  [{ y: coord.y, x: coord.x, status: EventStatus.NOTHING, num: -1 }];
+    responseJson['responsedata'] = [{ y: coord.y, x: coord.x, status: EventStatus.NOTHING, num: -1 }];
     response.status(200).json(responseJson);
   }
   else if (buttonHandler.isClickMine(coord.y, coord.x)) {
-    responseJson['responsedata'] =  [{ y: coord.y, x: coord.x, status: EventStatus.END, num: -1 }];
+    responseJson['responsedata'] = [{ y: coord.y, x: coord.x, status: EventStatus.END, num: -1 }];
     response.status(200).json(responseJson);
   }
-  else if(buttonHandler.getBoard()[coord.y][coord.x].aroundNumber > 0 ){
+  else if (buttonHandler.getBoard()[coord.y][coord.x].aroundNumber > 0) {
     const numOfCell: number = buttonHandler.getBoard()[coord.y][coord.x].aroundNumber;
     buttonHandler.getBoard()[coord.y][coord.x].visited = true;
     responseJson['responsedata'] = [{ y: coord.y, x: coord.x, status: EventStatus.NUMBERCELL, num: numOfCell }];
     response.status(200).json(responseJson);
   }
-  else{
+  else {
     responseJson['responsedata'] = buttonHandler.chainConflict(coord.y, coord.x);
     response.status(200).json(responseJson);
   }
