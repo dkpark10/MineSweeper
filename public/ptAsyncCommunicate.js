@@ -6,17 +6,15 @@ window.onload = function () {
     document.addEventListener('auxclick', function (e) {
         e.preventDefault();
     });
-    for (var i = 0; i < 5; i++) {
-        for (var j = 0; j < 5; j++) {
-            var buttonID = "buttonCell" + i + "?" + j;
+    for (var i = 0; i < 10; i++) {
+        for (var j = 0; j < 10; j++) {
+            var buttonID = "buttoncell" + i + "?" + j;
             var buttonElement = document.getElementById(buttonID);
             buttonElement.addEventListener('mousedown', buttonClickEvent);
         }
     }
 };
 var isInit = true;
-var MS = 1000;
-var cellid = 'buttonCell';
 var colorofButtonNumber = [null, '#FF7388', '#614BF4', '##FFFF35', '#DC1C38', '#7EEE62', '#0DEBEB', '#A566F8', '#A9350B'];
 var mouseEvent;
 (function (mouseEvent) {
@@ -35,7 +33,7 @@ var EventStatus;
     EventStatus[EventStatus["RELIVEFLAG"] = 5] = "RELIVEFLAG";
 })(EventStatus || (EventStatus = {}));
 function buttonIDparsing(buttonId) {
-    var coord = buttonId.substr(cellid.length).split('?');
+    var coord = buttonId.substr('buttoncell'.length).split('?');
     return { y: Number(coord[0]), x: Number(coord[1]) };
 }
 // 버튼클릭 콜백이벤트 1: 자기자신 2: 마우스 이벤트를 디폴트로 받음
@@ -78,13 +76,13 @@ function leftClickHandleling() {
             var y = element.y;
             var x = element.x;
             var num = element.num;
-            var buttonCell = document.getElementById("" + cellid + y + "?" + x);
+            var buttonCellElement = document.getElementById("buttoncell" + y + "?" + x);
             if (element.status === EventStatus.DISABLED) {
-                buttonCell.disabled = true;
+                buttonCellElement.disabled = true;
             }
             else if (element.status === EventStatus.NUMBERCELL) {
-                buttonCell.style.color = colorofButtonNumber[num];
-                buttonCell.innerText = num.toString();
+                buttonCellElement.style.color = colorofButtonNumber[num];
+                buttonCellElement.innerText = num.toString();
             }
         }
     });
@@ -93,17 +91,20 @@ function rightClickHandleling() {
     var responseData = JSON.parse(this.responseText);
     var y = responseData.y;
     var x = responseData.x;
-    var buttonCell = document.getElementById("" + cellid + y + "?" + x);
+    var buttonCellElement = document.getElementById("buttoncell" + y + "?" + x);
+    var extraFlagElement = document.getElementById('extraflag');
+    var extraFlagElementValue = extraFlagElement.textContent;
     if (responseData.status === EventStatus.SETFLAG) {
-        buttonCell.innerHTML = '<img src = "flag.png"/>';
+        extraFlagElement.innerText = Number(extraFlagElementValue) - 1;
+        buttonCellElement.innerHTML = '<img src = "flag.png"/>';
     }
     else if (responseData.status === EventStatus.RELIVEFLAG) {
-        buttonCell.innerHTML = '';
+        extraFlagElement.innerText = Number(extraFlagElementValue) + 1;
+        buttonCellElement.innerHTML = '';
     }
 }
 function wheelClickHandleling() {
     var responseData = JSON.parse(this.responseText).responsedata;
-    console.log(responseData);
     responseData.forEach(function (element) {
         if (element.status === EventStatus.END) {
             // to do...
@@ -116,13 +117,13 @@ function wheelClickHandleling() {
             var y = element.y;
             var x = element.x;
             var num = element.num;
-            var buttonCell = document.getElementById("" + cellid + y + "?" + x);
+            var buttonCellElement = document.getElementById("buttoncell" + y + "?" + x);
             if (element.status === EventStatus.DISABLED) {
-                buttonCell.disabled = true;
+                buttonCellElement.disabled = true;
             }
             else if (element.status === EventStatus.NUMBERCELL) {
-                buttonCell.style.color = colorofButtonNumber[num];
-                buttonCell.innerText = num.toString();
+                buttonCellElement.style.color = colorofButtonNumber[num];
+                buttonCellElement.innerText = num.toString();
             }
         }
     });

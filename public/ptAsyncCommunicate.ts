@@ -10,7 +10,7 @@ window.onload = function () {
 
   for (let i: number = 0; i < 5; i++) {
     for (let j: number = 0; j < 5; j++) {
-      const buttonID = `buttonCell${i}?${j}`;
+      const buttonID = `buttoncell${i}?${j}`;
       const buttonElement: HTMLButtonElement = document.getElementById(buttonID) as HTMLButtonElement;
       buttonElement.addEventListener('mousedown', buttonClickEvent);
     }
@@ -18,9 +18,6 @@ window.onload = function () {
 }
 
 var isInit: boolean = true;
-const MS: number = 1000;
-const cellid: string = 'buttonCell';
-
 const colorofButtonNumber: [null, string, string, string, string, string, string, string, string] =
   [null, '#FF7388', '#614BF4', '##FFFF35', '#DC1C38', '#7EEE62', '#0DEBEB', '#A566F8', '#A9350B'];
 
@@ -52,7 +49,7 @@ interface ResponseJSON {
 }
 
 function buttonIDparsing(buttonId: string): Coord {
-  const coord: string[] = buttonId.substr(cellid.length).split('?');
+  const coord: string[] = buttonId.substr('buttoncell'.length).split('?');
   return { y: Number(coord[0]), x: Number(coord[1]) };
 }
 
@@ -103,13 +100,13 @@ function leftClickHandleling(this: XMLHttpRequest) {
       const y: number = element.y;
       const x: number = element.x;
       const num: number = element.num;
-      const buttonCell = document.getElementById(`${cellid}${y}?${x}`) as HTMLButtonElement;
+      const buttonCellElement = document.getElementById(`buttoncell${y}?${x}`) as HTMLButtonElement;
 
       if (element.status === EventStatus.DISABLED) {
-        buttonCell.disabled = true;
+        buttonCellElement.disabled = true;
       } else if (element.status === EventStatus.NUMBERCELL) {
-        buttonCell.style.color = colorofButtonNumber[num] as string;
-        buttonCell.innerText = num.toString();
+        buttonCellElement.style.color = colorofButtonNumber[num] as string;
+        buttonCellElement.innerText = num.toString();
       }
     }
   });
@@ -121,12 +118,17 @@ function rightClickHandleling(this: XMLHttpRequest) {
   const responseData: ResponseJSON = JSON.parse(this.responseText);
   const y: number = responseData.y;
   const x: number = responseData.x;
-  const buttonCell = document.getElementById(`${cellid}${y}?${x}`) as HTMLButtonElement;
+  const buttonCellElement:any = document.getElementById(`buttoncell${y}?${x}`) as HTMLButtonElement;
+  const extraFlagElement:any = document.getElementById('extraflag') as HTMLSpanElement
+  let extraFlagElementValue: string = extraFlagElement.textContent;
+
   if (responseData.status === EventStatus.SETFLAG) {
-    buttonCell.innerHTML = '<img src = "flag.png"/>';
+    extraFlagElement.innerText = Number(extraFlagElementValue) - 1;
+    buttonCellElement.innerHTML = '<img src = "flag.png"/>';
   }
   else if (responseData.status === EventStatus.RELIVEFLAG) {
-    buttonCell.innerHTML = '';
+    extraFlagElement.innerText = Number(extraFlagElementValue) + 1;
+    buttonCellElement.innerHTML = '';
   }
 }
 
@@ -145,13 +147,13 @@ function wheelClickHandleling(this: XMLHttpRequest) {
       const y: number = element.y;
       const x: number = element.x;
       const num: number = element.num;
-      const buttonCell = document.getElementById(`${cellid}${y}?${x}`) as HTMLButtonElement;
+      const buttonCellElement = document.getElementById(`buttoncell${y}?${x}`) as HTMLButtonElement;
 
       if (element.status === EventStatus.DISABLED) {
-        buttonCell.disabled = true;
+        buttonCellElement.disabled = true;
       } else if (element.status === EventStatus.NUMBERCELL) {
-        buttonCell.style.color = colorofButtonNumber[num] as string;
-        buttonCell.innerText = num.toString();
+        buttonCellElement.style.color = colorofButtonNumber[num] as string;
+        buttonCellElement.innerText = num.toString();
       }
     }
   }); 

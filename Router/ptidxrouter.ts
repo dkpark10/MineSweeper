@@ -46,7 +46,10 @@ router.get('/', function (request: Request, response: Response, nextfunction: Ne
   });
 
   request.session.mine = mineData;
-  response.render("index", { row: mineData.row, col: mineData.col, mine: responseBoard });
+  response.render("index", { row: mineData.row, 
+                            col: mineData.col, 
+                            mine: responseBoard , 
+                            numofMine: mineData.numberOfMine});
 });
 
 

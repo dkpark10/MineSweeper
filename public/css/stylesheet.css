@@ -40,26 +40,22 @@ body{
   background-image: linear-gradient(to bottom, #D4F4FA,#BDBDBD);
 }
 .buttonGroup #gameinfo{
-  height: 25px;
+  height: 29px;
   margin-bottom: 0px;
   background-color: #28366b;
   border: solid #28366b; border-width: 3px 0px 3px;
 }
-#gameinfo #difficulty{
-  height: 95%;
-  width: 60px;
-  border: 1px solid #ff0000;
-  display: inline-block;
+#gameinfocell{
+  max-width:50%;
+  height:100%;
+  margin: 0 auto;
 }
-#gameinfo #timer{
+#gameinfocell .spanelement{
   height: 95%;
-  width: 40px;
-  border: 1px solid cyan;
+  min-width: 40px;
   display: inline-block;
-}
-#gameinfo #extraflag{
-  height: 95%;
-  width: 40px;
-  border: 1px solid darkorange;
-  display: inline-block;
+  text-align: center;
+  color:white;
+  font-weight: bold;
+  font-size: 16px;
 }

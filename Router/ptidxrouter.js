@@ -35,7 +35,10 @@ router.get('/', function (request, response, nextfunction) {
         return ele1.map(function (ele2) { return ele2.mine; });
     });
     request.session.mine = mineData;
-    response.render("index", { row: mineData.row, col: mineData.col, mine: responseBoard });
+    response.render("index", { row: mineData.row,
+        col: mineData.col,
+        mine: responseBoard,
+        numofMine: mineData.numberOfMine });
 });
 router.post('/leftclickhandle', function (request, response, nextfunction) {
     var sess = request.session.mine;
