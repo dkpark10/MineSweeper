@@ -17,16 +17,16 @@
   <div class='buttonGroup'>
     <div id='gameinfo'>
       <div id='gameinfocell'>
-        <img style='margin-top:1.5px' src='/timer.png' />
+        <img src='/timer.png' />
         <span class='spanelement' id='timer'>000</span>
-        <img style='margin-top:1.5px' src='/flag.png' />
+        <img  src='/flag.png' />
         <span class='spanelement' id='extraflag'><%= numofMine %></span>
       </div>
     </div>
     <% for(let i=0; i< row ; i++){ %>
     <p style='margin-top : 10px' />
     <% for(let j=0; j< col ; j++){ %>
-    <button id='buttonCell<%=i%>?<%=j%>'><%= mine[i][j] %></button>
+    <button id='buttoncell<%=i%>?<%=j%>'><%= mine[i][j] %></button>
     <%}%>
         </p>
       <%}%>

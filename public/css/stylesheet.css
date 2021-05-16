@@ -1,3 +1,4 @@
+@import url(https:fonts.googleapis.com/css?family=Roboto:400,100,300,500);
 *{
   box-sizing: border-box; /* 패딩, 보더속성을 넓이에 반영하지 않는다. */
 }
@@ -50,12 +51,16 @@ body{
   height:100%;
   margin: 0 auto;
 }
+#gameinfocell img{
+  vertical-align: middle;
+}
 #gameinfocell .spanelement{
   height: 95%;
   min-width: 40px;
   display: inline-block;
   text-align: center;
-  color:white;
   font-weight: bold;
-  font-size: 16px;
+  color:white;
+  font-size: 14px;
+  font-family: "Roboto", sans-serif;
 }

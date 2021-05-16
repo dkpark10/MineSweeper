@@ -14,8 +14,6 @@ window.onload = function () {
         }
     }
 };
-var isInit = true;
-var colorofButtonNumber = [null, '#FF7388', '#614BF4', '##FFFF35', '#DC1C38', '#7EEE62', '#0DEBEB', '#A566F8', '#A9350B'];
 var mouseEvent;
 (function (mouseEvent) {
     mouseEvent[mouseEvent["LEFTCLICK"] = 1] = "LEFTCLICK";
@@ -32,14 +30,15 @@ var EventStatus;
     EventStatus[EventStatus["SETFLAG"] = 4] = "SETFLAG";
     EventStatus[EventStatus["RELIVEFLAG"] = 5] = "RELIVEFLAG";
 })(EventStatus || (EventStatus = {}));
-function buttonIDparsing(buttonId) {
-    var coord = buttonId.substr('buttoncell'.length).split('?');
-    return { y: Number(coord[0]), x: Number(coord[1]) };
-}
+var isFirstClick = true;
+var colorofButtonNumber = [null, '#FF7388', '#614BF4', '##FFFF35', '#DC1C38', '#7EEE62', '#0DEBEB', '#A566F8', '#A9350B'];
 // 버튼클릭 콜백이벤트 1: 자기자신 2: 마우스 이벤트를 디폴트로 받음
 function buttonClickEvent(e) {
     var requestCoord = buttonIDparsing(this.id);
     var xhr = new XMLHttpRequest();
+    if (isFirstClick) {
+        setInitialTime(new Date().getTime());
+    }
     if (e.which === mouseEvent.LEFTCLICK) {
         xhr.open('post', '/leftclickhandle');
         xhr.setRequestHeader('Content-Type', 'application/json');
@@ -61,6 +60,28 @@ function buttonClickEvent(e) {
     else {
         ;
     }
+}
+function setInitialTime(startTIme) {
+    isFirstClick = false;
+    setInterval(function () {
+        var MILLISECOND = 1000;
+        var endTime = new Date().getTime();
+        var gap = Math.floor((endTime - startTIme) / MILLISECOND);
+        var timerElement = document.getElementById('timer');
+        if (gap < 10) {
+            timerElement.innerText = "00" + gap;
+        }
+        else if (gap >= 10 && gap < 100) {
+            timerElement.innerText = "0" + gap;
+        }
+        else {
+            timerElement.innerText = "" + gap;
+        }
+    }, 1000);
+}
+function buttonIDparsing(buttonId) {
+    var coord = buttonId.substr('buttoncell'.length).split('?');
+    return { y: Number(coord[0]), x: Number(coord[1]) };
 }
 function leftClickHandleling() {
     var responseData = JSON.parse(this.responseText).responsedata;

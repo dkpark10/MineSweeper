@@ -35,17 +35,14 @@ router.get('/', function (request: Request, response: Response, nextfunction: Ne
   buttonHandler = ButtonHandler.getInstance(mineData);
 
   let responseBoard: number[][];
-  if (request.session.mine === undefined) {
-    buttonHandler.plantMine();
-    buttonHandler.setAroundMineNumberOfCell();
-  }
+  buttonHandler.plantMine();
+  buttonHandler.setAroundMineNumberOfCell();
 
   // 지뢰밭 배열 추출
   responseBoard = mineData.board.map((ele1: MineBoard[]) => {
     return ele1.map((ele2: MineBoard) => ele2.mine);
   });
 
-  request.session.mine = mineData;
   response.render("index", { row: mineData.row, 
                             col: mineData.col, 
                             mine: responseBoard , 
@@ -55,7 +52,6 @@ router.get('/', function (request: Request, response: Response, nextfunction: Ne
 
 router.post('/leftclickhandle', (request: Request, response: Response, nextfunction: NextFunction) => {
 
-  const sess: MineData = request.session.mine;
   const coord: Coord = { y: Number(request.body.y), x: Number(request.body.x) };
   let responseJson: { [key: string]: ResponseJSON[] | undefined } = {};
 
@@ -70,7 +66,10 @@ router.post('/leftclickhandle', (request: Request, response: Response, nextfunct
   else if (buttonHandler.getBoard()[coord.y][coord.x].aroundNumber > 0) {
     const numOfCell: number = buttonHandler.getBoard()[coord.y][coord.x].aroundNumber;
     buttonHandler.getBoard()[coord.y][coord.x].visited = true;
-    responseJson['responsedata'] = [{ y: coord.y, x: coord.x, status: EventStatus.NUMBERCELL, num: numOfCell }];
+    buttonHandler.setExtraCell(buttonHandler.getExtraCell() - 1);
+    
+    const eventStauts: EventStatus = buttonHandler.isGameClear() ? EventStatus.END : EventStatus.NUMBERCELL;
+    responseJson['responsedata'] = [{ y: coord.y, x: coord.x, status: eventStauts, num: numOfCell }];
     response.status(200).json(responseJson);
   }
   else {
@@ -82,7 +81,6 @@ router.post('/leftclickhandle', (request: Request, response: Response, nextfunct
 
 router.post('/rightclickhandle', (request: Request, response: Response, nextfunction: NextFunction) => {
 
-  const sess: MineData = request.session.mine;
   const coord: Coord = { y: Number(request.body.y), x: Number(request.body.x) };
 
   response.status(200).json(buttonHandler.setFlag(coord.y, coord.x));
@@ -91,7 +89,6 @@ router.post('/rightclickhandle', (request: Request, response: Response, nextfunc
 
 router.post('/wheelclickhandle', (request: Request, response: Response, nextfunction: NextFunction) => {
 
-  const sess: MineData = request.session.mine;
   const coord: Coord = { y: Number(request.body.y), x: Number(request.body.x) };
 
   let responseJson: { [key: string]: ResponseJSON[] | undefined } = {};

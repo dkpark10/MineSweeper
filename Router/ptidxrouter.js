@@ -26,22 +26,18 @@ router.get('/', function (request, response, nextfunction) {
     // 싱글톤 
     buttonHandler = pbuttonHandler_1.ButtonHandler.getInstance(mineData);
     var responseBoard;
-    if (request.session.mine === undefined) {
-        buttonHandler.plantMine();
-        buttonHandler.setAroundMineNumberOfCell();
-    }
+    buttonHandler.plantMine();
+    buttonHandler.setAroundMineNumberOfCell();
     // 지뢰밭 배열 추출
     responseBoard = mineData.board.map(function (ele1) {
         return ele1.map(function (ele2) { return ele2.mine; });
     });
-    request.session.mine = mineData;
     response.render("index", { row: mineData.row,
         col: mineData.col,
         mine: responseBoard,
         numofMine: mineData.numberOfMine });
 });
 router.post('/leftclickhandle', function (request, response, nextfunction) {
-    var sess = request.session.mine;
     var coord = { y: Number(request.body.y), x: Number(request.body.x) };
     var responseJson = {};
     if (buttonHandler.isClickFlag(coord.y, coord.x)) {
@@ -64,12 +60,10 @@ router.post('/leftclickhandle', function (request, response, nextfunction) {
     }
 });
 router.post('/rightclickhandle', function (request, response, nextfunction) {
-    var sess = request.session.mine;
     var coord = { y: Number(request.body.y), x: Number(request.body.x) };
     response.status(200).json(buttonHandler.setFlag(coord.y, coord.x));
 });
 router.post('/wheelclickhandle', function (request, response, nextfunction) {
-    var sess = request.session.mine;
     var coord = { y: Number(request.body.y), x: Number(request.body.x) };
     var responseJson = {};
     responseJson['responsedata'] = buttonHandler.wheelClickHandle(coord.y, coord.x);

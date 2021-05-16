@@ -38,6 +38,7 @@ export class ButtonHandler {
   public getBoard(): MineBoard[][] { return this.board; }
   public setExtraCell(arg: number) { this.extraCell = arg; }
   public setBoard(arg: MineBoard[][]) { this.board = arg; }
+  public isGameClear():boolean { return this.extraCell <= 0; }
 
   public plantMine() {
 
@@ -100,6 +101,7 @@ export class ButtonHandler {
     q.push({ y: y, x: x });
     this.board[y][x].visited = true;
     ret.push({ y: y, x: x, status: EventStatus.DISABLED, num: -1 });
+    let extraCell: number = this.extraCell - 1;
     
     while (q.length) {
 
@@ -116,6 +118,7 @@ export class ButtonHandler {
         if(this.board[nexty][nextx].flag === true) continue;
 
         if (this.board[nexty][nextx].aroundNumber === 0 && this.board[nexty][nextx].visited === false) {
+          extraCell--;
           ret.push({ y: nexty, x: nextx, status: EventStatus.DISABLED, num: -1 });
           this.board[nexty][nextx].visited = true;
           q.push({ y: nexty, x: nextx });
@@ -138,11 +141,17 @@ export class ButtonHandler {
         if(this.board[nexty][nextx].visited === true) continue;
 
         const numOfCell: number = this.board[nexty][nextx].aroundNumber;
+        extraCell--;
    
         this.board[nexty][nextx].visited = true;        
         ret.push({ y: nexty, x: nextx, status: EventStatus.NUMBERCELL, num: numOfCell });
       }
     });
+
+    this.extraCell = extraCell;
+    if(this.isGameClear()){
+      ret.push({ y: -1, x: -1, status: EventStatus.END, num: -1 });
+    }
 
     return ret;
   }
