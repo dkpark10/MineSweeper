@@ -1,0 +1,51 @@
+@import url(https:fonts.googleapis.com/css?family=Roboto:400,100,300,500);
+*{
+  box-sizing: border-box; /* 패딩, 보더속성을 넓이에 반영하지 않는다. */
+}
+html,body{
+  width: 100%;
+  height: 100%;
+}
+.modal{
+  position: fixed;
+  display: flex;
+  top:0; left:0;
+  width:100%;
+  height:100%;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+.modal_overlay{
+  width:100%;
+  height:100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  position: absolute;
+}
+.modal_content{
+  position: relative;
+  max-width:350px;
+  padding: 25px 50px;
+  background-color: white;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 6px 6px rgba(0,0,0,0.2);
+}
+.hidden{
+  display: none;
+}
+.modal_game_status .modal_game_over_time .modal_percentage_of_victories .modal_total_game_number{
+  font-family: "Roboto", sans-serif;
+}
+#closemodal{
+  position: relative;
+  margin-top:10px;
+  background-color: turquoise;
+  color:white;
+  font-family: "Roboto", sans-serif;
+  border-radius: 5px;
+  width:70px;
+  height: 25px;
+  padding: 0;
+  border: none;
+}

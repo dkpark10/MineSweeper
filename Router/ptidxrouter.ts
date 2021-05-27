@@ -7,11 +7,19 @@ const router: any = express.Router();
 const app: any = express();
 
 import { MineData, difficulty, MineBoard, cloneObject, Coord, ResponseJSON, EventStatus } from '../lib/commonutility';
-import { easy, normal, hard, test } from '../lib/ptdifficulty';
+import { levels } from '../lib/ptdifficulty';
 import { ButtonHandler } from '../lib/pbuttonHandler';
 let buttonHandler: ButtonHandler;
 
+
 router.get('/', function (request: Request, response: Response, nextfunction: NextFunction) {
+  response.render("main", {});
+});
+
+
+router.get('/maingame/:level', function (request: Request, response: Response, nextfunction: NextFunction) {
+
+  const level: string = request.params.level;
 
   const mineBoard: MineBoard = {
     mine: 0,
@@ -29,7 +37,7 @@ router.get('/', function (request: Request, response: Response, nextfunction: Ne
       board: Array.from({ length: arg.row }, () => { })
         .map(() => Array.from({ length: arg.col }, () => cloneObject(mineBoard)))
     }
-  })(easy);
+  })(levels[level]);
 
   // 싱글톤 
   buttonHandler = ButtonHandler.getInstance(mineData);
@@ -82,7 +90,6 @@ router.post('/leftclickhandle', (request: Request, response: Response, nextfunct
 router.post('/rightclickhandle', (request: Request, response: Response, nextfunction: NextFunction) => {
 
   const coord: Coord = { y: Number(request.body.y), x: Number(request.body.x) };
-
   response.status(200).json(buttonHandler.setFlag(coord.y, coord.x));
 });
 

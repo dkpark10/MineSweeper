@@ -2,11 +2,11 @@
 *{
   box-sizing: border-box; /* 패딩, 보더속성을 넓이에 반영하지 않는다. */
 }
-body{
+html, body{
   width: 100%;
   height: 100%;
 }
-.buttonGroup{
+.buttongroup{
   margin: 1;
   position: absolute;
   top: 50%;
@@ -14,7 +14,7 @@ body{
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
-.buttonGroup button {
+.buttongroup button {
   background-image: linear-gradient(to bottom, #FFFFFF,#E7E7E7);
   border: 1px solid #5D5D5D;
   font-weight: bold;
@@ -26,25 +26,28 @@ body{
   font-size: 13px;
   padding-bottom: 6px;
 }
-.buttonGroup button:not(:last-child) {
+.buttongroup button:not(:last-child) {
   border-right: none;
 }
-.buttonGroup:after {
+.buttongroup:after {
   content: "";
   clear: both;
   display: table;
 } 
-.buttonGroup button:hover:enabled {
+.buttongroup button:hover:enabled {
   background-image: linear-gradient(to bottom, #E0DBE9,#FFF6FB);
 }
-.buttonGroup button:active {
+.buttongroup button:active {
   background-image: linear-gradient(to bottom, #D4F4FA,#BDBDBD);
 }
-.buttonGroup #gameinfo{
+.buttongroup #gameinfo{
   height: 29px;
   margin-bottom: 0px;
   background-color: #28366b;
   border: solid #28366b; border-width: 3px 0px 3px;
+  display:flex;
+  justify-items: cneter;
+  align-items: center;
 }
 #gameinfocell{
   max-width:50%;

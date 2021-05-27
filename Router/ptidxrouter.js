@@ -7,6 +7,10 @@ var ptdifficulty_1 = require("../lib/ptdifficulty");
 var pbuttonHandler_1 = require("../lib/pbuttonHandler");
 var buttonHandler;
 router.get('/', function (request, response, nextfunction) {
+    response.render("main", {});
+});
+router.get('/maingame/:level', function (request, response, nextfunction) {
+    var level = request.params.level;
     var mineBoard = {
         mine: 0,
         flag: false,
@@ -22,7 +26,7 @@ router.get('/', function (request, response, nextfunction) {
             board: Array.from({ length: arg.row }, function () { })
                 .map(function () { return Array.from({ length: arg.col }, function () { return commonutility_1.cloneObject(mineBoard); }); })
         };
-    })(ptdifficulty_1.easy);
+    })(ptdifficulty_1.levels[level]);
     // 싱글톤 
     buttonHandler = pbuttonHandler_1.ButtonHandler.getInstance(mineData);
     var responseBoard;
@@ -51,7 +55,9 @@ router.post('/leftclickhandle', function (request, response, nextfunction) {
     else if (buttonHandler.getBoard()[coord.y][coord.x].aroundNumber > 0) {
         var numOfCell = buttonHandler.getBoard()[coord.y][coord.x].aroundNumber;
         buttonHandler.getBoard()[coord.y][coord.x].visited = true;
-        responseJson['responsedata'] = [{ y: coord.y, x: coord.x, status: commonutility_1.EventStatus.NUMBERCELL, num: numOfCell }];
+        buttonHandler.setExtraCell(buttonHandler.getExtraCell() - 1);
+        var eventStauts = buttonHandler.isGameClear() ? commonutility_1.EventStatus.END : commonutility_1.EventStatus.NUMBERCELL;
+        responseJson['responsedata'] = [{ y: coord.y, x: coord.x, status: eventStauts, num: numOfCell }];
         response.status(200).json(responseJson);
     }
     else {

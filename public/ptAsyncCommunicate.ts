@@ -11,10 +11,13 @@ window.onload = function () {
   for (let i: number = 0; i < 10; i++) {
     for (let j: number = 0; j < 10; j++) {
       const buttonID = `buttoncell${i}?${j}`;
-      const buttonElement: HTMLButtonElement = document.getElementById(buttonID) as HTMLButtonElement;
+      const buttonElement: any = document.getElementById(buttonID) as HTMLButtonElement;
       buttonElement.addEventListener('mousedown', buttonClickEvent);
     }
   }
+
+  const closeModalButton: any = document.getElementById('closemodal') as HTMLButtonElement;
+  closeModalButton.addEventListener('click', closeModal);
 }
 
 enum mouseEvent {
@@ -46,6 +49,7 @@ interface ResponseJSON {
 
 var isFirstClick: boolean = true;
 var timeGap:number;
+var timerID: any;
 const colorofButtonNumber: [null, string, string, string, string, string, string, string, string] =
   [null, '#FF7388', '#614BF4', '##FFFF35', '#DC1C38', '#7EEE62', '#0DEBEB', '#A566F8', '#A9350B'];
 
@@ -62,6 +66,7 @@ function buttonClickEvent(this: HTMLButtonElement, e: MouseEvent) {
 
   if (e.which === mouseEvent.LEFTCLICK) {
 
+    console.log('input left click');
     xhr.open('post', '/leftclickhandle');
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(requestCoord));
@@ -69,6 +74,7 @@ function buttonClickEvent(this: HTMLButtonElement, e: MouseEvent) {
   }
   else if (e.which === mouseEvent.RIGHTCLICK) {
 
+    console.log('input right click');
     xhr.open('post', '/rightclickhandle');
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(requestCoord));
@@ -76,6 +82,7 @@ function buttonClickEvent(this: HTMLButtonElement, e: MouseEvent) {
   }
   else if (e.which === mouseEvent.WHEELCLICK) {
 
+    console.log('input wheel click');
     xhr.open('post', '/wheelclickhandle');
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(requestCoord));
@@ -89,9 +96,10 @@ function buttonClickEvent(this: HTMLButtonElement, e: MouseEvent) {
 
 function setInitialTime(startTIme: number) {
   isFirstClick = false;
+  const MILLISECOND:number = 1000;
 
-  setInterval(() => {
-    const MILLISECOND:number = 1000;
+  timerID = setInterval(() => {
+    
     const endTime: number = new Date().getTime();
     timeGap = Math.floor((endTime - startTIme) / MILLISECOND);
     const timerElement: any = document.getElementById('timer') as HTMLSpanElement;
@@ -105,7 +113,7 @@ function setInitialTime(startTIme: number) {
     }else{
       timerElement.innerText = `${timeGap}`;
     }
-  }, 1000);
+  }, MILLISECOND);
 }
 
 
@@ -117,12 +125,14 @@ function buttonIDparsing(buttonId: string): Coord {
 
 function leftClickHandleling(this: XMLHttpRequest) {
 
+  console.log('output left click');
+
   const responseData: ResponseJSON[] = JSON.parse(this.responseText).responsedata;
 
   responseData.forEach((element: ResponseJSON) => {
     if (element.status === EventStatus.END) {
-      // to do...
-      console.log('click mine;;;;');
+      clearInterval(timerID);
+      openModal();
     } else if (element.status === EventStatus.NOTHING) {
       ;
     } else {
@@ -144,6 +154,8 @@ function leftClickHandleling(this: XMLHttpRequest) {
 
 function rightClickHandleling(this: XMLHttpRequest) {
 
+  console.log('output right click');
+
   const responseData: ResponseJSON = JSON.parse(this.responseText);
   const y: number = responseData.y; const x: number = responseData.x;
   const buttonCellElement: any = document.getElementById(`buttoncell${y}?${x}`) as HTMLButtonElement;
@@ -152,7 +164,8 @@ function rightClickHandleling(this: XMLHttpRequest) {
 
   if (responseData.status === EventStatus.SETFLAG) {
     extraFlagElement.innerText = Number(extraFlagElementValue) - 1;
-    buttonCellElement.innerHTML = '<img src = "flag.png"/>';
+    buttonCellElement.innerHTML = '<img src = "/flag.png"/>';
+    // buttonCellElement.innerHTML = '<img src = "flag.png"/>';
   }
   else if (responseData.status === EventStatus.RELIVEFLAG) {
     extraFlagElement.innerText = Number(extraFlagElementValue) + 1;
@@ -163,6 +176,8 @@ function rightClickHandleling(this: XMLHttpRequest) {
 
 function wheelClickHandleling(this: XMLHttpRequest) {
 
+  console.log('output wheel click');
+
   const responseData: ResponseJSON[] = JSON.parse(this.responseText).responsedata;
 
   responseData.forEach((element: ResponseJSON) => {
@@ -172,7 +187,7 @@ function wheelClickHandleling(this: XMLHttpRequest) {
     } else if (element.status === EventStatus.NOTHING) {
       ;
     } else {
-      const y: number = element.y;
+      const y: number = element.y; 
       const x: number = element.x;
       const num: number = element.num;
       const buttonCellElement = document.getElementById(`buttoncell${y}?${x}`) as HTMLButtonElement;
@@ -185,4 +200,17 @@ function wheelClickHandleling(this: XMLHttpRequest) {
       }
     }
   });
+}
+
+
+function openModal(){
+
+  const modal: any = document.querySelector('.modal') as HTMLDivElement;
+  modal.classList.remove('hidden');
+}
+
+
+function closeModal(){
+  const modal: any = document.querySelector('.modal') as HTMLDivElement;
+  modal.classList.add('hidden');
 }

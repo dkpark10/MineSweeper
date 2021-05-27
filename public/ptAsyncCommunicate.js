@@ -13,6 +13,8 @@ window.onload = function () {
             buttonElement.addEventListener('mousedown', buttonClickEvent);
         }
     }
+    var closeModalButton = document.getElementById('closemodal');
+    closeModalButton.addEventListener('click', closeModal);
 };
 var mouseEvent;
 (function (mouseEvent) {
@@ -31,6 +33,8 @@ var EventStatus;
     EventStatus[EventStatus["RELIVEFLAG"] = 5] = "RELIVEFLAG";
 })(EventStatus || (EventStatus = {}));
 var isFirstClick = true;
+var timeGap;
+var timerID;
 var colorofButtonNumber = [null, '#FF7388', '#614BF4', '##FFFF35', '#DC1C38', '#7EEE62', '#0DEBEB', '#A566F8', '#A9350B'];
 // 버튼클릭 콜백이벤트 1: 자기자신 2: 마우스 이벤트를 디폴트로 받음
 function buttonClickEvent(e) {
@@ -40,18 +44,21 @@ function buttonClickEvent(e) {
         setInitialTime(new Date().getTime());
     }
     if (e.which === mouseEvent.LEFTCLICK) {
+        console.log('input left click');
         xhr.open('post', '/leftclickhandle');
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify(requestCoord));
         xhr.addEventListener('load', leftClickHandleling);
     }
     else if (e.which === mouseEvent.RIGHTCLICK) {
+        console.log('input right click');
         xhr.open('post', '/rightclickhandle');
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify(requestCoord));
         xhr.addEventListener('load', rightClickHandleling);
     }
     else if (e.which === mouseEvent.WHEELCLICK) {
+        console.log('input wheel click');
         xhr.open('post', '/wheelclickhandle');
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify(requestCoord));
@@ -63,32 +70,36 @@ function buttonClickEvent(e) {
 }
 function setInitialTime(startTIme) {
     isFirstClick = false;
-    setInterval(function () {
-        var MILLISECOND = 1000;
+    var MILLISECOND = 1000;
+    timerID = setInterval(function () {
         var endTime = new Date().getTime();
-        var gap = Math.floor((endTime - startTIme) / MILLISECOND);
+        timeGap = Math.floor((endTime - startTIme) / MILLISECOND);
         var timerElement = document.getElementById('timer');
-        if (gap < 10) {
-            timerElement.innerText = "00" + gap;
+        if (timeGap < 10) {
+            timerElement.innerText = "00" + timeGap;
         }
-        else if (gap >= 10 && gap < 100) {
-            timerElement.innerText = "0" + gap;
+        else if (timeGap >= 10 && timeGap < 100) {
+            timerElement.innerText = "0" + timeGap;
+        }
+        else if (timeGap >= 999) {
+            timerElement.innerText = '999';
         }
         else {
-            timerElement.innerText = "" + gap;
+            timerElement.innerText = "" + timeGap;
         }
-    }, 1000);
+    }, MILLISECOND);
 }
 function buttonIDparsing(buttonId) {
     var coord = buttonId.substr('buttoncell'.length).split('?');
     return { y: Number(coord[0]), x: Number(coord[1]) };
 }
 function leftClickHandleling() {
+    console.log('output left click');
     var responseData = JSON.parse(this.responseText).responsedata;
     responseData.forEach(function (element) {
         if (element.status === EventStatus.END) {
-            // to do...
-            console.log('click mine;;;;');
+            clearInterval(timerID);
+            openModal();
         }
         else if (element.status === EventStatus.NOTHING) {
             ;
@@ -109,6 +120,7 @@ function leftClickHandleling() {
     });
 }
 function rightClickHandleling() {
+    console.log('output right click');
     var responseData = JSON.parse(this.responseText);
     var y = responseData.y;
     var x = responseData.x;
@@ -117,7 +129,7 @@ function rightClickHandleling() {
     var extraFlagElementValue = extraFlagElement.textContent;
     if (responseData.status === EventStatus.SETFLAG) {
         extraFlagElement.innerText = Number(extraFlagElementValue) - 1;
-        buttonCellElement.innerHTML = '<img src = "flag.png"/>';
+        buttonCellElement.innerHTML = '<img src = "/flag.png"/>';
     }
     else if (responseData.status === EventStatus.RELIVEFLAG) {
         extraFlagElement.innerText = Number(extraFlagElementValue) + 1;
@@ -125,6 +137,7 @@ function rightClickHandleling() {
     }
 }
 function wheelClickHandleling() {
+    console.log('output wheel click');
     var responseData = JSON.parse(this.responseText).responsedata;
     responseData.forEach(function (element) {
         if (element.status === EventStatus.END) {
@@ -148,4 +161,12 @@ function wheelClickHandleling() {
             }
         }
     });
+}
+function openModal() {
+    var modal = document.querySelector('.modal');
+    modal.classList.remove('hidden');
+}
+function closeModal() {
+    var modal = document.querySelector('.modal');
+    modal.classList.add('hidden');
 }
