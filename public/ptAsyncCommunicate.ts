@@ -1,25 +1,5 @@
 'use strict';
 
-window.onload = function () {
-  document.addEventListener('contextmenu', function (e: MouseEvent) {   // 오른쪽 마우스 막음
-    e.preventDefault();
-  });
-  document.addEventListener('auxclick', function (e) {        // 휠클릭 막음
-    e.preventDefault();
-  });
-
-  for (let i: number = 0; i < 10; i++) {
-    for (let j: number = 0; j < 10; j++) {
-      const buttonID = `buttoncell${i}?${j}`;
-      const buttonElement: any = document.getElementById(buttonID) as HTMLButtonElement;
-      buttonElement.addEventListener('mousedown', buttonClickEvent);
-    }
-  }
-
-  const closeModalButton: any = document.getElementById('closemodal') as HTMLButtonElement;
-  closeModalButton.addEventListener('click', closeModal);
-}
-
 enum mouseEvent {
   LEFTCLICK = 1,
   WHEELCLICK,
@@ -47,11 +27,49 @@ interface ResponseJSON {
   num: number;
 }
 
+
+window.onload = function () {
+  document.addEventListener('contextmenu', function (e: MouseEvent) {   // 오른쪽 마우스 막음
+    e.preventDefault();
+  });
+  document.addEventListener('auxclick', function (e) {        // 휠클릭 막음
+    e.preventDefault();
+  });
+
+  const xhr: XMLHttpRequest = new XMLHttpRequest();
+
+  xhr.open('post', '/getsessionlevel');
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({}));
+  xhr.addEventListener('load', setButtonEvent);
+
+  const closeModalButton: any = document.getElementById('closemodal') as HTMLButtonElement;
+  closeModalButton.addEventListener('click', closeModal);
+}
+
+
 var isFirstClick: boolean = true;
-var timeGap:number;
+var timeGap: number;
 var timerID: any;
 const colorofButtonNumber: [null, string, string, string, string, string, string, string, string] =
-  [null, '#FF7388', '#614BF4', '##FFFF35', '#DC1C38', '#7EEE62', '#0DEBEB', '#A566F8', '#A9350B'];
+  [null, '#FF7388', '#614BF4', '#CCD700', '#DC1C38', '#7EEE62', '#0DEBEB', '#A566F8', '#A9350B'];
+
+
+function setButtonEvent(this: XMLHttpRequest) {
+
+  const responseData: any = JSON.parse(this.responseText).level;
+  const row:number = responseData.row;
+  const col:number = responseData.col;
+
+
+  for (let i: number = 0; i < row; i++) {
+    for (let j: number = 0; j < col; j++) {
+      const buttonID = `buttoncell${i}?${j}`;
+      const buttonElement: any = document.getElementById(buttonID) as HTMLButtonElement;
+      buttonElement.addEventListener('mousedown', buttonClickEvent);
+    }
+  }
+}
 
 
 // 버튼클릭 콜백이벤트 1: 자기자신 2: 마우스 이벤트를 디폴트로 받음
@@ -96,10 +114,10 @@ function buttonClickEvent(this: HTMLButtonElement, e: MouseEvent) {
 
 function setInitialTime(startTIme: number) {
   isFirstClick = false;
-  const MILLISECOND:number = 1000;
+  const MILLISECOND: number = 1000;
 
   timerID = setInterval(() => {
-    
+
     const endTime: number = new Date().getTime();
     timeGap = Math.floor((endTime - startTIme) / MILLISECOND);
     const timerElement: any = document.getElementById('timer') as HTMLSpanElement;
@@ -108,9 +126,9 @@ function setInitialTime(startTIme: number) {
       timerElement.innerText = `00${timeGap}`;
     } else if (timeGap >= 10 && timeGap < 100) {
       timerElement.innerText = `0${timeGap}`;
-    } else if(timeGap >= 999){
+    } else if (timeGap >= 999) {
       timerElement.innerText = '999';
-    }else{
+    } else {
       timerElement.innerText = `${timeGap}`;
     }
   }, MILLISECOND);
@@ -187,7 +205,7 @@ function wheelClickHandleling(this: XMLHttpRequest) {
     } else if (element.status === EventStatus.NOTHING) {
       ;
     } else {
-      const y: number = element.y; 
+      const y: number = element.y;
       const x: number = element.x;
       const num: number = element.num;
       const buttonCellElement = document.getElementById(`buttoncell${y}?${x}`) as HTMLButtonElement;
@@ -203,14 +221,14 @@ function wheelClickHandleling(this: XMLHttpRequest) {
 }
 
 
-function openModal(){
+function openModal() {
 
   const modal: any = document.querySelector('.modal') as HTMLDivElement;
   modal.classList.remove('hidden');
 }
 
 
-function closeModal(){
+function closeModal() {
   const modal: any = document.querySelector('.modal') as HTMLDivElement;
   modal.classList.add('hidden');
 }

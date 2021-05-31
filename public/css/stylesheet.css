@@ -15,7 +15,7 @@ html, body{
   transform: translate(-50%, -50%);
 }
 .buttongroup button {
-  background-image: linear-gradient(to bottom, #FFFFFF,#E7E7E7);
+  background-image: linear-gradient(to bottom, #FFFFFF,#D1D1D1);
   border: 1px solid #5D5D5D;
   font-weight: bold;
   font-size: 13px;

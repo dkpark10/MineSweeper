@@ -2,9 +2,10 @@
 
 import { Request, Response, NextFunction } from 'express';
 
+declare function require(param: string): any;
+
 const express: any = require('express');
 const router: any = express.Router();
-const app: any = express();
 
 import { MineData, difficulty, MineBoard, cloneObject, Coord, ResponseJSON, EventStatus } from '../lib/commonutility';
 import { levels } from '../lib/ptdifficulty';
@@ -13,6 +14,7 @@ let buttonHandler: ButtonHandler;
 
 
 router.get('/', function (request: Request, response: Response, nextfunction: NextFunction) {
+  
   response.render("main", {});
 });
 
@@ -39,6 +41,10 @@ router.get('/maingame/:level', function (request: Request, response: Response, n
     }
   })(levels[level]);
 
+  if(request.session.level === undefined){
+    request.session.level = { row: levels[level].row, col: levels[level].col };
+  }
+
   // 싱글톤 
   buttonHandler = ButtonHandler.getInstance(mineData);
 
@@ -55,6 +61,16 @@ router.get('/maingame/:level', function (request: Request, response: Response, n
                             col: mineData.col, 
                             mine: responseBoard , 
                             numofMine: mineData.numberOfMine});
+});
+
+
+router.post('/getsessionlevel', (request: Request, response: Response, nextfunction: NextFunction) => {
+  
+  let responseData: any = {};
+  if(request.session.level !== undefined){
+    responseData = request.session.level;
+  }
+  response.status(200).json({ level: responseData });
 });
 
 

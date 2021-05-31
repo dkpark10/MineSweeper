@@ -1,7 +1,6 @@
 'use strict';
 var express = require('express');
 var router = express.Router();
-var app = express();
 var commonutility_1 = require("../lib/commonutility");
 var ptdifficulty_1 = require("../lib/ptdifficulty");
 var pbuttonHandler_1 = require("../lib/pbuttonHandler");
@@ -27,6 +26,9 @@ router.get('/maingame/:level', function (request, response, nextfunction) {
                 .map(function () { return Array.from({ length: arg.col }, function () { return commonutility_1.cloneObject(mineBoard); }); })
         };
     })(ptdifficulty_1.levels[level]);
+    if (request.session.level === undefined) {
+        request.session.level = { row: ptdifficulty_1.levels[level].row, col: ptdifficulty_1.levels[level].col };
+    }
     // 싱글톤 
     buttonHandler = pbuttonHandler_1.ButtonHandler.getInstance(mineData);
     var responseBoard;
@@ -40,6 +42,13 @@ router.get('/maingame/:level', function (request, response, nextfunction) {
         col: mineData.col,
         mine: responseBoard,
         numofMine: mineData.numberOfMine });
+});
+router.post('/getsessionlevel', function (request, response, nextfunction) {
+    var responseData = {};
+    if (request.session.level !== undefined) {
+        responseData = request.session.level;
+    }
+    response.status(200).json({ level: responseData });
 });
 router.post('/leftclickhandle', function (request, response, nextfunction) {
     var coord = { y: Number(request.body.y), x: Number(request.body.x) };

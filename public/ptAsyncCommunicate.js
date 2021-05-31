@@ -1,21 +1,4 @@
 'use strict';
-window.onload = function () {
-    document.addEventListener('contextmenu', function (e) {
-        e.preventDefault();
-    });
-    document.addEventListener('auxclick', function (e) {
-        e.preventDefault();
-    });
-    for (var i = 0; i < 10; i++) {
-        for (var j = 0; j < 10; j++) {
-            var buttonID = "buttoncell" + i + "?" + j;
-            var buttonElement = document.getElementById(buttonID);
-            buttonElement.addEventListener('mousedown', buttonClickEvent);
-        }
-    }
-    var closeModalButton = document.getElementById('closemodal');
-    closeModalButton.addEventListener('click', closeModal);
-};
 var mouseEvent;
 (function (mouseEvent) {
     mouseEvent[mouseEvent["LEFTCLICK"] = 1] = "LEFTCLICK";
@@ -32,10 +15,37 @@ var EventStatus;
     EventStatus[EventStatus["SETFLAG"] = 4] = "SETFLAG";
     EventStatus[EventStatus["RELIVEFLAG"] = 5] = "RELIVEFLAG";
 })(EventStatus || (EventStatus = {}));
+window.onload = function () {
+    document.addEventListener('contextmenu', function (e) {
+        e.preventDefault();
+    });
+    document.addEventListener('auxclick', function (e) {
+        e.preventDefault();
+    });
+    var xhr = new XMLHttpRequest();
+    xhr.open('post', '/getsessionlevel');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({}));
+    xhr.addEventListener('load', setButtonEvent);
+    var closeModalButton = document.getElementById('closemodal');
+    closeModalButton.addEventListener('click', closeModal);
+};
 var isFirstClick = true;
 var timeGap;
 var timerID;
-var colorofButtonNumber = [null, '#FF7388', '#614BF4', '##FFFF35', '#DC1C38', '#7EEE62', '#0DEBEB', '#A566F8', '#A9350B'];
+var colorofButtonNumber = [null, '#FF245E', '#614BF4', '#FFAA39', '#DC1C38', '#7EEE62', '#0DEBEB', '#A566F8', '#A9350B'];
+function setButtonEvent() {
+    var responseData = JSON.parse(this.responseText).level;
+    var row = responseData.row;
+    var col = responseData.col;
+    for (var i = 0; i < row; i++) {
+        for (var j = 0; j < col; j++) {
+            var buttonID = "buttoncell" + i + "?" + j;
+            var buttonElement = document.getElementById(buttonID);
+            buttonElement.addEventListener('mousedown', buttonClickEvent);
+        }
+    }
+}
 // 버튼클릭 콜백이벤트 1: 자기자신 2: 마우스 이벤트를 디폴트로 받음
 function buttonClickEvent(e) {
     var requestCoord = buttonIDparsing(this.id);
@@ -130,6 +140,7 @@ function rightClickHandleling() {
     if (responseData.status === EventStatus.SETFLAG) {
         extraFlagElement.innerText = Number(extraFlagElementValue) - 1;
         buttonCellElement.innerHTML = '<img src = "/flag.png"/>';
+        // buttonCellElement.innerHTML = '<img src = "flag.png"/>';
     }
     else if (responseData.status === EventStatus.RELIVEFLAG) {
         extraFlagElement.innerText = Number(extraFlagElementValue) + 1;
