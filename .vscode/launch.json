@@ -18,6 +18,12 @@
       "request": "launch",
       "name": "run chorme",
       "program": "${workspaceFolder}/app.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "run chorme practice",
+      "program": "${workspaceFolder}/practice/nodepractice.js"
     }
   ]
 }

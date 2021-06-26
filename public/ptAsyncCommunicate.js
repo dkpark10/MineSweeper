@@ -23,7 +23,7 @@ window.onload = function () {
         e.preventDefault();
     });
     var xhr = new XMLHttpRequest();
-    xhr.open('post', '/getsessionlevel');
+    xhr.open('post', '/getrowandcol');
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify({}));
     xhr.addEventListener('load', setButtonEvent);
@@ -107,25 +107,20 @@ function leftClickHandleling() {
     console.log('output left click');
     var responseData = JSON.parse(this.responseText).responsedata;
     responseData.forEach(function (element) {
-        if (element.status === EventStatus.END) {
+        var y = element.y;
+        var x = element.x;
+        var num = element.num;
+        var buttonCellElement = document.getElementById("buttoncell" + y + "?" + x);
+        if (element.status === EventStatus.DISABLED) {
+            buttonCellElement.disabled = true;
+        }
+        else if (element.status === EventStatus.NUMBERCELL) {
+            setInnerHTMLButtonCell(buttonCellElement, num);
+        }
+        else if (element.status === EventStatus.END) {
+            setInnerHTMLButtonCell(buttonCellElement, num);
             clearInterval(timerID);
             openModal();
-        }
-        else if (element.status === EventStatus.NOTHING) {
-            ;
-        }
-        else {
-            var y = element.y;
-            var x = element.x;
-            var num = element.num;
-            var buttonCellElement = document.getElementById("buttoncell" + y + "?" + x);
-            if (element.status === EventStatus.DISABLED) {
-                buttonCellElement.disabled = true;
-            }
-            else if (element.status === EventStatus.NUMBERCELL) {
-                buttonCellElement.style.color = colorofButtonNumber[num];
-                buttonCellElement.innerText = num.toString();
-            }
         }
     });
 }
@@ -140,7 +135,7 @@ function rightClickHandleling() {
     if (responseData.status === EventStatus.SETFLAG) {
         extraFlagElement.innerText = Number(extraFlagElementValue) - 1;
         buttonCellElement.innerHTML = '<img src = "/flag.png"/>';
-        // buttonCellElement.innerHTML = '<img src = "flag.png"/>';
+        // buttonCellElement.innerHTML = '<img src = "flag.png"/>';   // 놋북일 때
     }
     else if (responseData.status === EventStatus.RELIVEFLAG) {
         extraFlagElement.innerText = Number(extraFlagElementValue) + 1;
@@ -151,27 +146,26 @@ function wheelClickHandleling() {
     console.log('output wheel click');
     var responseData = JSON.parse(this.responseText).responsedata;
     responseData.forEach(function (element) {
-        if (element.status === EventStatus.END) {
-            // to do...
-            console.log('click mine;;;;');
+        var y = element.y;
+        var x = element.x;
+        var num = element.num;
+        var buttonCellElement = document.getElementById("buttoncell" + y + "?" + x);
+        if (element.status === EventStatus.DISABLED) {
+            buttonCellElement.disabled = true;
         }
-        else if (element.status === EventStatus.NOTHING) {
-            ;
+        else if (element.status === EventStatus.NUMBERCELL) {
+            setInnerHTMLButtonCell(buttonCellElement, num);
         }
-        else {
-            var y = element.y;
-            var x = element.x;
-            var num = element.num;
-            var buttonCellElement = document.getElementById("buttoncell" + y + "?" + x);
-            if (element.status === EventStatus.DISABLED) {
-                buttonCellElement.disabled = true;
-            }
-            else if (element.status === EventStatus.NUMBERCELL) {
-                buttonCellElement.style.color = colorofButtonNumber[num];
-                buttonCellElement.innerText = num.toString();
-            }
+        else if (element.status === EventStatus.END) {
+            setInnerHTMLButtonCell(buttonCellElement, num);
+            clearInterval(timerID);
+            openModal();
         }
     });
+}
+function setInnerHTMLButtonCell(htmlElement, num) {
+    htmlElement.style.color = colorofButtonNumber[num];
+    htmlElement.innerText = num.toString();
 }
 function openModal() {
     var modal = document.querySelector('.modal');

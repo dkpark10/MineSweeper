@@ -11,7 +11,11 @@ const bodyparser: any = require('body-parser');
 const session:any = require('express-session');
 const fileStore:any = require('session-file-store')(session);
 const path:any = require('path');
+const redis: any = require('redis');
+const client:any = redis.createClient();
 const fs:any = require('fs');
+// const redis:any = require('redis');
+// const client:any = redis.createClient();
 
 const port = 8080;
 import { secret } from './secret/ptsession';

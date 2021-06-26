@@ -233,7 +233,7 @@ export class ButtonHandler {
     const col: number = this.col;
 
     for (let i: number = 0; i < row; i++) {
-      for (let j: number = 0; j < row; j++) {
+      for (let j: number = 0; j < col; j++) {
         this.board[i][j].aroundNumber = this.calculAroundMineNumberOfCell(i, j);
       }
     }

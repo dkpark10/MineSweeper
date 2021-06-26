@@ -6,17 +6,12 @@ declare function require(param: string): any;
 
 const express: any = require('express');
 const router: any = express.Router();
+const shortid:any = require('shortid');
 
 import { MineData, difficulty, MineBoard, cloneObject, Coord, ResponseJSON, EventStatus } from '../lib/commonutility';
 import { levels } from '../lib/ptdifficulty';
 import { ButtonHandler } from '../lib/pbuttonHandler';
 let buttonHandler: ButtonHandler;
-
-
-router.get('/', function (request: Request, response: Response, nextfunction: NextFunction) {
-  
-  response.render("main", {});
-});
 
 
 router.get('/maingame/:level', function (request: Request, response: Response, nextfunction: NextFunction) {
@@ -41,9 +36,6 @@ router.get('/maingame/:level', function (request: Request, response: Response, n
     }
   })(levels[level]);
 
-  if(request.session.level === undefined){
-    request.session.level = { row: levels[level].row, col: levels[level].col };
-  }
 
   // 싱글톤 
   buttonHandler = ButtonHandler.getInstance(mineData);
@@ -57,6 +49,8 @@ router.get('/maingame/:level', function (request: Request, response: Response, n
     return ele1.map((ele2: MineBoard) => ele2.mine);
   });
 
+  request.session.mine = 123;
+
   response.render("index", { row: mineData.row, 
                             col: mineData.col, 
                             mine: responseBoard , 
@@ -64,12 +58,9 @@ router.get('/maingame/:level', function (request: Request, response: Response, n
 });
 
 
-router.post('/getsessionlevel', (request: Request, response: Response, nextfunction: NextFunction) => {
+router.post('/getrowandcol', (request: Request, response: Response, nextfunction: NextFunction) => {
   
-  let responseData: any = {};
-  if(request.session.level !== undefined){
-    responseData = request.session.level;
-  }
+  let responseData: any = {row : buttonHandler.getRow(), col: buttonHandler.getCol()};
   response.status(200).json({ level: responseData });
 });
 
@@ -118,5 +109,16 @@ router.post('/wheelclickhandle', (request: Request, response: Response, nextfunc
   responseJson['responsedata'] = buttonHandler.wheelClickHandle(coord.y, coord.x);
   response.status(200).json(responseJson);
 });
+
+
+router.get('/', function (request: Request, response: Response, nextfunction: NextFunction) {
+  
+  const ranip:string = shortid.generate();
+  if(request.session.user){
+    
+  }
+  response.render("main", {});
+});
+
 
 export = router;

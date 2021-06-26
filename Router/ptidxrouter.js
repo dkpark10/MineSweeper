@@ -1,13 +1,11 @@
 'use strict';
 var express = require('express');
 var router = express.Router();
+var shortid = require('shortid');
 var commonutility_1 = require("../lib/commonutility");
 var ptdifficulty_1 = require("../lib/ptdifficulty");
 var pbuttonHandler_1 = require("../lib/pbuttonHandler");
 var buttonHandler;
-router.get('/', function (request, response, nextfunction) {
-    response.render("main", {});
-});
 router.get('/maingame/:level', function (request, response, nextfunction) {
     var level = request.params.level;
     var mineBoard = {
@@ -26,9 +24,6 @@ router.get('/maingame/:level', function (request, response, nextfunction) {
                 .map(function () { return Array.from({ length: arg.col }, function () { return commonutility_1.cloneObject(mineBoard); }); })
         };
     })(ptdifficulty_1.levels[level]);
-    if (request.session.level === undefined) {
-        request.session.level = { row: ptdifficulty_1.levels[level].row, col: ptdifficulty_1.levels[level].col };
-    }
     // 싱글톤 
     buttonHandler = pbuttonHandler_1.ButtonHandler.getInstance(mineData);
     var responseBoard;
@@ -38,16 +33,14 @@ router.get('/maingame/:level', function (request, response, nextfunction) {
     responseBoard = mineData.board.map(function (ele1) {
         return ele1.map(function (ele2) { return ele2.mine; });
     });
+    request.session.mine = 123;
     response.render("index", { row: mineData.row,
         col: mineData.col,
         mine: responseBoard,
         numofMine: mineData.numberOfMine });
 });
-router.post('/getsessionlevel', function (request, response, nextfunction) {
-    var responseData = {};
-    if (request.session.level !== undefined) {
-        responseData = request.session.level;
-    }
+router.post('/getrowandcol', function (request, response, nextfunction) {
+    var responseData = { row: buttonHandler.getRow(), col: buttonHandler.getCol() };
     response.status(200).json({ level: responseData });
 });
 router.post('/leftclickhandle', function (request, response, nextfunction) {
@@ -83,5 +76,11 @@ router.post('/wheelclickhandle', function (request, response, nextfunction) {
     var responseJson = {};
     responseJson['responsedata'] = buttonHandler.wheelClickHandle(coord.y, coord.x);
     response.status(200).json(responseJson);
+});
+router.get('/', function (request, response, nextfunction) {
+    var ranip = shortid.generate();
+    if (request.session.user) {
+    }
+    response.render("main", {});
 });
 module.exports = router;

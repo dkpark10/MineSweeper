@@ -38,7 +38,7 @@ window.onload = function () {
 
   const xhr: XMLHttpRequest = new XMLHttpRequest();
 
-  xhr.open('post', '/getsessionlevel');
+  xhr.open('post', '/getrowandcol');
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(JSON.stringify({}));
   xhr.addEventListener('load', setButtonEvent);
@@ -47,12 +47,11 @@ window.onload = function () {
   closeModalButton.addEventListener('click', closeModal);
 }
 
-
 var isFirstClick: boolean = true;
 var timeGap: number;
 var timerID: any;
 const colorofButtonNumber: [null, string, string, string, string, string, string, string, string] =
-  [null, '#FF7388', '#614BF4', '#CCD700', '#DC1C38', '#7EEE62', '#0DEBEB', '#A566F8', '#A9350B'];
+  [null, '#FF245E', '#614BF4', '#FFAA39', '#DC1C38', '#7EEE62', '#0DEBEB', '#A566F8', '#A9350B'];
 
 
 function setButtonEvent(this: XMLHttpRequest) {
@@ -60,7 +59,6 @@ function setButtonEvent(this: XMLHttpRequest) {
   const responseData: any = JSON.parse(this.responseText).level;
   const row:number = responseData.row;
   const col:number = responseData.col;
-
 
   for (let i: number = 0; i < row; i++) {
     for (let j: number = 0; j < col; j++) {
@@ -144,27 +142,25 @@ function buttonIDparsing(buttonId: string): Coord {
 function leftClickHandleling(this: XMLHttpRequest) {
 
   console.log('output left click');
-
   const responseData: ResponseJSON[] = JSON.parse(this.responseText).responsedata;
 
   responseData.forEach((element: ResponseJSON) => {
-    if (element.status === EventStatus.END) {
+
+    const y: number = element.y;
+    const x: number = element.x;
+    const num: number = element.num;
+    const buttonCellElement = document.getElementById(`buttoncell${y}?${x}`) as HTMLButtonElement;
+
+    if (element.status === EventStatus.DISABLED) {
+      buttonCellElement.disabled = true;
+    }
+    else if (element.status === EventStatus.NUMBERCELL) {
+      setInnerHTMLButtonCell(buttonCellElement, num);
+    }
+    else if (element.status === EventStatus.END) {
+      setInnerHTMLButtonCell(buttonCellElement, num);
       clearInterval(timerID);
       openModal();
-    } else if (element.status === EventStatus.NOTHING) {
-      ;
-    } else {
-      const y: number = element.y;
-      const x: number = element.x;
-      const num: number = element.num;
-      const buttonCellElement = document.getElementById(`buttoncell${y}?${x}`) as HTMLButtonElement;
-
-      if (element.status === EventStatus.DISABLED) {
-        buttonCellElement.disabled = true;
-      } else if (element.status === EventStatus.NUMBERCELL) {
-        buttonCellElement.style.color = colorofButtonNumber[num] as string;
-        buttonCellElement.innerText = num.toString();
-      }
     }
   });
 }
@@ -183,7 +179,7 @@ function rightClickHandleling(this: XMLHttpRequest) {
   if (responseData.status === EventStatus.SETFLAG) {
     extraFlagElement.innerText = Number(extraFlagElementValue) - 1;
     buttonCellElement.innerHTML = '<img src = "/flag.png"/>';
-    // buttonCellElement.innerHTML = '<img src = "flag.png"/>';
+    // buttonCellElement.innerHTML = '<img src = "flag.png"/>';   // 놋북일 때
   }
   else if (responseData.status === EventStatus.RELIVEFLAG) {
     extraFlagElement.innerText = Number(extraFlagElementValue) + 1;
@@ -199,25 +195,30 @@ function wheelClickHandleling(this: XMLHttpRequest) {
   const responseData: ResponseJSON[] = JSON.parse(this.responseText).responsedata;
 
   responseData.forEach((element: ResponseJSON) => {
-    if (element.status === EventStatus.END) {
-      // to do...
-      console.log('click mine;;;;');
-    } else if (element.status === EventStatus.NOTHING) {
-      ;
-    } else {
-      const y: number = element.y;
-      const x: number = element.x;
-      const num: number = element.num;
-      const buttonCellElement = document.getElementById(`buttoncell${y}?${x}`) as HTMLButtonElement;
+    
+    const y: number = element.y;
+    const x: number = element.x;
+    const num: number = element.num;
+    const buttonCellElement = document.getElementById(`buttoncell${y}?${x}`) as HTMLButtonElement;
 
-      if (element.status === EventStatus.DISABLED) {
-        buttonCellElement.disabled = true;
-      } else if (element.status === EventStatus.NUMBERCELL) {
-        buttonCellElement.style.color = colorofButtonNumber[num] as string;
-        buttonCellElement.innerText = num.toString();
-      }
+    if (element.status === EventStatus.DISABLED) {
+      buttonCellElement.disabled = true;
+    }
+    else if (element.status === EventStatus.NUMBERCELL) {
+      setInnerHTMLButtonCell(buttonCellElement, num);
+    }
+    else if (element.status === EventStatus.END) {
+      setInnerHTMLButtonCell(buttonCellElement, num);
+      clearInterval(timerID);
+      openModal();
     }
   });
+}
+
+
+function setInnerHTMLButtonCell(htmlElement: HTMLButtonElement, num : number){
+  htmlElement.style.color = colorofButtonNumber[num] as string;
+  htmlElement.innerText = num.toString();
 }
 
 
