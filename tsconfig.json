@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "outDir": "./dist",  // 컴파일된 경로 지정
+    "rootDir": "./src",   // 컴파일할 대상 root 지정
+    "noImplicitAny": true,
+    "strict": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "./**/*"
+  ]
+}
