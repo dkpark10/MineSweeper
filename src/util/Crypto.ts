@@ -1,19 +1,6 @@
 import crypto from 'crypto';
 
-class encryptionHandler {
-
-  private static instance: encryptionHandler;
-  private constructor() {
-
-  }
-
-  public static getInstance() {
-
-    if (!encryptionHandler.instance) {
-      encryptionHandler.instance = new encryptionHandler();
-    }
-    return encryptionHandler.instance;
-  }
+export default class EncryptionHandler {
 
   public createSalt(): Promise<string> {
 
@@ -45,6 +32,3 @@ class encryptionHandler {
     return await this.cryptoPassword(plaintext, salt);
   }
 }
-
-export default encryptionHandler.getInstance();
-

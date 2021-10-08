@@ -1,7 +1,9 @@
 import { Router } from 'express';
-import { isExistid, register } from './Register';
+import { isExistUser, register } from './Register';
+
 const router: Router = Router();
 
-router.post('/register', isExistid, register);
+router.get('/user', isExistUser);
+router.post('/register', register);
 
 export default router;

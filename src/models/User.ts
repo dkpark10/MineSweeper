@@ -1,6 +1,6 @@
 import mysql, { ConnectionConfig, MysqlError } from 'mysql';
-import config from '../config/index';
-import encrypter from '../util/Crypto';
+import config from '../config/Index';
+import { resolve } from 'path';
 
 interface UserRow {
   ID: string;
@@ -11,6 +11,13 @@ interface UserRow {
   ENROLLDATE: any;
 };
 
+interface UserInfo {
+  id: string;
+  email: string;
+  pwd: string;
+};
+
+// 싱글톤으로 작성한다.
 class Connection {
 
   private static instance: Connection;
@@ -43,28 +50,50 @@ class Connection {
     })
   }
 
-  public register(id: string, pwd: string, salt: string) {
+  public register({ id, email, pwd }: UserInfo): Promise<boolean> {
 
-    const query: string = 'INSERT INTO USERS SET ?';
-    const user = {
+    const query = `INSERT INTO USERS (ID, PWD, EMAIL, GRADE, AUTH, ENROLLDATE)
+                            VALUES (?, ?, ?, ?, ?, NOW())`;
 
-    }
+    return new Promise((resolve, reject) => {
 
-    this.connection.query(query, user, (err, result) => {
-
-    });
+      this.connection.query(query, [id, pwd, email, 5, 'normal'], (err, result) => {
+        if (err) {
+          reject('register query fail');
+        } else {
+          resolve(true);
+        }
+      });
+    })
   }
 
-  public isExistUser(id: string): Promise<boolean> {
+  public registSalt(id: string, salt: string): Promise<boolean> {
 
-    const query: string = 'SELECT ID FROM USERS WHERE ID = ?';
+    const query = `INSERT INTO SALT (ID, SALT) VALUES (?, ?)`;
+    
+    return new Promise((resolve, reject) => {
 
-    return new Promise((reslove, reject) => {
-      this.connection.query(query, [id], (err: MysqlError | null, result: UserRow[]) => {
+      this.connection.query(query, [id, salt], (err, result) => {
+        if (err) {
+          reject('registSalt query fail');
+        } else {
+          resolve(true);
+        }
+      });
+    })
+  }
+
+  public isExistUser({ column, value }: any): Promise<boolean> {
+
+    const query: string = `SELECT ID FROM USERS WHERE ${column} = ?`;
+
+    return new Promise((resolve, reject) => {
+
+      this.connection.query(query, [value], (err: MysqlError | null, result: UserRow[]) => {
         if (err) {
           reject('isExistUser query fail');
         } else {
-          reslove(result.length > 0);
+          resolve(result.length > 0);
         }
       });
     })

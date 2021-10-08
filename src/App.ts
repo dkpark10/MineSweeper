@@ -48,10 +48,10 @@
 
 import express, { Request, Response, NextFunction } from 'express';
 import * as bodyParser from 'body-parser';
-import helmet from 'helmet';
+import helmet, { contentSecurityPolicy } from 'helmet';
 import compression from 'compression';
 import shortid from 'shortid';
-import * as sanitizeHtml from 'sanitize-html';
+import sanitize from 'sanitize-html';
 import cors from 'cors';
 import apiroute from './routes/api';
 import db from './models/User';
@@ -69,20 +69,46 @@ app.use('/api', apiroute);
 
 app.get('/', async (request: Request, response: Response, next: NextFunction) => {
 
-  if(true){
-    next();
-  }
+  var dirtylist = [
+    '<h1>rere</h1>',
+    '<script>reer</script>',
+    '<p>fdfd</p>',
+    '<div>fdff</div>',
+    '<section>ffef</section>'
+  ];
+
+  const html = "<strong>hello world</strong>";
+  console.log(sanitize(html));
+  console.log(sanitize("<img src=x onerror=alert('img') />"));
+  console.log(sanitize("console.log('hello world')"));
+  console.log(sanitize("<script>alert('hello world')</script>"));
+
+
+  var cleanList = dirtylist.map((ele) => sanitize(ele, { allowedTags: [] }));
+
+  response.status(200).send(cleanList);
+});
+
+app.get('/.../:id', async (request: Request, response: Response, next: NextFunction) => {
+  console.log(request.params.id, 'params id');
+  response.send(`${request.params.id} params`);
 });
 
 app.get('/...', async (request: Request, response: Response, next: NextFunction) => {
-  response.send('next~~~');
+
+  const ssss:string = request.query.id as string;
+  console.log(request.query.id, 'query string');
+  response.send(`${request.query.id} query string`);
+});
+
+app.post('/...', async (request: Request, response: Response, next: NextFunction) => {
+
+  console.log(request.body.id);
+  response.send('what the....');
 });
 
 app.post('/bodytest', async (request: Request, response: Response, next: NextFunction) => {
   try{
-    const id: string = request.body.id;
-    const isExistUser:boolean = await db.isExistUser(id);  
-    response.status(200).send({ret: isExistUser});
   }catch(e){
     response.status(200).send('error...... why??');
   }
