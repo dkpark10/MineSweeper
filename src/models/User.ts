@@ -13,8 +13,8 @@ interface UserRow {
 
 interface UserInfo {
   id: string;
-  email: string;
   pwd: string;
+  email: string;
 };
 
 // 싱글톤으로 작성한다.
@@ -50,7 +50,7 @@ class Connection {
     })
   }
 
-  public register({ id, email, pwd }: UserInfo): Promise<boolean> {
+  public register({ id, pwd, email }: UserInfo): Promise<boolean> {
 
     const query = `INSERT INTO USERS (ID, PWD, EMAIL, GRADE, AUTH, ENROLLDATE)
                             VALUES (?, ?, ?, ?, ?, NOW())`;
@@ -59,7 +59,7 @@ class Connection {
 
       this.connection.query(query, [id, pwd, email, 5, 'normal'], (err, result) => {
         if (err) {
-          reject('register query fail');
+          reject('register user query fail');
         } else {
           resolve(true);
         }
@@ -70,12 +70,12 @@ class Connection {
   public registSalt(id: string, salt: string): Promise<boolean> {
 
     const query = `INSERT INTO SALT (ID, SALT) VALUES (?, ?)`;
-    
+
     return new Promise((resolve, reject) => {
 
       this.connection.query(query, [id, salt], (err, result) => {
         if (err) {
-          reject('registSalt query fail');
+          reject('registsalt query fail');
         } else {
           resolve(true);
         }
@@ -94,6 +94,22 @@ class Connection {
           reject('isExistUser query fail');
         } else {
           resolve(result.length > 0);
+        }
+      });
+    })
+  }
+
+  public deleteUser(id: string): Promise<boolean> {
+
+    const query = 'DELETE FROM USERS WHERE id = ?';
+
+    return new Promise((resolve, reject) => {
+
+      this.connection.query(query, [id], (err: MysqlError | null, result: UserRow[]) => {
+        if (err) {
+          reject('delete user query fail');
+        } else {
+          resolve(true);
         }
       });
     })
