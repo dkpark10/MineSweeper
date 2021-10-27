@@ -48,13 +48,14 @@
 
 import express, { Request, Response, NextFunction } from 'express';
 import * as bodyParser from 'body-parser';
-import helmet, { contentSecurityPolicy } from 'helmet';
+import helmet from 'helmet';
 import compression from 'compression';
 import shortid from 'shortid';
 import sanitize from 'sanitize-html';
 import cors from 'cors';
 import apiroute from './routes/api';
-import db from './models/User';
+import secretKey from './config/secretkey';
+import cookieParser from 'cookie-parser'
 
 const app: express.Application = express();
 const port: string = process.env.PORT || '8080';
@@ -64,6 +65,23 @@ app.use(helmet());
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.set('secret-key', secretKey);
+
+app.use(cookieParser(app.get('secret-key').cookieKey));
+
+// post body 인풋 세탁
+app.use((request: Request, response: Response, next: NextFunction) => {
+
+  const dirtyUserInfo = request.body;
+  Object.entries(dirtyUserInfo).map(([key, value]) => {
+    dirtyUserInfo[key] = sanitize(value as string, { allowedTags: [] });
+  });
+  console.log('시큐어 쿠키', request.signedCookies);
+  console.log('걍쿠키', request.cookies);
+  console.log(request.headers.cookie);
+
+  next();
+});
 
 app.use('/api', apiroute);
 
@@ -77,13 +95,6 @@ app.get('/', async (request: Request, response: Response, next: NextFunction) =>
     '<section>ffef</section>'
   ];
 
-  const html = "<strong>hello world</strong>";
-  console.log(sanitize(html));
-  console.log(sanitize("<img src=x onerror=alert('img') />"));
-  console.log(sanitize("console.log('hello world')"));
-  console.log(sanitize("<script>alert('hello world')</script>"));
-
-
   var cleanList = dirtylist.map((ele) => sanitize(ele, { allowedTags: [] }));
 
   response.status(200).send(cleanList);
@@ -96,20 +107,22 @@ app.get('/.../:id', async (request: Request, response: Response, next: NextFunct
 
 app.get('/...', async (request: Request, response: Response, next: NextFunction) => {
 
-  const ssss:string = request.query.id as string;
-  console.log(request.query.id, 'query string');
-  response.send(`${request.query.id} query string`);
+  response.status(200).send('sdsdsd');
 });
 
 app.post('/...', async (request: Request, response: Response, next: NextFunction) => {
+  
+  console.log('시큐어 쿠키', request.signedCookies);
+  console.log('걍쿠키', request.cookies);
+  console.log(request.headers.cookie);
 
-  console.log(request.body.id);
-  response.send('what the....');
+  response.cookie('access token', 1231232132312323);
+  response.status(200).send('sdsdsd');
 });
 
 app.post('/bodytest', async (request: Request, response: Response, next: NextFunction) => {
-  try{
-  }catch(e){
+  try {
+  } catch (e) {
     response.status(200).send('error...... why??');
   }
 });

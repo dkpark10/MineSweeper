@@ -1,8 +1,8 @@
 import mysql, { ConnectionConfig, MysqlError } from 'mysql';
+import redis from 'redis';
 import config from '../config/Index';
-import { resolve } from 'path';
 
-interface UserRow {
+export interface UserRow {
   ID: string;
   PWD: string;
   EMAIL: string;
@@ -11,7 +11,7 @@ interface UserRow {
   ENROLLDATE: any;
 };
 
-interface UserInfo {
+export interface UserInfo {
   id: string;
   pwd: string;
   email: string;
@@ -22,11 +22,13 @@ class Connection {
 
   private static instance: Connection;
   private readonly connection: mysql.Connection;
+  private readonly redis: redis.RedisClient;
 
   private constructor(config: ConnectionConfig) {
 
     this.connection = mysql.createConnection(config);
     this.connection.connect();
+    this.redis = redis.createClient();
   }
 
   public static getInstance() {
@@ -83,17 +85,49 @@ class Connection {
     })
   }
 
-  public isExistUser({ column, value }: any): Promise<boolean> {
+  public getSalt(id: string): Promise<string> {
 
-    const query: string = `SELECT ID FROM USERS WHERE ${column} = ?`;
+    const query = 'SELECT SALT FROM SALT WHERE ID = ?';
 
     return new Promise((resolve, reject) => {
 
-      this.connection.query(query, [value], (err: MysqlError | null, result: UserRow[]) => {
+      this.connection.query(query, [id], (err: MysqlError | null, result: { SALT: string }[]) => {
+        if (err) {
+          reject('getSalt query fail');
+        } else {
+          resolve(result[0].SALT);
+        }
+      });
+    });
+  }
+
+  public getUserInfo({ columns, id }: { columns: string[], id: string }): Promise<UserRow[]> {
+
+    const query: string = `SELECT ${columns} FROM USERS WHERE ID = ?`;
+
+    return new Promise((resolve, reject) => {
+
+      this.connection.query(query, [id], (err: MysqlError | null, result: UserRow[]) => {
+        if (err) {
+          reject('getUserInfo query fail');
+        } else {
+          resolve(result);
+        }
+      });
+    })
+  }
+
+  public getPassword(id: string): Promise<string> {
+
+    const query: string = `SELECT PWD FROM USERS WHERE ID = ?`;
+
+    return new Promise((resolve, reject) => {
+
+      this.connection.query(query, [id], (err: MysqlError | null, result: { PWD: string }[]) => {
         if (err) {
           reject('isExistUser query fail');
         } else {
-          resolve(result.length > 0);
+          resolve(result[0].PWD);
         }
       });
     })
@@ -105,7 +139,7 @@ class Connection {
 
     return new Promise((resolve, reject) => {
 
-      this.connection.query(query, [id], (err: MysqlError | null, result: UserRow[]) => {
+      this.connection.query(query, [id], (err: MysqlError | null, result) => {
         if (err) {
           reject('delete user query fail');
         } else {
@@ -113,6 +147,10 @@ class Connection {
         }
       });
     })
+  }
+
+  public setRefreshToken(id: string, refreshToken: string): boolean {
+    return this.redis.set(id, refreshToken);
   }
 }
 
