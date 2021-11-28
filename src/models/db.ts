@@ -1,3 +1,4 @@
+import { PrivateKeyInput } from 'crypto';
 import mysql, { ConnectionConfig, MysqlError } from 'mysql';
 import redis from 'redis';
 import config from '../config/Index';
@@ -15,6 +16,13 @@ export interface UserInfo {
   id: string;
   pwd: string;
   email: string;
+};
+
+export interface GameRecord {
+  id: string;
+  record: number;
+  success: number;
+  level: string;
 };
 
 // 싱글톤으로 작성한다.
@@ -149,8 +157,59 @@ class Connection {
     })
   }
 
-  public setRefreshToken(id: string, refreshToken: string): boolean {
-    return this.redis.set(id, refreshToken);
+  public setRefreshToken(id: string, refreshToken: string) {
+    this.redis.set(id, refreshToken);
+    // 2주뒤 refresh token 삭제 
+    this.redis.expire(id, (86400 * 14));
+  }
+
+  public deleteRefreshToken(id: string) {
+    this.redis.del(id);
+  }
+
+  public getRefreshToken(id: string): Promise<string | null> {
+    return new Promise((resolve, reject) => {
+      this.redis.get(id, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  }
+
+  public insertGameRecord({ id, record, success, level }: GameRecord): Promise<boolean | string> {
+
+    const query = `INSERT INTO ${level}game (GAMENUM, ID, RECORD, DATE, SUCCESS)
+                  VALUES (?,?,?,NOW(),?)`;
+
+    return new Promise((resolve, reject) => {
+
+      this.connection.query(query, [null, id, record, success], (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(true);
+        }
+      });
+    })
+  }
+
+  public getGameRecord(): Promise<any[]> {
+
+    const query = 'SELECT* FROM EASYGAME ORDER BY RECORD';
+
+    return new Promise((resolve, reject) => {
+
+      this.connection.query(query, [], (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
   }
 }
 
