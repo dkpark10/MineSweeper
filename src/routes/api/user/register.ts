@@ -60,7 +60,7 @@ const registUser = async (request: Request, response: Response, next: NextFuncti
       }));
   }
   catch (e) {
-
+  
     // 소금 등록 실패시 참조무결성을 위해 방금 등록된 아이디를 삭제해야 한다.
     // 사실 이건 일어날 일이 없지 않나? 
     if (e === 'registsalt query fail') {

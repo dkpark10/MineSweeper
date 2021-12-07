@@ -21,20 +21,29 @@ app.use(cors({
 }));
 
 app.set('secret-key', secretKey);
+app.set('itemCountPerPage', 20);
 app.use(cookieParser(app.get('secret-key').cookieKey));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// post body 인풋 세탁
-app.use((request: Request, response: Response, next: NextFunction) => {
-
-  const dirtyUserInfo = request.body;
-  Object.entries(dirtyUserInfo).map(([key, value]) => {
-    dirtyUserInfo[key] = sanitize(value as string, {
+const sanitizeInput = (arg: any) => {
+  Object.entries({ ...arg }).map(([key, value]) => {
+    arg[key] = sanitize(value as string, {
       allowedTags: []
-    });
-  });
+    })
+  })
+}
 
+// 모든 get 쿼리스트링 세탁한다.
+app.get('*', async (request: Request, _: Response, next: NextFunction) => {
+  sanitizeInput(request.params);
+  sanitizeInput(request.query);
+  next();
+});
+
+// post body 인풋 세탁
+app.post('*', async (request: Request, _: Response, next: NextFunction) => {
+  sanitizeInput(request.body);
   next();
 });
 

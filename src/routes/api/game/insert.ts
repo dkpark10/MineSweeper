@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import db, { GameRecord } from '../../../models/db';
+import shortid from 'shortid';
 
-const game = async (request: Request, response: Response, next: NextFunction) => {
+const record = async (request: Request, response: Response) => {
 
   try {
 
@@ -21,18 +22,18 @@ const game = async (request: Request, response: Response, next: NextFunction) =>
   }
 }
 
-const insertTest = async (request: Request, response: Response, next: NextFunction) => {
+const insertTest = async (request: Request, response: Response) => {
 
   try {
 
-    for (let i = 0; i < 4000; i++) {
+    for (let i = 0; i < 5000; i++) {
 
       const record = Math.round(Math.random() * (999999 - 1) + 1) / 1000;
       const success = Math.floor(Math.random() * 10) % 2;
 
       const gameRecord: GameRecord = {
-        id: 'dkpark10',
-        level: 'easy',
+        id: shortid.generate(),
+        level: 'test',
         record,
         success
       }
@@ -62,4 +63,4 @@ const getTest = async (request: Request, response: Response, next: NextFunction)
   }
 }
 
-export { game, insertTest, getTest };
+export { record, insertTest, getTest };

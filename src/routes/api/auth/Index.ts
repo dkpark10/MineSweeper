@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { game, getTest, insertTest } from './game';
+import { record, getTest, insertTest } from '../game/insert';
 import db from '../../../models/db';
 import { signToken, verifyToken } from '../../../util/jwttHandler';
 
@@ -16,10 +16,10 @@ router.use(async (request: Request, response: Response, next: NextFunction) => {
 
     const id = request.signedCookies['accessToken'].id;
     const jwtKey = request.app.get('secret-key').jwtKey;
-    const tempAccessToken = request.headers.authorization?.split(' ')[1] as string;
+    const tempAccessToken = request.headers.authorization?.split(' ')[1];
     const tempRefreshToken = await db.getRefreshToken(id) || '';
 
-    const accessToken = await verifyToken(jwtKey, tempAccessToken);
+    const accessToken = await verifyToken(jwtKey, tempAccessToken as string);
     const refreshToken = await verifyToken(jwtKey, tempRefreshToken);
 
     // access token 만료
@@ -62,8 +62,12 @@ router.use(async (request: Request, response: Response, next: NextFunction) => {
   }
 });
 
-router.post('/game', game);
+router.post('/game', record);
 router.post('/game/test', insertTest);
 router.get('/game/test', getTest);
+router.get('/test', async(req:Request, res:Response) => {
+
+  res.status(200).send('....');
+});
 
 export default router;

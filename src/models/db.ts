@@ -211,6 +211,51 @@ class Connection {
       });
     });
   }
+
+  public getGameSize(level: string): Promise<number> {
+
+    const query =
+      `SELECT COUNT(*) AS successGameCount
+    FROM ${level}game 
+    WHERE success=? 
+    ORDER BY gamenum DESC LIMIT 1`;
+
+    return new Promise((resolve, reject) => {
+
+      this.connection.query(query, [1], (err, data: { successGameCount: number }[]) => {
+
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data[0].successGameCount);
+        }
+      });
+    });
+  }
+
+  public getGameLank(level: string, { begin, end }: { [key: string]: number }) {
+
+    const query =
+      `SELECT id, MIN(record) as record, ranking
+    FROM (
+      SELECT id, record, RANK() over(ORDER BY record) AS 'ranking'
+      FROM ${level}game
+      WHERE success=?
+    )ranked
+    WHERE ranked.ranking >? AND ranked.ranking <=?
+    GROUP BY id`;
+
+    return new Promise((resolve, reject) => {
+
+      this.connection.query(query, [1, begin, end], (err, data) => {
+        if (err || !data) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  }
 }
 
 export default Connection.getInstance();
