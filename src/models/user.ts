@@ -1,7 +1,6 @@
-import { PrivateKeyInput } from 'crypto';
-import mysql, { ConnectionConfig, MysqlError } from 'mysql';
+import mysql, { MysqlError } from 'mysql';
 import redis from 'redis';
-import config from '../config/Index';
+import Model from './model';
 
 export interface UserRow {
   ID: string;
@@ -18,46 +17,10 @@ export interface UserInfo {
   email: string;
 };
 
-export interface GameRecord {
-  id: string;
-  record: number;
-  success: number;
-  level: string;
-};
+export default class UserModel extends Model {
 
-// 싱글톤으로 작성한다.
-class Connection {
-
-  private static instance: Connection;
-  private readonly connection: mysql.Connection;
-  private readonly redis: redis.RedisClient;
-
-  private constructor(config: ConnectionConfig) {
-
-    this.connection = mysql.createConnection(config);
-    this.connection.connect();
-    this.redis = redis.createClient();
-  }
-
-  public static getInstance() {
-
-    if (!Connection.instance) {
-      Connection.instance = new Connection(config.mysql);
-    }
-    return Connection.instance;
-  }
-
-  public verify(id: string, pwd: string) {
-
-    const query: string = 'SELECT * FROM USER WHERE ID=? AND PWD=?';
-
-    this.connection.query(query, [id, pwd], (err: MysqlError | null, result: any) => {
-      if (err) {
-        throw new Error('verify query fail');
-      } else {
-        // ???
-      }
-    })
+  constructor(c: mysql.Connection, r: redis.RedisClient) {
+    super(c, r);
   }
 
   public register({ id, pwd, email }: UserInfo): Promise<boolean> {
@@ -111,7 +74,7 @@ class Connection {
 
   public getUserInfo({ columns, id }: { columns: string[], id: string }): Promise<UserRow[]> {
 
-    const query: string = `SELECT ${columns} FROM USERS WHERE ID = ?`;
+    const query: string = `SELECT ${columns} FROM USERS WHERE ID =?`;
 
     return new Promise((resolve, reject) => {
 
@@ -178,84 +141,4 @@ class Connection {
       });
     });
   }
-
-  public insertGameRecord({ id, record, success, level }: GameRecord): Promise<boolean | string> {
-
-    const query = `INSERT INTO ${level}game (GAMENUM, ID, RECORD, DATE, SUCCESS)
-                  VALUES (?,?,?,NOW(),?)`;
-
-    return new Promise((resolve, reject) => {
-
-      this.connection.query(query, [null, id, record, success], (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(true);
-        }
-      });
-    })
-  }
-
-  public getGameRecord(): Promise<any[]> {
-
-    const query = 'SELECT* FROM EASYGAME ORDER BY RECORD';
-
-    return new Promise((resolve, reject) => {
-
-      this.connection.query(query, [], (err, data) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data);
-        }
-      });
-    });
-  }
-
-  public getGameSize(level: string): Promise<number> {
-
-    const query =
-      `SELECT COUNT(*) AS successGameCount
-    FROM ${level}game 
-    WHERE success=? 
-    ORDER BY gamenum DESC LIMIT 1`;
-
-    return new Promise((resolve, reject) => {
-
-      this.connection.query(query, [1], (err, data: { successGameCount: number }[]) => {
-
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data[0].successGameCount);
-        }
-      });
-    });
-  }
-
-  public getGameLank(level: string, { begin, end }: { [key: string]: number }) {
-
-    const query =
-      `SELECT id, MIN(record) as record, ranking
-    FROM (
-      SELECT id, record, RANK() over(ORDER BY record) AS 'ranking'
-      FROM ${level}game
-      WHERE success=?
-    )ranked
-    WHERE ranked.ranking >? AND ranked.ranking <=?
-    GROUP BY id`;
-
-    return new Promise((resolve, reject) => {
-
-      this.connection.query(query, [1, begin, end], (err, data) => {
-        if (err || !data) {
-          reject(err);
-        } else {
-          resolve(data);
-        }
-      });
-    });
-  }
 }
-
-export default Connection.getInstance();

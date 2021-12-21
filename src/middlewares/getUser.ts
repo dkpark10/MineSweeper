@@ -1,8 +1,9 @@
-import db, { UserRow } from '../models/db';
+import model from '../models';
+import { UserRow } from '../models/user';
 
 const getUser = async (columns: string, value: string) => {
 
-  const result: UserRow[] = await db.getUserInfo({
+  const result: UserRow[] = await model.user.getUserInfo({
     columns: [columns],
     id: value
   });

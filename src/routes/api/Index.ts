@@ -1,9 +1,24 @@
 import { Router } from 'express';
 import auth from './auth';
-import { login } from './user/login';
-import { logout } from './user/logout';
-import { isExistUser, registUser } from './user/register';
-import { getGameSize, getGame } from './game/get';
+import {
+  login,
+  logout,
+  isExistUser,
+  registUser
+} from './user/user.controller';
+
+import {
+  getGameSize,
+  getGame,
+  getUserGame
+} from './game/game.controller';
+
+import {
+  getPostListperPage,
+  getPost,
+  updatePostView,
+  dropTest
+} from './posts/posts.controller';
 
 const router: Router = Router();
 
@@ -15,6 +30,13 @@ router.post('/logout', logout);
 router.get('/user', isExistUser);
 router.post('/user', registUser);
 
-router.use('/game/:level', getGameSize, getGame);
+router.get('/posts', getPostListperPage);
+router.get('/posts/:postid', getPost);
+router.patch('/posts/:postid', updatePostView);
+
+router.get('/game', getUserGame);
+router.get('/game/:level', getGameSize, getGame);
+
+router.get('/droptest', dropTest);
 
 export default router;
