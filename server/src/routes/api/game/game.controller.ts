@@ -85,7 +85,8 @@ const getUserGame = async (request: Request, response: Response, next: NextFunct
 
     const winRate = await model.game.getUserGame(userid as string);
     const bestRecordPerLevel = await model.game.getBestRecordPerLevel(userid as string);
-    const data = { ...winRate, ...bestRecordPerLevel };
+    const pastGame = await model.game.getPastGame(userid as string);
+    const data = { ...winRate, ...bestRecordPerLevel, pastGame: pastGame };
 
     response.status(201).send({ result: true, data });
 

@@ -7,6 +7,7 @@ export interface GameRecord {
   record: number;
   success: number;
   level: string;
+  date?: string;
 };
 
 export interface WinRate {
@@ -152,7 +153,7 @@ export default class GameModel extends Model {
     });
   }
 
-  public getBestRecordPerLevel(id: string):Promise<BestRecord> {
+  public getBestRecordPerLevel(id: string): Promise<BestRecord> {
 
     const query =
       `SELECT MIN(e.record)as ebest, MIN(n.record)as nbest, MIN(h.record) as hbest
@@ -179,6 +180,31 @@ export default class GameModel extends Model {
           reject(err);
         } else {
           resolve(data[0]);
+        }
+      });
+    });
+  }
+
+  public getPastGame(id: string): Promise<GameRecord> {
+
+    const query = `
+    SELECT record, DATE_FORMAT(DATE, '%Y-%m-%d')AS date ,success,level
+      FROM(
+      SELECT record,DATE,success, 'easy' AS level FROM easygame WHERE id=?
+      UNION
+      SELECT record,DATE,success, 'normal' FROM normalgame WHERE id=?
+      UNION
+      SELECT record,DATE,success, 'hard' FROM hardgame WHERE id=?)AS temp
+      ORDER BY DATE DESC
+      limit 20`;
+
+    return new Promise((resolve, reject) => {
+
+      this.connection.query(query, [id, id, id], (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
         }
       });
     });
