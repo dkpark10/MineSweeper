@@ -1,3 +1,4 @@
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 import express, { Request, Response, NextFunction } from 'express';
 import * as bodyParser from 'body-parser';
 import helmet from 'helmet';
@@ -12,7 +13,6 @@ import path from 'path';
 
 const app: express.Application = express();
 const port: string = process.env.PORT || '8080';
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 // 서버단 최적화 
 // 조회수 업데이트 데드락 최적화(캐시?)
@@ -27,7 +27,7 @@ app.use(cors({
   credentials: true
 }));
 
-app.use(express.static(path.join(__dirname, './client')));
+app.use(express.static(path.join(__dirname, '../../client/build')));
 app.set('secret-key', secretKey);
 app.set('itemCountPerPage', 20);
 app.use(cookieParser(app.get('secret-key').cookieKey));
@@ -67,7 +67,7 @@ app.post('*', async (request: Request, _: Response, next: NextFunction) => {
 app.use('/api', apiroute);
 
 app.get('/', async (request: Request, response: Response, next: NextFunction) => {
-  response.sendFile(path.join(__dirname, './client/index.html'));
+  response.sendFile(path.join(__dirname, '../../client/build/index.html'));
 });
 
 app.post('/', async (request: Request, response: Response, next: NextFunction) => {
@@ -80,7 +80,7 @@ app.post('/', async (request: Request, response: Response, next: NextFunction) =
 
 // 서버에서 url 넘겨줄 때 헤당 엔드포인트가 없으므로
 app.get('*', async (request: Request, response: Response) => {
-  response.sendFile(path.join(__dirname, './client/index.html'));
+  response.sendFile(path.join(__dirname, '../../client/build/index.html'));
 });
 
 app.listen(port, () => {

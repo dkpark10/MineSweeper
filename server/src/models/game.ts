@@ -1,4 +1,4 @@
-import mysql from 'mysql';
+import mysql from 'mysql2';
 import redis from 'redis'
 import Model from './model';
 
@@ -49,22 +49,6 @@ export default class GameModel extends Model {
     })
   }
 
-  public getGameRecord(): Promise<any[]> {
-
-    const query = 'SELECT* FROM EASYGAME ORDER BY RECORD';
-
-    return new Promise((resolve, reject) => {
-
-      this.connection.query(query, [], (err, data) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data);
-        }
-      });
-    });
-  }
-
   public getGameSize(level: string): Promise<number> {
 
     const query =
@@ -75,7 +59,7 @@ export default class GameModel extends Model {
 
     return new Promise((resolve, reject) => {
 
-      this.connection.query(query, [1], (err, data: { successGameCount: number }[]) => {
+      this.connection.query(query, [1], (err, data: any[]) => {
 
         if (err) {
           reject(err);
@@ -143,7 +127,7 @@ export default class GameModel extends Model {
 
     return new Promise((resolve, reject) => {
 
-      this.connection.query(query, [id, 1, id, id, 1, id, id, 1, id], (err, data) => {
+      this.connection.query(query, [id, 1, id, id, 1, id, id, 1, id], (err, data: any[]) => {
         if (err) {
           reject(err);
         } else {
@@ -175,7 +159,7 @@ export default class GameModel extends Model {
 
     return new Promise((resolve, reject) => {
 
-      this.connection.query(query, [id, 1, id, 1, id, 1], (err, data) => {
+      this.connection.query(query, [id, 1, id, 1, id, 1], (err, data: any[]) => {
         if (err) {
           reject(err);
         } else {
@@ -200,7 +184,7 @@ export default class GameModel extends Model {
 
     return new Promise((resolve, reject) => {
 
-      this.connection.query(query, [id, id, id], (err, data) => {
+      this.connection.query(query, [id, id, id], (err, data: any) => {
         if (err) {
           reject(err);
         } else {

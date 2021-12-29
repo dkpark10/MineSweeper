@@ -95,46 +95,4 @@ const getUserGame = async (request: Request, response: Response, next: NextFunct
   }
 }
 
-const getTest = async (request: Request, response: Response, next: NextFunction) => {
-
-  try {
-
-    const begin = new Date().getTime();
-    const data = await model.game.getGameRecord();
-    const end = new Date().getTime();
-
-    response.status(201).send({ result: true, message: (end - begin) / 1000, length: data.length });
-  }
-  catch (e) {
-    response.status(201).send({ result: false, message: e });
-  }
-}
-
-
-const insertTest = async (request: Request, response: Response) => {
-
-  try {
-
-    for (let i = 0; i < 5000; i++) {
-
-      const record = Math.round(Math.random() * (999999 - 1) + 1) / 1000;
-      const success = Math.floor(Math.random() * 10) % 2;
-
-      const gameRecord: GameRecord = {
-        id: shortid.generate(),
-        level: 'test',
-        record,
-        success
-      }
-
-      await model.game.insertGameRecord(gameRecord);
-    }
-
-    response.status(201).send({ result: true, message: '게임 기록 쿼리 성공' });
-  }
-  catch (e) {
-    response.status(201).send({ result: false, message: e });
-  }
-}
-
-export { record, insertTest, getTest, getGameSize, getGame, getUserGame };
+export { record, getGameSize, getGame, getUserGame };

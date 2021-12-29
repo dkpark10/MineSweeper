@@ -8,9 +8,9 @@
     {
       "type": "chrome",
       "request": "launch",
-      "name": "debugger server",
+      "name": "Launch Chrome against localhost",
       "url": "http://localhost:8080",
-      "webRoot": "${workspaceFolder}/src"
+      "webRoot": "${workspaceFolder}"
     },
     {
       "name": "run debugger",
@@ -26,7 +26,7 @@
       "request": "launch",
       "name": "run react debugger",
       "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}/src",
+      "webRoot": "${workspaceFolder}client/src",
     },
     {
       "type": "node",

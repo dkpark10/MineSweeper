@@ -1,4 +1,4 @@
-import mysql, { MysqlError } from 'mysql';
+import mysql, { QueryError } from 'mysql2';
 import redis from 'redis';
 import Model from './model';
 
@@ -19,13 +19,14 @@ export interface UserInfo {
 
 export default class UserModel extends Model {
 
+  private readonly table = 'users';
   constructor(c: mysql.Connection, r: redis.RedisClient) {
     super(c, r);
   }
 
   public register({ id, pwd, email }: UserInfo): Promise<boolean> {
 
-    const query = `INSERT INTO USERS (ID, PWD, EMAIL, GRADE, AUTH, ENROLLDATE)
+    const query = `INSERT INTO ${this.table} (ID, PWD, EMAIL, GRADE, AUTH, ENROLLDATE)
                             VALUES (?, ?, ?, ?, ?, NOW())`;
 
     return new Promise((resolve, reject) => {
@@ -42,7 +43,7 @@ export default class UserModel extends Model {
 
   public registSalt(id: string, salt: string): Promise<boolean> {
 
-    const query = `INSERT INTO SALT (ID, SALT) VALUES (?, ?)`;
+    const query = `INSERT INTO salt (ID, SALT) VALUES (?, ?)`;
 
     return new Promise((resolve, reject) => {
 
@@ -58,11 +59,11 @@ export default class UserModel extends Model {
 
   public getSalt(id: string): Promise<string> {
 
-    const query = 'SELECT SALT FROM SALT WHERE ID = ?';
+    const query = 'SELECT salt FROM salt WHERE ID = ?';
 
     return new Promise((resolve, reject) => {
 
-      this.connection.query(query, [id], (err: MysqlError | null, result: { SALT: string }[]) => {
+      this.connection.query(query, [id], (err: QueryError | null, result: any[]) => {
         if (err) {
           reject('getSalt query fail');
         } else {
@@ -74,11 +75,11 @@ export default class UserModel extends Model {
 
   public getUserInfo({ columns, id }: { columns: string[], id: string }): Promise<UserRow[]> {
 
-    const query: string = `SELECT ${columns} FROM USERS WHERE ID =?`;
+    const query: string = `SELECT ${columns} FROM ${this.table} WHERE ID =?`;
 
     return new Promise((resolve, reject) => {
 
-      this.connection.query(query, [id], (err: MysqlError | null, result: UserRow[]) => {
+      this.connection.query(query, [id], (err: QueryError | null, result: any[]) => {
         if (err) {
           reject('getUserInfo query fail');
         } else {
@@ -90,11 +91,11 @@ export default class UserModel extends Model {
 
   public getPassword(id: string): Promise<string> {
 
-    const query: string = `SELECT PWD FROM USERS WHERE ID = ?`;
+    const query: string = `SELECT PWD FROM ${this.table} WHERE ID = ?`;
 
     return new Promise((resolve, reject) => {
 
-      this.connection.query(query, [id], (err: MysqlError | null, result: { PWD: string }[]) => {
+      this.connection.query(query, [id], (err: QueryError | null, result: any[]) => {
         if (err) {
           reject('isExistUser query fail');
         } else {
@@ -106,11 +107,11 @@ export default class UserModel extends Model {
 
   public deleteUser(id: string): Promise<boolean> {
 
-    const query = 'DELETE FROM USERS WHERE id = ?';
+    const query = `DELETE FROM ${this.table} WHERE id = ?`;
 
     return new Promise((resolve, reject) => {
 
-      this.connection.query(query, [id], (err: MysqlError | null, result) => {
+      this.connection.query(query, [id], (err: QueryError | null, result) => {
         if (err) {
           reject('delete user query fail');
         } else {

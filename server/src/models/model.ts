@@ -1,4 +1,4 @@
-import mysql from 'mysql';
+import mysql from 'mysql2';
 import redis from 'redis';
 
 export default abstract class Model {

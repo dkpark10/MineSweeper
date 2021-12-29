@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { record, getTest, insertTest } from '../game/game.controller';
+import { record } from '../game/game.controller';
 import { insertPost, deletePost } from '../posts/posts.controller';
 import db from '../../../models';
 import { signToken, verifyToken } from '../../../util/jwttHandler';
@@ -71,9 +71,6 @@ router.post('/game', record);
 
 router.post('/posts', insertPost);
 router.delete('/posts', deletePost);
-
-router.post('/game/test', insertTest);
-router.get('/game/test', getTest);
 
 router.get('/test', async(req:Request, res:Response) => {
   res.status(200).send('....');

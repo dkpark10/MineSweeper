@@ -1,4 +1,4 @@
-import mysql, { ConnectionConfig } from 'mysql';
+import mysql, { ConnectionOptions } from "mysql2";
 import redis from 'redis';
 import config from '../config/Index';
 import UserModel from '../models/user';
@@ -16,7 +16,7 @@ class Connection {
   public readonly game: GameModel;
   public readonly post: PostModel;
 
-  private constructor(config: ConnectionConfig) {
+  private constructor(config: ConnectionOptions) {
 
     this.connection = mysql.createConnection(config);
     this.connection.connect();
