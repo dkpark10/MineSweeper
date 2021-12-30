@@ -3,6 +3,5 @@ server/dist
 server/src/config
 
 client/node_modules
-client/build
 client/src/practice
 client/src/config

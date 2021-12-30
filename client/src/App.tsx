@@ -6,7 +6,6 @@ import SignUp from './components/SignUp';
 import NotFound from './components/page/NotFound';
 import Loading from './components/page/Loading';
 import Option from './components/Option';
-import NotePad from './Practice/ReduxPrac';
 import axios from 'axios';
 import { setLogin } from './reducers/Login';
 import { useDispatch } from 'react-redux';
@@ -63,7 +62,6 @@ export default function App() {
             <Route path="/community" component={Bulletin} />
             <Route path="/mypage" component={MyPage} />
             <Route path="/option" component={Option} />
-            <Route path="/test" component={NotePad} />
             <Route component={NotFound} />
           </Switch>
         </Suspense>
