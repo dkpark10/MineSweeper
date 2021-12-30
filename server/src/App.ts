@@ -4,7 +4,7 @@ import * as bodyParser from 'body-parser';
 import helmet from 'helmet';
 import compression from 'compression';
 import sanitize from 'sanitize-html';
-import apiroute from './routes/api';
+import apiroute from './routes/api/index';
 import secretKey from './config/secretkey';
 import cookieParser from 'cookie-parser'
 import shortid from 'shortid';

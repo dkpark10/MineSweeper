@@ -1,6 +1,6 @@
 import mysql, { ConnectionOptions } from "mysql2";
 import redis from 'redis';
-import config from '../config/Index';
+import config from '../config/index';
 import UserModel from '../models/user';
 import PostModel from '../models/post';
 import GameModel from '../models/game';
