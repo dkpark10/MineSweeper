@@ -40,7 +40,7 @@ export default function BulletinMain({ match, location }: RouteComponentProps<Ma
 
   useEffect(() => {
 
-    axiosApi.get(`http://localhost:8080/api/posts?page=${page}`)
+    axiosApi.get(`/api/posts?page=${page}`)
       .then((response: Response) => {
         setPostList(prev => ([
           ...response.data.result

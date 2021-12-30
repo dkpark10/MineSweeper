@@ -51,7 +51,7 @@ export default function CreatePost({ history }: RouteComponentProps) {
     if (title.length === 0)
       return;
 
-    axiosApi.post(`http://localhost:8080/api/auth/posts`, {
+    axiosApi.post(`/api/auth/posts`, {
       "author": author,
       "title": title,
       "contents": contents.substring(0, 2500)

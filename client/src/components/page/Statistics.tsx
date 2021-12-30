@@ -62,7 +62,7 @@ export default function Statisticks({ userid }: { userid: string }) {
   const [winCount, setWinCount] = useState<number[]>([]);
 
   useEffect(() => {
-    axiosApi.get(`http://localhost:8080/api/game?userid=${userid}`)
+    axiosApi.get(`/api/game?userid=${userid}`)
       .then((res: Response) => {
 
         const { easytotal, normaltotal, hardtotal, easywin, normalwin, hardwin, pastGame } = res.data;

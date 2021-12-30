@@ -61,7 +61,7 @@ const SignUp = ({ history }: RouteComponentProps) => {
     if (invalid === true)
       return;
 
-    axiosApi.post(`http://localhost:8080/api/user`, {
+    axiosApi.post(`/api/user`, {
       "id": inputs.id.value,
       "email": inputs.email.value,
       "pwd": inputs.pwd.value

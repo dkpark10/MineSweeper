@@ -44,13 +44,12 @@ export default function StatisticsPastGame({ pastGame }) {
 
       const { align, value } = ele;
       return (
-        <>
-          <TextWrapper
-            textAlign={align}
-            fontSize={pastGameHeaderFontSize}
-            value={value}
-          />
-        </>
+        <TextWrapper
+          key={idx}
+          textAlign={align}
+          fontSize={pastGameHeaderFontSize}
+          value={value}
+        />
       )
     })
 

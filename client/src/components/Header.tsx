@@ -96,7 +96,7 @@ const LogoutMenu = () => {
 
   const dispatch = useDispatch();
   const logout = () => {
-    axiosApi.post(`http://localhost:8080/api/logout`)
+    axiosApi.post(`/api/logout`)
       .then((response: Response) => {
         if (response.result === false) {
           throw new Error('logout error');

@@ -60,7 +60,7 @@ const SignIn = ({ history }: RouteComponentProps) => {
     if (invalid.length > 0)
       return;
 
-    axiosApi.post(`http://localhost:8080/api/login`, {
+    axiosApi.post(`/api/login`, {
       "id": inputs.id.value,
       "pwd": inputs.pwd.value
     })

@@ -1,9 +1,17 @@
 import axios, { AxiosResponse, AxiosInstance } from 'axios';
 
-const SERVER_ADDRESS = 'http://localhost:8080' as const;
+let SERVER_ADDRESS: string;
+if (process.env.NODE_ENV === 'development') {
+  SERVER_ADDRESS = 'http://localhost:8080';
+} else {
+  SERVER_ADDRESS = 'http://13.125.83.254:8080';
+}
 
 export interface AxiosInterface {
-  [key: string]: (url: string, data?: any) => Promise<any>;
+  get: (url: string, data?: any) => Promise<any>;
+  post: (url: string, data?: any) => Promise<any>;
+  patch: (url: string, data?: any) => Promise<any>;
+  delete: (url: string, data?: any) => Promise<any>;
 }
 
 export interface Response {
@@ -16,69 +24,53 @@ export interface Response {
   }
 }
 
-const config = {
+// const config = {
+//   headers: {
+//     'Content-type': 'application/json',
+//     'Accept': 'application/json',
+//   },
+//   withCredentials: true
+// };
+
+const instance: AxiosInstance = axios.create({
+
+  baseURL: `${SERVER_ADDRESS}`, // 기본 서버 주소 입력
   headers: {
     'Content-type': 'application/json',
     'Accept': 'application/json',
   },
   withCredentials: true
-};
+})
 
 const axiosApi: AxiosInterface = {
 
-  get: (url: string) => axios.get(url, config)
+  get: (url: string) => instance.get(url)
     .then((response: AxiosResponse<Response>) => response.data)
     .catch(err => console.error(err)),
 
-  post: (url: string, data: { [key: string]: any }) => axios.post(url, data, config)
+  post: (url: string, data: { [key: string]: any }) => instance.post(url, data)
     .then((response: AxiosResponse<Response>) => response.data)
     .catch(err => console.error(err)),
 
-  patch: (url: string, data: { [key: string]: any }) => axios.patch(url, data, config)
+  patch: (url: string, data: { [key: string]: any }) => instance.patch(url, data)
     .then((response: AxiosResponse<Response>) => response.data)
     .catch(err => console.error(err)),
 
-  delete: (url: string, data: { [key: string]: any }) => axios.delete(url, data)
+  delete: (url: string, data: { [key: string]: any }) => instance.delete(url, data)
     .then((response: AxiosResponse<Response>) => response.data)
     .catch(err => console.error(err)),
 };
 
-export abstract class AxiosHandler {
+// export abstract class AxiosHandler {
 
-  public static instance: AxiosInstance = axios.create({
-    baseURL: `${SERVER_ADDRESS}`, // 기본 서버 주소 입력
-    headers: {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-    },
-    withCredentials: true
-  });
-
-  public static async get<T>(url: string): Promise<T> {
-
-    const ret = await this.instance.get<T>(url)
-    return ret.data;
-  }
-
-  public static async post<T>(url: string, data?: any): Promise<T> {
-
-    try {
-      return await this.instance.post(url, data);
-    }
-    catch (e) {
-      return e;
-    }
-  }
-
-  public static async patch<T>(url: string, data?: any): Promise<T> {
-
-    try {
-      return await this.instance.patch(url, data);
-    }
-    catch (e) {
-      return e;
-    }
-  }
-}
+//   public static instance: AxiosInstance = axios.create({
+//     baseURL: `${SERVER_ADDRESS}`, // 기본 서버 주소 입력
+//     headers: {
+//       'Content-type': 'application/json',
+//       'Accept': 'application/json',
+//     },
+//     withCredentials: true
+//   });
+// }
 
 export default axiosApi;

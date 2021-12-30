@@ -74,7 +74,7 @@ export default function PostDelete({ history, location }: RouteComponentProps<Ma
       history.replace('/signin');
     }
 
-    axiosApi.get(`http://localhost:8080/api/posts/${postid}`)
+    axiosApi.get(`/api/posts/${postid}`)
       .then((res: Response) => {
 
         if (res.data.author === userid) {
@@ -93,7 +93,7 @@ export default function PostDelete({ history, location }: RouteComponentProps<Ma
       return;
     }
 
-    axiosApi.delete(`http://localhost:8080/api/auth/posts?postid=${postid}`)
+    axiosApi.delete(`/api/auth/posts?postid=${postid}`)
       .then((res: Response) => {
         history.replace('/community?page=1');
       })

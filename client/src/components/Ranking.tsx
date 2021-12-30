@@ -56,7 +56,7 @@ const Ranking = ({ match, location }: RouteComponentProps<MatchParams>) => {
   const level = match.params.level;
   useEffect(() => {
 
-    axiosApi.get(`http://localhost:8080/api/game/${level}`)
+    axiosApi.get(`api/game/${level}`)
       .then((response: Response) => {
         setTotalItemCount(response.data);
       })
@@ -105,7 +105,7 @@ const RankingList = ({ currentPage, level }: RankListProps) => {
   const [list, setList] = useState<RankItem[]>([]);
   useEffect(() => {
 
-    axiosApi.get(`http://localhost:8080/api/game/${level}?page=${currentPage}`)
+    axiosApi.get(`api/game/${level}?page=${currentPage}`)
       .then((response: Response) => {
         setList(prev => ([
           ...response.data

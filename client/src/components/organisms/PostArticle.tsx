@@ -56,10 +56,10 @@ export default function PostArticle({ match, history }: RouteComponentProps<Matc
 
   useEffect(() => {
 
-    axiosApi.patch(`http://localhost:8080/api/posts/${postid}?column=views`)
+    axiosApi.patch(`/api/posts/${postid}?column=views`)
       .catch(e => { });
 
-    axiosApi.get(`http://localhost:8080/api/posts/${postid}`)
+    axiosApi.get(`/api/posts/${postid}`)
       .then((response: Response) => {
         setPost(prev => ({
           ...response.data

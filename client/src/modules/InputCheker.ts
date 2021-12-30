@@ -47,7 +47,7 @@ export default class InputInvalidChecker {
         return resolve({ msg: this.invalidText[name][0], status: true });
       }
 
-      axiosApi.get(`http://localhost:8080/api/user?${name}=${value}`)
+      axiosApi.get(`/api/user?${name}=${value}`)
         .then((response: Response) => {
           if (response.result === true) {
             return resolve({ msg: this.invalidText[name][1], status: true });

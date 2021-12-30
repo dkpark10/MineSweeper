@@ -35,7 +35,6 @@ const parseCookie = (name: string) => {
 }
 
 export default function App() {
-
   const dispatch = useDispatch();
   // Authorization 헤더는 새로고침 브라우저 꺼지면 사라지므로
   // 컴포넌트 새로 마운트 될 때 마다 토큰 박음

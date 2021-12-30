@@ -23,7 +23,10 @@ const port: string = process.env.PORT || '8080';
 app.use(compression());
 app.use(helmet());
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:80'
+  ],
   credentials: true
 }));
 
