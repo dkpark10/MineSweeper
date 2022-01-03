@@ -65,14 +65,14 @@ const login = async (request: Request, response: Response, next: NextFunction) =
 const logout = async (request: Request, response: Response, next: NextFunction) => {
 
   try {
-    
-    if (request.signedCookies['accessToken'] === undefined){
+
+     if (request.signedCookies['accessToken'] === undefined){
       throw '쿠키 없음 ~~~';
-    }
+     }
 
     const id = request.signedCookies['accessToken'].id;
     response.clearCookie('accessToken');
-    
+
     model.user.deleteRefreshToken(id);
     return response.status(200).send({ result: true, message: 'Logout ~~' });
   }
@@ -130,7 +130,7 @@ const registUser = async (request: Request, response: Response, next: NextFuncti
       }));
   }
   catch (e) {
-  
+
     // 소금 등록 실패시 참조무결성을 위해 방금 등록된 아이디를 삭제해야 한다.
     // 사실 이건 일어날 일이 없지 않나? 
     if (e === 'registsalt query fail') {

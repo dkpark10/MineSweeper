@@ -1,11 +1,8 @@
 import axios, { AxiosResponse, AxiosInstance } from 'axios';
+import address from '../config/ServerAddress';
 
 let SERVER_ADDRESS: string;
-if (process.env.NODE_ENV === 'development') {
-  SERVER_ADDRESS = 'http://localhost:8080';
-} else {
-  SERVER_ADDRESS = 'http://13.125.83.254:8080';
-}
+SERVER_ADDRESS = address;
 
 export interface AxiosInterface {
   get: (url: string, data?: any) => Promise<any>;

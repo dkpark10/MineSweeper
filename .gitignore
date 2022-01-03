@@ -5,3 +5,4 @@ server/src/config
 client/node_modules
 client/src/practice
 client/src/config
+client/build

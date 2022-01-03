@@ -1,8 +1,5 @@
-import Header from '../Header';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
 import axiosApi, { Response } from '../../modules/API';
-import { RootState } from '../../reducers';
 import React, { useEffect, useState } from 'react';
 
 import {

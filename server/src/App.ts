@@ -6,11 +6,12 @@ import compression from 'compression';
 import sanitize from 'sanitize-html';
 import apiroute from './routes/api/index';
 import secretKey from './config/secretkey';
+import address from './config/address';
 import cookieParser from 'cookie-parser'
 import shortid from 'shortid';
 import cors from 'cors';
 import path from 'path';
-
+import { expressCspHeader, INLINE, NONE, SELF } from 'express-csp-header';
 const app: express.Application = express();
 const port: string = process.env.PORT || '8080';
 
@@ -22,11 +23,17 @@ const port: string = process.env.PORT || '8080';
 
 app.use(compression());
 app.use(helmet());
+app.use(expressCspHeader({
+  directives: {
+    'script-src': [SELF, INLINE]
+  }
+}));
+
 app.use(cors({
   origin: [
     'http://localhost:3000',
     'http://localhost:80',
-    'http://13.125.83.254:80'
+    address
   ],
   credentials: true
 }));
@@ -39,7 +46,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 const sanitizeInput = (arg: any) => {
-  
+
   Object.entries({ ...arg }).map(([key, value]) => {
     arg[key] = sanitize(value as string, {
       allowedTags: [

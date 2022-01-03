@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import model from '../../../models';
 import { GameRecord } from '../../../models/game';
-import shortid from 'shortid';
 
 const getGameSize = async (request: Request, response: Response, next: NextFunction) => {
 

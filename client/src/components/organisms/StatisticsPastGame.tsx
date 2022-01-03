@@ -60,7 +60,7 @@ export default function StatisticsPastGame({ pastGame }) {
       >
         <HeaderText
           size={'1.15rem'}
-          value={'PastGame'}
+          value={'Recent Game'}
           isColor={true}
           margin={'20px 0'}
         />
@@ -80,7 +80,7 @@ export default function StatisticsPastGame({ pastGame }) {
               <TextWrapper
                 textAlign={'left'}
                 fontSize={pastGameContentFontSize}
-                value={String(idx)}
+                value={String(idx + 1)}
                 bold={true}
                 isColor={true}
               />

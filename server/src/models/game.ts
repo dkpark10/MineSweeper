@@ -1,4 +1,4 @@
-import mysql from 'mysql2';
+import mysql, { RowDataPacket } from 'mysql2';
 import redis from 'redis'
 import Model from './model';
 
@@ -10,7 +10,7 @@ export interface GameRecord {
   date?: string;
 };
 
-export interface WinRate {
+export interface WinRate extends RowDataPacket{
   easywin: number;
   easytotal: number;
   normalwin: number;
@@ -19,12 +19,15 @@ export interface WinRate {
   hardtotal: number;
 };
 
-export interface BestRecord {
+export interface BestRecord extends RowDataPacket {
   ebest: number;
   nbest: number;
   hbest: number;
 };
 
+export interface WinGameSize extends RowDataPacket{
+  successGameCount: number;
+}
 
 export default class GameModel extends Model {
 
@@ -59,7 +62,7 @@ export default class GameModel extends Model {
 
     return new Promise((resolve, reject) => {
 
-      this.connection.query(query, [1], (err, data: any[]) => {
+      this.connection.query(query, [1], (err, data: WinGameSize[]) => {
 
         if (err) {
           reject(err);
@@ -127,7 +130,7 @@ export default class GameModel extends Model {
 
     return new Promise((resolve, reject) => {
 
-      this.connection.query(query, [id, 1, id, id, 1, id, id, 1, id], (err, data: any[]) => {
+      this.connection.query(query, [id, 1, id, id, 1, id, id, 1, id], (err, data: WinRate[]) => {
         if (err) {
           reject(err);
         } else {
@@ -159,7 +162,7 @@ export default class GameModel extends Model {
 
     return new Promise((resolve, reject) => {
 
-      this.connection.query(query, [id, 1, id, 1, id, 1], (err, data: any[]) => {
+      this.connection.query(query, [id, 1, id, 1, id, 1], (err, data: BestRecord[]) => {
         if (err) {
           reject(err);
         } else {

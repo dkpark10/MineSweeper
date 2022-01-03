@@ -67,7 +67,7 @@ export default class UserModel extends Model {
         if (err) {
           reject('getSalt query fail');
         } else {
-          resolve(result[0].SALT);
+          resolve(result[0].salt);
         }
       });
     });
