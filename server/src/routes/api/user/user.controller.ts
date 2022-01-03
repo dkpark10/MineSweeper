@@ -3,8 +3,9 @@ import Encrypter from '../../../util/crypto';
 import sanitize from 'sanitize-html';
 import model from '../../../models/index';
 import { UserRow } from '../../../models/user';
-import { signToken } from '../../../util/jwttHandler';
 import getUser from '../../../middlewares/getUser';
+import userVerification from '../../../middlewares/userverification';
+import { signToken } from '../../../util/jwttHandler';
 
 const getSaltedPassword = async (id: string, pwd: string) => {
   const encrypter: Encrypter = new Encrypter();
@@ -66,9 +67,9 @@ const logout = async (request: Request, response: Response, next: NextFunction) 
 
   try {
 
-     if (request.signedCookies['accessToken'] === undefined){
+    if (request.signedCookies['accessToken'] === undefined) {
       throw '쿠키 없음 ~~~';
-     }
+    }
 
     const id = request.signedCookies['accessToken'].id;
     response.clearCookie('accessToken');
@@ -106,7 +107,7 @@ const isExistUser = async (request: Request, response: Response, next: NextFunct
 }
 
 
-const registUser = async (request: Request, response: Response, next: NextFunction) => {
+const registUser = async (request: Request, response: Response) => {
 
   const { id, email, pwd } = request.body;
 
@@ -152,6 +153,22 @@ const registUser = async (request: Request, response: Response, next: NextFuncti
   }
 }
 
+// 새로고침시 자동 로그인
+// 토큰 만료시 새로고침할 때에도 유저검증을 해야한다.
+const slientLogin = async (request: Request, response: Response) => {
+
+  try {
+    const tempAccessToken = request.signedCookies['accessToken'].accessToken;
+    const result = await userVerification(request, response, tempAccessToken);
+
+    const data = request.signedCookies['accessToken'];
+    response.status(200).send({ result, data });
+  }
+  catch (e) {
+    response.status(200).send({ result: false, message: e });
+  }
+}
+
 const test = async (request: Request, response: Response, next: NextFunction) => {
 
   try {
@@ -162,4 +179,4 @@ const test = async (request: Request, response: Response, next: NextFunction) =>
   }
 }
 
-export { isExistUser, registUser, test ,login, logout };
+export { isExistUser, registUser, test, login, logout, slientLogin };

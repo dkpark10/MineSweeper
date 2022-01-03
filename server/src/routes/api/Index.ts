@@ -4,7 +4,8 @@ import {
   login,
   logout,
   isExistUser,
-  registUser
+  registUser,
+  slientLogin
 } from './user/user.controller';
 
 import {
@@ -26,6 +27,7 @@ router.use('/auth', auth);
 
 router.post('/login', login);
 router.post('/logout', logout);
+router.post('/slientlogin', slientLogin);
 
 router.get('/user', isExistUser);
 router.post('/user', registUser);

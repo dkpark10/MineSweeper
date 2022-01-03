@@ -13,6 +13,7 @@ import cookieParser from 'cookie-parser';
 import cookieKey from './config/CookieKey';
 import { ThemeProvider } from 'styled-components';
 import theme from './styles/Theme';
+import axiosApi, { Response } from './modules/API';
 
 // 라우팅 또는 페이지 컴포넌트에서 가져와야 한다.
 const Game = lazy(() => import('./components/Game'));
@@ -39,21 +40,21 @@ export default function App() {
   // 컴포넌트 새로 마운트 될 때 마다 토큰 박음
   useEffect(() => {
 
-    const parsedCookie = parseCookie('accessToken');
-
-    if (parsedCookie) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${parsedCookie.accessToken}`;
-      dispatch(setLogin({
-        isLogin: true,
-        id: parsedCookie.id
-      }));
-    }
-  });
+    axiosApi.post(`/api/slientlogin`)
+      .then((response: Response) => {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.accessToken}`;
+        dispatch(setLogin({
+          isLogin: true,
+          id: response.data.id
+        }));
+      })
+      .catch(e => console.error(e));
+  }, [dispatch])
 
   return (
     <>
       <ThemeProvider theme={theme}>
-        <Suspense fallback={<Loading/>}>
+        <Suspense fallback={<Loading />}>
           <Switch>
             <Route exact path="/" component={Game} />
             <Route path="/signin" component={SignIn} />

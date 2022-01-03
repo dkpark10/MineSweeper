@@ -2,7 +2,11 @@ import axios, { AxiosResponse, AxiosInstance } from 'axios';
 import address from '../config/ServerAddress';
 
 let SERVER_ADDRESS: string;
-SERVER_ADDRESS = address;
+if (process.env.NODE_ENV === 'development') {
+  SERVER_ADDRESS = 'http://localhost:8080';
+} else {
+  SERVER_ADDRESS = address;
+}
 
 export interface AxiosInterface {
   get: (url: string, data?: any) => Promise<any>;
@@ -20,14 +24,6 @@ export interface Response {
     accessToken: string;
   }
 }
-
-// const config = {
-//   headers: {
-//     'Content-type': 'application/json',
-//     'Accept': 'application/json',
-//   },
-//   withCredentials: true
-// };
 
 const instance: AxiosInstance = axios.create({
 

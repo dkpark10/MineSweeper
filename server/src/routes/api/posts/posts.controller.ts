@@ -73,10 +73,9 @@ const deletePost = async (request: Request, response: Response) => {
     response.status(200).send({ result: result });
   }
   catch(e){
-    response.status(200).send({ result: false, message:e});
+    response.status(201).send({ result: false, message:e});
   }
 }
-
 
 const dropTest = async (request: Request, response: Response) => {
 
@@ -87,7 +86,7 @@ const dropTest = async (request: Request, response: Response) => {
     response.status(200).send({ result: result, message: 'drop success' });
   }
   catch(e){
-    response.status(200).send({ result: false, message:e});
+    response.status(201).send({ result: false, message:e});
   }
 };
 
