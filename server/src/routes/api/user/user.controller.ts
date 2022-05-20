@@ -55,7 +55,9 @@ const login = async (request: Request, response: Response, next: NextFunction) =
     });
 
     return response.status(201).send({
-      result: true, message: '로그인 성공', loginInfo: { id, accessToken }
+      result: true, 
+      message: '로그인 성공', 
+      loginInfo: { id, accessToken }
     });
   }
   catch (e) {
@@ -68,17 +70,17 @@ const logout = async (request: Request, response: Response, next: NextFunction) 
   try {
 
     if (request.signedCookies['accessToken'] === undefined) {
-      throw '쿠키 없음 ~~~';
+      throw '로그인된 유저가 아닙니다.';
     }
 
     const id = request.signedCookies['accessToken'].id;
     response.clearCookie('accessToken');
 
     model.user.deleteRefreshToken(id);
-    return response.status(200).send({ result: true, message: 'Logout ~~' });
+    return response.send({ result: true });
   }
   catch (e) {
-    return response.status(202).send({ result: false, message: e });
+    return response.send({ result: false, message: e });
   }
 }
 
@@ -86,23 +88,20 @@ const isExistUser = async (request: Request, response: Response, next: NextFunct
 
   try {
 
-    const key: string = sanitize(Object.keys(request.query)[0], sanitizeOption).toUpperCase();
-    const value: string = sanitize(Object.values(request.query)[0] as string, sanitizeOption);
+    const key = sanitize(Object.keys(request.query)[0], sanitizeOption).toUpperCase();
+    const value = sanitize(Object.values(request.query)[0] as string, sanitizeOption);
 
     if (value === '' || !value) {
-      throw "누가 스크립트 태그를 넣어 공격했군....";
+      throw "값이 없음";
     }
 
-    const user = await getUser(key, value);
+    const result = await getUser(key, value);
 
-    return response.status(200).send({
-      result: user,
-      message: '유저 존재 쿼리 성공~~'
-    });
+    return response.send({ result });
   }
   catch (e) {
     // 에러(네트워크, 기타) 발생시 유저가 존재한다는 응답을 보냄으로서 회원가입을 막는다.
-    return response.status(400).send({ result: !USEREXIST, message: e });
+    return response.send({ result: !USEREXIST, message: e });
   }
 }
 
@@ -112,12 +111,12 @@ const registUser = async (request: Request, response: Response) => {
   const { id, email, pwd } = request.body;
 
   try {
-    // 누가 postman으로 중복아이디, 중복메일로 던진다면 ??
+    // 누가 postman으로 중복아이디를 던진다면 ???
     const existid = await getUser('id', id);
-    const existMail = await getUser('email', email);
 
-    if (existid || existMail)
+    if (existid){
       throw false;
+    }
 
     const encrypter: Encrypter = new Encrypter();
     const salt: string = await encrypter.createSalt();

@@ -28,7 +28,7 @@ const getGameSize = async (request: Request, response: Response, next: NextFunct
   }
 }
 
-const getGame = async (request: Request, response: Response) => {
+const getGameInfo = async (request: Request, response: Response) => {
 
   try {
     const { page } = request.query;
@@ -37,13 +37,13 @@ const getGame = async (request: Request, response: Response) => {
 
     const end = Number(page) * request.app.get('itemCountPerPage');
     const begin = end - request.app.get('itemCountPerPage');
+    const data = await model.game.getGameLank(request.params.level, { begin, end });
+    console.log(data);
 
-    const ret = await model.game.getGameLank(request.params.level, { begin, end });
-
-    response.status(200).send({ result: true, data: ret });
+    response.status(200).send(data);
   }
   catch (e) {
-    response.status(201).send({ result: false, message: e });
+    response.status(202).send([]);
   }
 }
 
@@ -59,11 +59,11 @@ const record = async (request: Request, response: Response) => {
       success: success === 'true' ? 1 : 0,
     }
 
-    await model.game.insertGameRecord(gameRecord);
-    response.status(201).send({ result: true, message: '게임 기록 쿼리 성공' });
+    const result = await model.game.insertGameRecord(gameRecord) as boolean;
+    response.status(201).send({ result });
   }
   catch (e) {
-    response.status(201).send({ result: false, message: e });
+    response.status(202).send({ result: false, message: e });
   }
 }
 
@@ -90,8 +90,8 @@ const getUserGame = async (request: Request, response: Response, next: NextFunct
     response.status(201).send({ result: true, data });
 
   }catch(e){
-    response.status(201).send({ result: true, message: e});
+    response.status(202).send({ result: true, message: e});
   }
 }
 
-export { record, getGameSize, getGame, getUserGame };
+export { record, getGameSize, getGameInfo, getUserGame };

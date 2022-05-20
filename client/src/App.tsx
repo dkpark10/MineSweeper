@@ -10,7 +10,7 @@ import axios from 'axios';
 import { setLogin } from './reducers/Login';
 import { useDispatch } from 'react-redux';
 import cookieParser from 'cookie-parser';
-import cookieKey from './config/CookieKey';
+import cookieKey from './config/cookie_key';
 import { ThemeProvider } from 'styled-components';
 import theme from './styles/Theme';
 import axiosApi, { Response } from './modules/API';

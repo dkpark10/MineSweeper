@@ -1,5 +1,5 @@
 import axios, { AxiosResponse, AxiosInstance } from 'axios';
-import address from '../config/ServerAddress';
+import address from '../config/server_address';
 
 let SERVER_ADDRESS: string;
 if (process.env.NODE_ENV === 'development') {

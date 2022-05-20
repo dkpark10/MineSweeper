@@ -76,7 +76,8 @@ export default class GameModel extends Model {
   public getGameLank(level: string, { begin, end }: { [key: string]: number }) {
 
     const query =
-      `SELECT id, MIN(record) as record, ranking
+      `SELECT id, MIN(record) as record, ranking,
+      (SELECT COUNT(*) FROM ${level}game WHERE success=1) AS totalItemCount
         FROM (
           SELECT id, record, RANK() over(ORDER BY record) AS 'ranking'
           FROM ${level}game

@@ -26,8 +26,6 @@ router.use(async (request: Request, response: Response, next: NextFunction) => {
   }
 });
 
-router.post('/game', record);
-
 router.post('/posts', insertPost);
 router.delete('/posts', deletePost);
 

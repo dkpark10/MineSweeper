@@ -9,9 +9,9 @@ import {
 } from './user/user.controller';
 
 import {
-  getGameSize,
-  getGame,
-  getUserGame
+  getGameInfo,
+  getUserGame,
+  record
 } from './game/game.controller';
 
 import {
@@ -37,7 +37,8 @@ router.get('/posts/:postid', getPost);
 router.patch('/posts/:postid', updatePostView);
 
 router.get('/game', getUserGame);
-router.get('/game/:level', getGameSize, getGame);
+router.get('/game/:level', getGameInfo);
+router.post('/game', record);
 
 router.get('/droptest', dropTest);
 

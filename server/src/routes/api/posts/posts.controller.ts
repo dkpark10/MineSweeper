@@ -10,15 +10,11 @@ const getPostListperPage = async (request: Request, response: Response) => {
       throw `page don't exists`;
     }
 
-    const totalContentSize = await model.post.getTotalPostSize();
-
     const itemCountPerPage = request.app.get('itemCountPerPage');
     const begin = (Number(page) - 1) * itemCountPerPage;
 
     const result = await model.post.getPostList(begin, itemCountPerPage);
-    response.status(200).send({ result: true, data: {
-      result, totalContentSize
-    } });
+    response.status(200).send(result);
   }
   catch (e) {
     response.status(201).send({ result: true, message: e });

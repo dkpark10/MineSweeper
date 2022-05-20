@@ -29,8 +29,9 @@ export default class PostModel extends Model {
   public getPostList(begin: number, itemCountPerPage: number): Promise<PostResponse[]> {
 
     const query =
-      `SELECT id, author, title, comments, likenum, UNIX_TIMESTAMP(date)as time
-     FROM ${this.table} LIMIT ?,?`;
+      `SELECT id, author, title, comments, likenum, UNIX_TIMESTAMP(date)as time,
+      (SELECT COUNT(*) FROM posts) AS totalItemCount
+      FROM ${this.table} LIMIT ?,?`;
 
     return new Promise((resolve, reject) => {
 
@@ -120,7 +121,7 @@ export default class PostModel extends Model {
     return new Promise((resolve, reject) => {
 
       this.connection.query(query, [postid], (err, data) => {
-        if (err){
+        if (err) {
           reject(err);
         } else {
           resolve(true);

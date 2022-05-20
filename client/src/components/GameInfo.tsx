@@ -14,12 +14,14 @@ const getCount = (count: number): string => {
     return `00${count}`;
   } else if (count >= 10 && count < 100) {
     return `0${count}`;
+  } else if (count >= 999) {
+    return '999';
   } else {
     return String(count);
   }
 }
 
-const GameInfo = ({firstClick, numofFlag, isGameOver}: Props) => {
+const GameInfo = ({ firstClick, numofFlag, isGameOver }: Props) => {
 
   // // 초기 젓 마운트 될 때 남은 깃발 갯수 리듀서에 작성
   // useEffect(() => {
