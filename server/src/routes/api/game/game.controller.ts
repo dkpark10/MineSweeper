@@ -1,11 +1,11 @@
-import { Request, Response, NextFunction } from 'express';
+import requestIp from "request-ip";
+import shortid from "shortid";
 import model from '../../../models';
+import { Request, Response, NextFunction } from 'express';
 import { GameRecord } from '../../../models/game';
 
-const getGameSize = async (request: Request, response: Response, next: NextFunction) => {
-
+export const getGameSize = async (request: Request, response: Response, next: NextFunction) => {
   try {
-
     const level = request.params.level;
     const { page } = request.query;
 
@@ -28,7 +28,7 @@ const getGameSize = async (request: Request, response: Response, next: NextFunct
   }
 }
 
-const getGameInfo = async (request: Request, response: Response) => {
+export const getGameInfo = async (request: Request, response: Response) => {
 
   try {
     const { page } = request.query;
@@ -38,7 +38,6 @@ const getGameInfo = async (request: Request, response: Response) => {
     const end = Number(page) * request.app.get('itemCountPerPage');
     const begin = end - request.app.get('itemCountPerPage');
     const data = await model.game.getGameLank(request.params.level, { begin, end });
-    console.log(data);
 
     response.status(200).send(data);
   }
@@ -47,51 +46,53 @@ const getGameInfo = async (request: Request, response: Response) => {
   }
 }
 
-const record = async (request: Request, response: Response) => {
-
+export const record = async (request: Request, response: Response) => {
   try {
-
     const { id, record, success, level } = request.body;
-    const gameRecord: GameRecord = {
-      id,
-      level,
-      record: Number(record),
-      success: success === 'true' ? 1 : 0,
+    let userid: string = id;
+
+    if (id === "anonymous") {
+      const clientIp = requestIp.getClientIp(request); 
+      const anonymousId = await model.user.getAnonymousUserId(clientIp);
+      console.log(clientIp, anonymousId);
+      userid = anonymousId ? anonymousId.ID : `anonymous${shortid.generate()}`;
     }
 
-    const result = await model.game.insertGameRecord(gameRecord) as boolean;
-    response.status(201).send({ result });
+    console.log(userid);
+    const gameRecord: GameRecord = {
+      level,
+      id: userid,
+      record: Number(record),
+      success: success === "true" ? 1 : 0,
+    }
+
+    const result = await model.game.insertGameRecord(gameRecord);
+    response.status(201).send(result)
   }
   catch (e) {
-    response.status(202).send({ result: false, message: e });
+    response.status(202).send(false);
   }
 }
 
-const getUserGame = async (request: Request, response: Response, next: NextFunction) => {
-
+export const getUserGame = async (request: Request, response: Response) => {
   try{
-
     const { userid } = request.query;
     
     const isExistUser = await model.user.getUserInfo({
-      columns: ['id'],
+      columns: ["id"],
       id: userid as string
     });
 
-    if (isExistUser.length <= 0) {
+    if (!isExistUser || userid === "anonymous") {
       throw 'no exist user';
     }
 
-    const winRate = await model.game.getUserGame(userid as string);
-    const bestRecordPerLevel = await model.game.getBestRecordPerLevel(userid as string);
+    const allGameRecord = await model.game.getAllGameRecord(userid as string);
     const pastGame = await model.game.getPastGame(userid as string);
-    const data = { ...winRate, ...bestRecordPerLevel, pastGame: pastGame };
-
-    response.status(201).send({ result: true, data });
+    const data = { ...allGameRecord , pastGame };
+    response.status(200).send(data);
 
   }catch(e){
     response.status(202).send({ result: true, message: e});
   }
 }
-
-export { record, getGameSize, getGameInfo, getUserGame };

@@ -21,6 +21,10 @@ import {
   dropTest
 } from './posts/posts.controller';
 
+import {
+  testRun
+} from './testapi/test.controller';
+
 const router: Router = Router();
 
 router.use('/auth', auth);
@@ -41,5 +45,6 @@ router.get('/game/:level', getGameInfo);
 router.post('/game', record);
 
 router.get('/droptest', dropTest);
+router.get('/test/:testid', testRun);
 
 export default router;

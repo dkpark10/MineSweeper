@@ -23,9 +23,9 @@ export default async function userVerification(request: Request, response: Respo
     });
 
     const newAccessToken = await signToken(jwtKey, '1h', {
-      id: userInfo[0].ID,
-      grade: userInfo[0].GRADE,
-      auth: userInfo[0].AUTH
+      id: userInfo.ID,
+      grade: userInfo.GRADE,
+      auth: userInfo.AUTH
     });
 
     // 새 access token 발급 후 쿠키저장

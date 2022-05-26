@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import model from '../../../models';
 
-const getPostListperPage = async (request: Request, response: Response) => {
+export const getPostListperPage = async (request: Request, response: Response) => {
 
   try {
 
@@ -21,7 +21,7 @@ const getPostListperPage = async (request: Request, response: Response) => {
   }
 }
 
-const updatePostView = async (request: Request, response: Response) => {
+export const updatePostView = async (request: Request, response: Response) => {
 
   try {
     const { column } = request.query;
@@ -36,20 +36,20 @@ const updatePostView = async (request: Request, response: Response) => {
   }
 }
 
-const getPost = async (request: Request, response: Response) => {
+export const getPost = async (request: Request, response: Response) => {
 
   try {
     const postid = request.params.postid;
     const data = await model.post.getPost(postid);
 
-    response.status(200).send({ result: true, data: data });
+    response.status(200).send(data);
   }
   catch (e) {
-    response.status(201).send({ result: false, message: e });
+    response.status(201).send({});
   }
 }
 
-const insertPost = async (request: Request, response: Response) => {
+export const insertPost = async (request: Request, response: Response) => {
 
   try {
     const result = await model.post.insertPost(request.body);
@@ -60,7 +60,7 @@ const insertPost = async (request: Request, response: Response) => {
   }
 }
 
-const deletePost = async (request: Request, response: Response) => {
+export const deletePost = async (request: Request, response: Response) => {
 
   try{
     const { postid } = request.query;
@@ -73,7 +73,7 @@ const deletePost = async (request: Request, response: Response) => {
   }
 }
 
-const dropTest = async (request: Request, response: Response) => {
+export const dropTest = async (request: Request, response: Response) => {
 
   try{
     const { page } = request.query;
@@ -84,13 +84,4 @@ const dropTest = async (request: Request, response: Response) => {
   catch(e){
     response.status(201).send({ result: false, message:e});
   }
-};
-
-export {
-  insertPost,
-  getPostListperPage,
-  getPost,
-  updatePostView,
-  dropTest,
-  deletePost
 };

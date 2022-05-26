@@ -1,63 +1,53 @@
 import { Request, Response, NextFunction } from 'express';
-import Encrypter from '../../../util/crypto';
+import { createSalt, getCryptoPassword } from '../../../util/crypto';
 import sanitize from 'sanitize-html';
 import model from '../../../models/index';
 import { UserRow } from '../../../models/user';
-import getUser from '../../../middlewares/getUser';
 import userVerification from '../../../middlewares/userverification';
 import { signToken } from '../../../util/jwttHandler';
 
-const getSaltedPassword = async (id: string, pwd: string) => {
-  const encrypter: Encrypter = new Encrypter();
-  const salt: string = await model.user.getSalt(id);
+const USEREXIST = true;
+const ENROLLSUCCESS = true;
 
-  return await encrypter.getCryptoPassword(salt, pwd);
-}
-
-const USEREXIST = true as const;
-const ENROLLSUCCESS = true as const;
-
-const sanitizeOption = {
-  allowedTags: [],
-}
-
-const login = async (request: Request, response: Response, next: NextFunction) => {
+export const login = async (request: Request, response: Response, next: NextFunction) => {
 
   try {
-    const { id, pwd } = request.body;
+    const { userid, password } = request.body;
     const jwtSecretKey = request.app.get('secret-key').jwtKey;
 
-    const userInfo: UserRow[] = await model.user.getUserInfo({
+    const userInfo: UserRow = await model.user.getUserInfo({
       columns: ['ID', 'PWD', 'GRADE', 'AUTH'],
-      id: id
+      id: userid
     });
 
-    if (userInfo.length <= 0)
+    if (!userInfo) {
       throw false;
+    }
 
-    const encryptedPassword = await getSaltedPassword(id, pwd);
+    const salt: string = await model.user.getSalt(userid);
+    const encryptedPassword = await getCryptoPassword(password, salt);
 
-    if (encryptedPassword !== userInfo[0].PWD)
+    if (encryptedPassword !== userInfo.PWD)
       throw false;
 
     const refreshToken = await signToken(jwtSecretKey, '14d');
     const accessToken = await signToken(jwtSecretKey, '1h', {
-      id: userInfo[0].ID,
-      grade: userInfo[0].GRADE,
-      auth: userInfo[0].AUTH
+      id: userInfo.ID,
+      grade: userInfo.GRADE,
+      auth: userInfo.AUTH
     });
 
-    model.user.setRefreshToken(id, refreshToken);
+    model.user.setRefreshToken(userid, refreshToken);
 
-    response.cookie('accessToken', { id, accessToken }, {
+    response.cookie('accessToken', { userid, accessToken }, {
       httpOnly: process.env.NODE_ENV === 'production',
       signed: true
     });
 
     return response.status(201).send({
-      result: true, 
-      message: '로그인 성공', 
-      loginInfo: { id, accessToken }
+      result: true,
+      message: '로그인 성공',
+      loginInfo: { userid, accessToken }
     });
   }
   catch (e) {
@@ -65,18 +55,16 @@ const login = async (request: Request, response: Response, next: NextFunction) =
   }
 }
 
-const logout = async (request: Request, response: Response, next: NextFunction) => {
-
+export const logout = async (request: Request, response: Response, next: NextFunction) => {
   try {
-
     if (request.signedCookies['accessToken'] === undefined) {
       throw '로그인된 유저가 아닙니다.';
     }
 
-    const id = request.signedCookies['accessToken'].id;
+    const userid = request.signedCookies['accessToken'].userid;
     response.clearCookie('accessToken');
 
-    model.user.deleteRefreshToken(id);
+    model.user.deleteRefreshToken(userid);
     return response.send({ result: true });
   }
   catch (e) {
@@ -84,20 +72,15 @@ const logout = async (request: Request, response: Response, next: NextFunction) 
   }
 }
 
-const isExistUser = async (request: Request, response: Response, next: NextFunction) => {
-
+export const isExistUser = async (request: Request, response: Response) => {
   try {
+    const { id } = request.query;
+    const userInfo: UserRow = await model.user.getUserInfo({
+      columns: ['*'],
+      id: id as string
+    });
 
-    const key = sanitize(Object.keys(request.query)[0], sanitizeOption).toUpperCase();
-    const value = sanitize(Object.values(request.query)[0] as string, sanitizeOption);
-
-    if (value === '' || !value) {
-      throw "값이 없음";
-    }
-
-    const result = await getUser(key, value);
-
-    return response.send({ result });
+    return response.send(userInfo !== undefined);
   }
   catch (e) {
     // 에러(네트워크, 기타) 발생시 유저가 존재한다는 응답을 보냄으로서 회원가입을 막는다.
@@ -106,28 +89,25 @@ const isExistUser = async (request: Request, response: Response, next: NextFunct
 }
 
 
-const registUser = async (request: Request, response: Response) => {
-
+export const registUser = async (request: Request, response: Response) => {
   const { id, email, pwd } = request.body;
-
   try {
     // 누가 postman으로 중복아이디를 던진다면 ???
-    const existid = await getUser('id', id);
+    const userInfo: UserRow = await model.user.getUserInfo({
+      columns: ['*'],
+      id: id as string
+    });
 
-    if (existid){
+    if (userInfo) {
       throw false;
     }
 
-    const encrypter: Encrypter = new Encrypter();
-    const salt: string = await encrypter.createSalt();
-    const encryptedPassword: string = await encrypter.getCryptoPassword(salt, pwd);
+    const salt = await createSalt();
+    const encryptedPassword: string = await getCryptoPassword(pwd, salt);
 
-    return await model.user.register({ id, pwd: encryptedPassword, email })
-      .then(_ => model.user.registSalt(id, salt))
-      .then(res => response.status(201).send({
-        result: ENROLLSUCCESS,
-        message: '유저 등록 성공 환영해요 ~~'
-      }));
+    await model.user.register(id, encryptedPassword, email);
+    await model.user.registSalt(id, salt)
+    response.status(201).send(true);
   }
   catch (e) {
 
@@ -154,28 +134,16 @@ const registUser = async (request: Request, response: Response) => {
 
 // 새로고침시 자동 로그인
 // 토큰 만료시 새로고침할 때에도 유저검증을 해야한다.
-const slientLogin = async (request: Request, response: Response) => {
+export const slientLogin = async (request: Request, response: Response) => {
 
   try {
-    const tempAccessToken = request.signedCookies['accessToken'].accessToken;
-    const result = await userVerification(request, response, tempAccessToken);
+    const accessToken = request.signedCookies['accessToken'].accessToken;
+    const result = await userVerification(request, response, accessToken);
 
     const data = request.signedCookies['accessToken'];
-    response.status(200).send({ result, data });
+    response.status(201).send({ result, data });
   }
   catch (e) {
-    response.status(200).send({ result: false, message: e });
+    response.status(202).send({ result: false, message: e });
   }
 }
-
-const test = async (request: Request, response: Response, next: NextFunction) => {
-
-  try {
-    response.status(200).send('로그인 유효하냐???');
-  }
-  catch (e) {
-
-  }
-}
-
-export { isExistUser, registUser, test, login, logout, slientLogin };

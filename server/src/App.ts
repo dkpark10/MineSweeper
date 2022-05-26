@@ -1,6 +1,6 @@
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 import express, { Request, Response, NextFunction } from 'express';
-import * as bodyParser from 'body-parser';
+import bodyParser from 'body-parser';
 import helmet from 'helmet';
 import compression from 'compression';
 import sanitize from 'sanitize-html';
@@ -25,7 +25,8 @@ app.use(compression());
 app.use(helmet());
 app.use(expressCspHeader({
   directives: {
-    'script-src': [SELF, INLINE]
+    'script-src': [SELF, INLINE],
+    'img-src': [SELF]
   }
 }));
 
@@ -42,11 +43,10 @@ app.use(express.static(path.join(__dirname, '../../client/build')));
 app.set('secret-key', secretKey);
 app.set('itemCountPerPage', 20);
 app.use(cookieParser(app.get('secret-key').cookieKey));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 const sanitizeInput = (arg: any) => {
-
   Object.entries({ ...arg }).map(([key, value]) => {
     arg[key] = sanitize(value as string, {
       allowedTags: [
