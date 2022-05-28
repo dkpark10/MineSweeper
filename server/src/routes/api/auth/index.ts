@@ -7,29 +7,26 @@ const router: Router = Router();
 
 // 로그인 토큰검증 미들웨어
 router.use(async (request: Request, response: Response, next: NextFunction) => {
-
   try {
-
-    if (request.signedCookies['accessToken'] === undefined){
-      next();
+    if (request.signedCookies['accessToken'] === undefined) {
+      throw "토큰이 없습니다";
     }
-
     // Authorization 헤더
     const tempAccessToken = request.headers.authorization?.split(' ')[1];
-    userverification(request, response, tempAccessToken as string);
+    const result = await userverification(request, response, tempAccessToken);
+    if (result) {
+      next();
+    }
   }
   catch (e) {
     return response.status(202).send({ result: false, mseeage: e });
   }
-  finally{
-    next();
-  }
 });
 
+router.delete('/posts/:postid', deletePost);
 router.post('/posts', insertPost);
-router.delete('/posts', deletePost);
 
-router.get('/test', async(req:Request, res:Response) => {
+router.get('/test', async (req: Request, res: Response) => {
   res.status(200).send('....');
 });
 

@@ -110,11 +110,15 @@ export default class UserModel extends Model {
     this.redis.expire(id, (86400 * 14));
   }
 
-  public deleteRefreshToken(id: string) {
+  public deleteRedisValue(id: string) {
     this.redis.del(id);
   }
 
-  public getRefreshToken(id: string): Promise<string | null> {
+  public setRedisValue(ip: string, id: string) {
+    this.redis.set(ip, id);
+  }
+
+  public getRedisValue(id: string): Promise<string | null> {
     return new Promise((resolve, reject) => {
       this.redis.get(id, (err, data) => {
         if (err) {

@@ -64,7 +64,7 @@ export const logout = async (request: Request, response: Response, next: NextFun
     const userid = request.signedCookies['accessToken'].userid;
     response.clearCookie('accessToken');
 
-    model.user.deleteRefreshToken(userid);
+    model.user.deleteRedisValue(userid);
     return response.send({ result: true });
   }
   catch (e) {
@@ -135,15 +135,19 @@ export const registUser = async (request: Request, response: Response) => {
 // 새로고침시 자동 로그인
 // 토큰 만료시 새로고침할 때에도 유저검증을 해야한다.
 export const slientLogin = async (request: Request, response: Response) => {
-
   try {
     const accessToken = request.signedCookies['accessToken'].accessToken;
-    const result = await userVerification(request, response, accessToken);
+    if (!accessToken) {
+      throw "토큰이 없습니다";
+    }
+
+    await userVerification(request, response, accessToken);
 
     const data = request.signedCookies['accessToken'];
-    response.status(201).send({ result, data });
+    response.status(201).send(data);
   }
   catch (e) {
+    console.log(e);
     response.status(202).send({ result: false, message: e });
   }
 }

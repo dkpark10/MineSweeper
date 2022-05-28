@@ -2,11 +2,15 @@ import { Request, Response } from 'express';
 import db from '../models/index';
 import { signToken, verifyToken } from '../util/jwttHandler';
 
-export default async function userVerification(request: Request, response: Response, tempAccessToken: string): Promise<boolean> {
+export default async function userVerification(request: Request, response: Response, tempAccessToken: string | undefined): Promise<boolean> {
 
-  const id = request.signedCookies['accessToken'].id;
+  if (!tempAccessToken) {
+    return false;
+  }
+
+  const id = request.signedCookies['accessToken'].userid;
   const jwtKey = request.app.get('secret-key').jwtKey;
-  const tempRefreshToken = await db.user.getRefreshToken(id) || '';
+  const tempRefreshToken = await db.user.getRedisValue(id) || '';
 
   const accessToken = await verifyToken(jwtKey, tempAccessToken);
   const refreshToken = await verifyToken(jwtKey, tempRefreshToken);
@@ -29,7 +33,7 @@ export default async function userVerification(request: Request, response: Respo
     });
 
     // 새 access token 발급 후 쿠키저장
-    response.cookie('accessToken', { id, newAccessToken }, {
+    response.cookie('accessToken', { id, accessToken: newAccessToken }, {
       httpOnly: process.env.NODE_ENV === 'production',
       signed: true
     });

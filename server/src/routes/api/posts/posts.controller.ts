@@ -50,7 +50,6 @@ export const getPost = async (request: Request, response: Response) => {
 }
 
 export const insertPost = async (request: Request, response: Response) => {
-
   try {
     const result = await model.post.insertPost(request.body);
     response.status(200).send({ result: result });
@@ -61,12 +60,11 @@ export const insertPost = async (request: Request, response: Response) => {
 }
 
 export const deletePost = async (request: Request, response: Response) => {
-
   try{
-    const { postid } = request.query;
-    const result = await model.post.deletePost(postid as string);
+    const postid = request.params.postid;
+    const result = await model.post.deletePost(postid);
 
-    response.status(200).send({ result: result });
+    response.status(200).send(result);
   }
   catch(e){
     response.status(201).send({ result: false, message:e});
@@ -74,7 +72,6 @@ export const deletePost = async (request: Request, response: Response) => {
 }
 
 export const dropTest = async (request: Request, response: Response) => {
-
   try{
     const { page } = request.query;
     const result = await model.post.xssTest(page as string);
