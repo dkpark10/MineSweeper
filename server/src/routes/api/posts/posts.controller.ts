@@ -2,9 +2,7 @@ import { Request, Response } from 'express';
 import model from '../../../models';
 
 export const getPostListperPage = async (request: Request, response: Response) => {
-
   try {
-
     const { page } = request.query;
     if (page === undefined) {
       throw `page don't exists`;
@@ -22,7 +20,6 @@ export const getPostListperPage = async (request: Request, response: Response) =
 }
 
 export const updatePostView = async (request: Request, response: Response) => {
-
   try {
     const { column } = request.query;
     const postid = request.params.postid;
@@ -37,7 +34,6 @@ export const updatePostView = async (request: Request, response: Response) => {
 }
 
 export const getPost = async (request: Request, response: Response) => {
-
   try {
     const postid = request.params.postid;
     const data = await model.post.getPost(postid);
@@ -52,10 +48,10 @@ export const getPost = async (request: Request, response: Response) => {
 export const insertPost = async (request: Request, response: Response) => {
   try {
     const result = await model.post.insertPost(request.body);
-    response.status(200).send({ result: result });
+    response.status(201).send(result);
   }
   catch (e) {
-    response.status(201).send({ result: false, message: e });
+    response.status(202).send(e);
   }
 }
 

@@ -19,14 +19,15 @@ export const login = async (request: Request, response: Response, next: NextFunc
     });
 
     if (!userInfo) {
-      throw false;
+      throw "존재하지 않는 유저에 대한 로그인 시도";
     }
 
     const salt: string = await model.user.getSalt(userid);
     const encryptedPassword = await getCryptoPassword(password, salt);
 
-    if (encryptedPassword !== userInfo.PWD)
-      throw false;
+    if (encryptedPassword !== userInfo.PWD){
+      throw "아이디 또는 비밀번호가 다릅니다";
+    }
 
     const refreshToken = await signToken(jwtSecretKey, '14d');
     const accessToken = await signToken(jwtSecretKey, '1h', {
@@ -130,6 +131,9 @@ export const registUser = async (request: Request, response: Response) => {
 // 토큰 만료시 새로고침할 때에도 유저검증을 해야한다.
 export const slientLogin = async (request: Request, response: Response) => {
   try {
+    if(request.signedCookies['accessToken'] === undefined){
+      throw "토큰이 없습니다";
+    }
     const { accessToken } = request.signedCookies['accessToken'];
     await userIdentification(request, response, accessToken);
 

@@ -30,7 +30,9 @@ export default class PostModel extends Model {
     const query =
       `SELECT id, author, title, comments, likenum, UNIX_TIMESTAMP(date)as time,
       (SELECT COUNT(*) FROM posts) AS totalItemCount
-      FROM ${this.table} LIMIT ?,?`;
+      FROM ${this.table} 
+      ORDER BY id DESC
+      LIMIT ?,?`;
 
     return new Promise((resolve, reject) => {
       this.connection.query(query, [begin, itemCountPerPage], (err, data: any[]) => {

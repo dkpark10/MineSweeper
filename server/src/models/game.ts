@@ -5,7 +5,7 @@ import Model from './model';
 export interface GameRecord {
   id: string;
   record: number;
-  success: number;
+  success: string;
   level: string;
   date?: string;
 };
@@ -32,7 +32,7 @@ export default class GameModel extends Model {
                   VALUES (?,?,?,NOW(),?)`;
 
     return new Promise((resolve, reject) => {
-      this.connection.query(query, [null, id, record, success], (err) => {
+      this.connection.query(query, [null, id, record, success === "success" ? 1 : 0], (err) => {
         if (err) {
           reject(false);
         } else {

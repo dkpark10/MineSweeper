@@ -46,7 +46,7 @@ export const getGameInfo = async (request: Request, response: Response) => {
   }
 }
 
-export const record = async (request: Request, response: Response) => {
+export const record = async (request: Request<{}, {}, GameRecord>, response: Response) => {
   try {
     const { id, record, success, level } = request.body;
     let userid: string = id;
@@ -68,7 +68,7 @@ export const record = async (request: Request, response: Response) => {
       level,
       id: userid,
       record: Number(record),
-      success: success === "true" ? 1 : 0,
+      success: success
     }
 
     const result = await model.game.insertGameRecord(gameRecord);
