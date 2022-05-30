@@ -52,13 +52,18 @@ export const record = async (request: Request, response: Response) => {
     let userid: string = id;
 
     if (id === "anonymous") {
-      const clientIp = requestIp.getClientIp(request); 
-      const anonymousId = await model.user.getAnonymousUserId(clientIp);
-      console.log(clientIp, anonymousId);
-      userid = anonymousId ? anonymousId.ID : `anonymous${shortid.generate()}`;
+      const clientIp = requestIp.getClientIp(request) as string;
+      const anonymousId = await model.user.getRedisValue(clientIp);
+
+      if (!anonymousId) {
+        const newAnonymousId = `anonymous_${shortid.generate()}`;
+        model.user.setRedisValue(clientIp, newAnonymousId);
+        userid = newAnonymousId;
+      }else{
+        userid = anonymousId;
+      }
     }
 
-    console.log(userid);
     const gameRecord: GameRecord = {
       level,
       id: userid,
@@ -83,8 +88,8 @@ export const getUserGame = async (request: Request, response: Response) => {
       id: userid as string
     });
 
-    if (!isExistUser || userid === "anonymous") {
-      throw 'no exist user';
+    if (!isExistUser && userid === "anonymous") {
+      throw "유저가 존재하지 않습니다.";
     }
 
     const allGameRecord = await model.game.getAllGameRecord(userid as string);

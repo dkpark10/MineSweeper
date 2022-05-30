@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { record } from '../game/game.controller';
 import { insertPost, deletePost } from '../posts/posts.controller';
-import userverification from '../../../middlewares/userverification';
+import { logout } from '../user/user.controller';
+import userIdentification from '../../../middlewares/user_identification';
 
 const router: Router = Router();
 
@@ -12,19 +12,22 @@ router.use(async (request: Request, response: Response, next: NextFunction) => {
       throw "토큰이 없습니다";
     }
     // Authorization 헤더
-    const tempAccessToken = request.headers.authorization?.split(' ')[1];
-    const result = await userverification(request, response, tempAccessToken);
-    if (result) {
-      next();
+    const accessToken = request.headers.authorization?.split(' ')[1];
+    const result = await userIdentification(request, response, accessToken);
+    if (result === false) {
+      throw "유저 식별에 실패하였습니다";
     }
+    next();
   }
   catch (e) {
-    return response.status(202).send({ result: false, mseeage: e });
+    response.status(202).send(e);
   }
 });
 
 router.delete('/posts/:postid', deletePost);
 router.post('/posts', insertPost);
+
+router.post('/logout', logout);
 
 router.get('/test', async (req: Request, res: Response) => {
   res.status(200).send('....');

@@ -27,14 +27,12 @@ export default class PostModel extends Model {
   }
 
   public getPostList(begin: number, itemCountPerPage: number): Promise<PostResponse[]> {
-
     const query =
       `SELECT id, author, title, comments, likenum, UNIX_TIMESTAMP(date)as time,
       (SELECT COUNT(*) FROM posts) AS totalItemCount
       FROM ${this.table} LIMIT ?,?`;
 
     return new Promise((resolve, reject) => {
-
       this.connection.query(query, [begin, itemCountPerPage], (err, data: any[]) => {
         if (err) {
           reject(err);
@@ -46,11 +44,9 @@ export default class PostModel extends Model {
   }
 
   public updatePost(postid: string, column: string): Promise<boolean> {
-
     const query = `UPDATE ${this.table} SET ${column}=${column}+1 WHERE id=?`;
 
     return new Promise((resolve, reject) => {
-
       this.connection.query(query, [postid], (err) => {
         if (err) {
           reject(err);
@@ -62,13 +58,11 @@ export default class PostModel extends Model {
   }
 
   public getPost(postid: string): Promise<PostResponse> {
-
     const query =
       `SELECT id, author, content, title, comments, likenum, UNIX_TIMESTAMP(date)as time, views
     FROM ${this.table} WHERE ID=?`;
 
     return new Promise((resolve, reject) => {
-
       this.connection.query(query, [postid], (err, data: any[]) => {
         if (err) {
           reject(err);
@@ -81,11 +75,9 @@ export default class PostModel extends Model {
 
   // COUNT(*) 가 COUNT(COLUMN)보다 빠르다.
   public getTotalPostSize(): Promise<number> {
-
     const query = `SELECT COUNT(*) AS totalSize FROM ${this.table}`;
 
     return new Promise((resolve, reject) => {
-
       this.connection.query(query, [], (err, data: any[]) => {
         if (err) {
           reject(err);
@@ -97,13 +89,11 @@ export default class PostModel extends Model {
   }
 
   public insertPost({ author, title, contents }: PostArg): Promise<boolean> {
-
     const query =
       `INSERT INTO ${this.table} (ID, AUTHOR, TITLE, CONTENT, DATE)
     VALUES (?,?,?,?,NOW())`;
 
     return new Promise((resolve, reject) => {
-
       this.connection.query(query, [null, author, title, contents], (err, data) => {
         if (err || !data) {
           reject(err);
@@ -115,11 +105,9 @@ export default class PostModel extends Model {
   }
 
   public deletePost(postid: string): Promise<boolean> {
-
     const query = `DELETE FROM ${this.table} WHERE ID=?`;
 
     return new Promise((resolve, reject) => {
-
       this.connection.query(query, [postid], (err, data) => {
         if (err) {
           reject(err);
@@ -131,11 +119,9 @@ export default class PostModel extends Model {
   }
 
   public xssTest(drop: string) {
-
     const query = `SELECT* FROM ${this.table} WHERE ID=${drop}`;
 
     return new Promise((resolve, reject) => {
-
       this.connection.query(query, (err, data) => {
         if (err) {
           reject(err);

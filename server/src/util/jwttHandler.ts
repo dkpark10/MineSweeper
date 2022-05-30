@@ -1,4 +1,4 @@
-import jwt, { Jwt } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 const signToken = (secretKey: string, expDate: string, userInfo = {}): Promise<string> => {
 

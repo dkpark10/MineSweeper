@@ -30,7 +30,6 @@ const router: Router = Router();
 router.use('/auth', auth);
 
 router.post('/login', login);
-router.post('/logout', logout);
 router.post('/slientlogin', slientLogin);
 
 router.get('/user', isExistUser);

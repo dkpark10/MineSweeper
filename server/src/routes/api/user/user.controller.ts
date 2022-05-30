@@ -1,16 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import { createSalt, getCryptoPassword } from '../../../util/crypto';
-import sanitize from 'sanitize-html';
 import model from '../../../models/index';
 import { UserRow } from '../../../models/user';
-import userVerification from '../../../middlewares/userverification';
+import userIdentification from '../../../middlewares/user_identification';
 import { signToken } from '../../../util/jwttHandler';
 
 const USEREXIST = true;
 const ENROLLSUCCESS = true;
 
 export const login = async (request: Request, response: Response, next: NextFunction) => {
-
   try {
     const { userid, password } = request.body;
     const jwtSecretKey = request.app.get('secret-key').jwtKey;
@@ -45,8 +43,6 @@ export const login = async (request: Request, response: Response, next: NextFunc
     });
 
     return response.status(201).send({
-      result: true,
-      message: '로그인 성공',
       loginInfo: { userid, accessToken }
     });
   }
@@ -55,7 +51,7 @@ export const login = async (request: Request, response: Response, next: NextFunc
   }
 }
 
-export const logout = async (request: Request, response: Response, next: NextFunction) => {
+export const logout = async (request: Request, response: Response) => {
   try {
     if (request.signedCookies['accessToken'] === undefined) {
       throw '로그인된 유저가 아닙니다.';
@@ -88,17 +84,15 @@ export const isExistUser = async (request: Request, response: Response) => {
   }
 }
 
-
 export const registUser = async (request: Request, response: Response) => {
   const { id, email, pwd } = request.body;
   try {
-    // 누가 postman으로 중복아이디를 던진다면 ???
-    const userInfo: UserRow = await model.user.getUserInfo({
+    const existUser: UserRow = await model.user.getUserInfo({
       columns: ['*'],
       id: id as string
     });
 
-    if (userInfo) {
+    if (existUser) {
       throw false;
     }
 
@@ -136,18 +130,13 @@ export const registUser = async (request: Request, response: Response) => {
 // 토큰 만료시 새로고침할 때에도 유저검증을 해야한다.
 export const slientLogin = async (request: Request, response: Response) => {
   try {
-    const accessToken = request.signedCookies['accessToken'].accessToken;
-    if (!accessToken) {
-      throw "토큰이 없습니다";
-    }
-
-    await userVerification(request, response, accessToken);
+    const { accessToken } = request.signedCookies['accessToken'];
+    await userIdentification(request, response, accessToken);
 
     const data = request.signedCookies['accessToken'];
     response.status(201).send(data);
   }
   catch (e) {
-    console.log(e);
-    response.status(202).send({ result: false, message: e });
+    response.status(202).send(e);
   }
 }

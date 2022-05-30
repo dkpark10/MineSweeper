@@ -67,7 +67,7 @@ export default class UserModel extends Model {
     return new Promise((resolve, reject) => {
       this.connection.query(query, [id], (err: QueryError | null, result: any) => {
         if (err) {
-          reject('getUserInfo query fail');
+          reject(err);
         } else {
           resolve(result[0]);
         }
@@ -75,7 +75,7 @@ export default class UserModel extends Model {
     })
   }
 
-  public getAnonymousUserId(ip: string | null): Promise<UserRow> {
+  public getAnonymousUserId(ip: string | null): Promise<string> {
     const query = `SELECT ID FROM ${this.table} WHERE IP=?`;
 
     return new Promise((resolve, reject) => {
@@ -83,7 +83,7 @@ export default class UserModel extends Model {
         if (err) {
           reject(err);
         } else {
-          resolve(result[0]);
+          resolve(result[0].ID);
         }
       });
     })
@@ -108,25 +108,5 @@ export default class UserModel extends Model {
     this.redis.set(id, refreshToken);
     // 2주뒤 refresh token 삭제 
     this.redis.expire(id, (86400 * 14));
-  }
-
-  public deleteRedisValue(id: string) {
-    this.redis.del(id);
-  }
-
-  public setRedisValue(ip: string, id: string) {
-    this.redis.set(ip, id);
-  }
-
-  public getRedisValue(id: string): Promise<string | null> {
-    return new Promise((resolve, reject) => {
-      this.redis.get(id, (err, data) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data);
-        }
-      });
-    });
   }
 }

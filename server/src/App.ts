@@ -8,7 +8,6 @@ import apiroute from './routes/api/index';
 import secretKey from './config/secretkey';
 import address from './config/address';
 import cookieParser from 'cookie-parser'
-import shortid from 'shortid';
 import cors from 'cors';
 import path from 'path';
 import { expressCspHeader, INLINE, NONE, SELF } from 'express-csp-header';
