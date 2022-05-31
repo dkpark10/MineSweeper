@@ -9,7 +9,7 @@ export const getGameSize = async (request: Request, response: Response, next: Ne
     const level = request.params.level;
     const { page } = request.query;
 
-    if (page !== undefined){
+    if (page !== undefined) {
       return next();
     }
 
@@ -28,10 +28,13 @@ export const getGameSize = async (request: Request, response: Response, next: Ne
   }
 }
 
-export const getGameInfo = async (request: Request, response: Response) => {
-
+export const getGameInfo = async (request: Request, response: Response, next: NextFunction) => {
   try {
-    const { page } = request.query;
+    const { page, user } = request.query;
+    if (user) {
+      return next();
+    }
+
     if (isNaN(Number(page)))
       throw "숫자가 아닙니다.";
 
@@ -43,6 +46,17 @@ export const getGameInfo = async (request: Request, response: Response) => {
   }
   catch (e) {
     response.status(202).send([]);
+  }
+}
+
+export const getUserGameSearch = async (request: Request, response: Response) => {
+  try {
+    const level = request.params.level;
+    const { user } = request.query;
+    const data = await model.game.getUserRankInfo(user as string, level);
+    response.status(200).send(data);
+  } catch (e) {
+    response.status(201).send(e);
   }
 }
 
@@ -59,7 +73,7 @@ export const record = async (request: Request<{}, {}, GameRecord>, response: Res
         const newAnonymousId = `anonymous_${shortid.generate()}`;
         model.user.setRedisValue(clientIp, newAnonymousId);
         userid = newAnonymousId;
-      }else{
+      } else {
         userid = anonymousId;
       }
     }
@@ -80,9 +94,9 @@ export const record = async (request: Request<{}, {}, GameRecord>, response: Res
 }
 
 export const getUserGame = async (request: Request, response: Response) => {
-  try{
+  try {
     const { userid } = request.query;
-    
+
     const isExistUser = await model.user.getUserInfo({
       columns: ["id"],
       id: userid as string
@@ -94,10 +108,10 @@ export const getUserGame = async (request: Request, response: Response) => {
 
     const allGameRecord = await model.game.getAllGameRecord(userid as string);
     const pastGame = await model.game.getPastGame(userid as string);
-    const data = { ...allGameRecord , pastGame };
+    const data = { ...allGameRecord, pastGame };
     response.status(200).send(data);
 
-  }catch(e){
-    response.status(202).send({ result: true, message: e});
+  } catch (e) {
+    response.status(202).send({ result: true, message: e });
   }
 }

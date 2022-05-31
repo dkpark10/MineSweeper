@@ -18,7 +18,7 @@ type Levels = "easy" | "normal" | "hard";
 type LevelsProps = "GameTotalCount" | "GameWinCount" | "BestRecord";
 type AlignmentLevelsProps = `${Levels}${LevelsProps}`;
 export type GameRecordType = RowDataPacket & {
-    [key in AlignmentLevelsProps]: string | number;
+  [key in AlignmentLevelsProps]: string | number;
 }
 
 export default class GameModel extends Model {
@@ -62,18 +62,17 @@ export default class GameModel extends Model {
 
   public getGameLank(level: string, { begin, end }: { [key: string]: number }) {
     const query =
-      `SELECT id, MIN(record) as record, ranking,
-      (SELECT COUNT(*) FROM ${level}game WHERE success=1) AS totalItemCount
-        FROM (
-          SELECT id, record, RANK() over(ORDER BY record) AS 'ranking'
-          FROM ${level}game
-          WHERE success=?
-        )ranked
-        WHERE ranked.ranking >? AND ranked.ranking <=?
-        GROUP BY id`;
+      `SELECT id, record, RANK() over(ORDER BY record) AS 'ranking',
+        (SELECT COUNT(*) 
+        FROM easygame 
+        WHERE success=?) AS totalItemCount
+      FROM easygame	
+      WHERE success=?
+      ORDER BY record
+      LIMIT ?,?`;
 
     return new Promise((resolve, reject) => {
-      this.connection.query(query, [1, begin, end], (err, data) => {
+      this.connection.query(query, [1,1, begin, end], (err, data) => {
         if (err || !data) {
           reject(err);
         } else {
@@ -103,7 +102,7 @@ export default class GameModel extends Model {
             FROM ${level}game
             WHERE id=?
         ) AS ${level}record,`)
-        .join('')}`
+          .join('')}`
         .slice(0, -1);
 
     return new Promise((resolve, reject) => {
@@ -135,6 +134,25 @@ export default class GameModel extends Model {
           reject(err);
         } else {
           resolve(data);
+        }
+      });
+    });
+  }
+
+  public getUserRankInfo(userid: string, level: string): Promise<GameRecord> {
+    const query = `
+      SELECT id, record
+      FROM ${level}game
+      WHERE id=? AND success=?
+      ORDER BY record 
+      LIMIT 1`;
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, [userid, 1], (err, data: any) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data[0]);
         }
       });
     });

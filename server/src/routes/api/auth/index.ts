@@ -17,16 +17,15 @@ router.use(async (request: Request, response: Response, next: NextFunction) => {
     if (result === false) {
       throw "유저 식별에 실패하였습니다";
     }
-    next();
+    return next();
   }
   catch (e) {
-    response.status(202).send(e);
+    response.status(403).send(e);
   }
 });
 
 router.delete('/posts/:postid', deletePost);
 router.post('/posts', insertPost);
-
 router.post('/logout', logout);
 
 router.get('/test', async (req: Request, res: Response) => {

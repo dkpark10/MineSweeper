@@ -11,17 +11,17 @@ export default abstract class Model {
     this.redis = r;
   }
 
-  public deleteRedisValue(id: string) {
-    this.redis.del(id);
+  public deleteRedisValue(key: string) {
+    this.redis.del(key);
   }
 
-  public setRedisValue(ip: string, id: string) {
-    this.redis.set(ip, id);
+  public setRedisValue(key: string, value: string) {
+    this.redis.set(key, value);
   }
 
-  public getRedisValue(id: string): Promise<string | null> {
+  public getRedisValue(key: string): Promise<string | null> {
     return new Promise((resolve, reject) => {
-      this.redis.get(id, (err, data) => {
+      this.redis.get(key, (err, data) => {
         if (err) {
           reject(err);
         } else {

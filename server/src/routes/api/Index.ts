@@ -2,16 +2,16 @@ import { Router } from 'express';
 import auth from './auth';
 import {
   login,
-  logout,
   isExistUser,
   registUser,
-  slientLogin
+  slientLogin,
 } from './user/user.controller';
 
 import {
   getGameInfo,
   getUserGame,
-  record
+  record,
+  getUserGameSearch
 } from './game/game.controller';
 
 import {
@@ -40,7 +40,7 @@ router.get('/posts/:postid', getPost);
 router.patch('/posts/:postid', updatePostView);
 
 router.get('/game', getUserGame);
-router.get('/game/:level', getGameInfo);
+router.get('/game/:level', getGameInfo, getUserGameSearch);
 router.post('/game', record);
 
 router.get('/droptest', dropTest);
