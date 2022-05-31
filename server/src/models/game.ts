@@ -64,15 +64,15 @@ export default class GameModel extends Model {
     const query =
       `SELECT id, record, RANK() over(ORDER BY record) AS 'ranking',
         (SELECT COUNT(*) 
-        FROM easygame 
+        FROM ${level}game 
         WHERE success=?) AS totalItemCount
-      FROM easygame	
+      FROM ${level}game
       WHERE success=?
       ORDER BY record
       LIMIT ?,?`;
 
     return new Promise((resolve, reject) => {
-      this.connection.query(query, [1,1, begin, end], (err, data) => {
+      this.connection.query(query, [1, 1, begin, end], (err, data) => {
         if (err || !data) {
           reject(err);
         } else {
@@ -141,18 +141,24 @@ export default class GameModel extends Model {
 
   public getUserRankInfo(userid: string, level: string): Promise<GameRecord> {
     const query = `
-      SELECT id, record
+    SELECT id, record, ranking,
+    (SELECT COUNT(*) FROM 
+      (SELECT ID FROM ${level}game WHERE id=? AND success=? LIMIT ?)AS a
+    ) AS totalItemCount
+    FROM (
+      SELECT id, record, RANK() over(ORDER BY record) AS 'ranking'
       FROM ${level}game
-      WHERE id=? AND success=?
-      ORDER BY record 
-      LIMIT 1`;
+      WHERE success=?
+    )ranked
+    WHERE id=?
+    LIMIT ?,?`;
 
     return new Promise((resolve, reject) => {
-      this.connection.query(query, [userid, 1], (err, data: any) => {
+      this.connection.query(query, [userid, 1, 20, 1, userid, 0, 20], (err, data: any) => {
         if (err) {
           reject(err);
         } else {
-          resolve(data[0]);
+          resolve(data);
         }
       });
     });
