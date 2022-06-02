@@ -10,7 +10,6 @@ import {
 import {
   getGameInfo,
   getUserGame,
-  record,
   getUserGameSearch
 } from './game/game.controller';
 
@@ -41,7 +40,6 @@ router.patch('/posts/:postid', updatePostView);
 
 router.get('/game', getUserGame);
 router.get('/game/:level', getGameInfo, getUserGameSearch);
-router.post('/game', record);
 
 router.get('/droptest', dropTest);
 router.get('/test/:testid', testRun);

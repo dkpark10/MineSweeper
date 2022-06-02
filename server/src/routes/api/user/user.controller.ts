@@ -1,12 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { createSalt, getCryptoPassword } from '../../../util/crypto';
 import model from '../../../models/index';
-import { UserRow } from '../../../models/user';
+import { UserRow, InputUserData } from '../../../models/user';
 import userIdentification from '../../../middlewares/user_identification';
 import { signToken } from '../../../util/jwttHandler';
 
 const USEREXIST = true;
-const ENROLLSUCCESS = true;
 
 export const login = async (request: Request, response: Response, next: NextFunction) => {
   try {
@@ -25,7 +24,7 @@ export const login = async (request: Request, response: Response, next: NextFunc
     const salt: string = await model.user.getSalt(userid);
     const encryptedPassword = await getCryptoPassword(password, salt);
 
-    if (encryptedPassword !== userInfo.PWD){
+    if (encryptedPassword !== userInfo.PWD) {
       throw "아이디 또는 비밀번호가 다릅니다";
     }
 
@@ -85,45 +84,40 @@ export const isExistUser = async (request: Request, response: Response) => {
   }
 }
 
-export const registUser = async (request: Request, response: Response) => {
-  const { id, email, pwd } = request.body;
+export const registUser = async (request: Request<{}, {}, InputUserData>, response: Response) => {
+  const { id, email, password } = request.body;
+
   try {
+    const regList: { [key: string]: RegExp } = {
+      id: /^[A-za-z0-9]{5,15}$/g,
+      email: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i
+    };
+
     const existUser: UserRow = await model.user.getUserInfo({
       columns: ['*'],
-      id: id as string
+      id
     });
 
-    if (existUser) {
-      throw false;
+    if (regList.id.exec(id) === null
+      || regList.email.exec(email) === null
+      || existUser) {
+      throw "유효하지 않은 입력입니다";
     }
 
     const salt = await createSalt();
-    const encryptedPassword: string = await getCryptoPassword(pwd, salt);
+    const encryptedPassword = await getCryptoPassword(password, salt);
 
-    await model.user.register(id, encryptedPassword, email);
+    await model.user.register({
+      id,
+      email,
+      password: encryptedPassword
+    })
     await model.user.registSalt(id, salt)
     response.status(201).send(true);
   }
   catch (e) {
-
-    // 소금 등록 실패시 참조무결성을 위해 방금 등록된 아이디를 삭제해야 한다.
-    // 사실 이건 일어날 일이 없지 않나? 
-    if (e === 'registsalt query fail') {
-      await model.user.deleteUser(id)
-        .then(res => response.status(400).send({
-          result: !ENROLLSUCCESS,
-          message: '유저 등록 실패 및 아이디 삭제'
-        }))
-        .catch(res => response.status(400).send({
-          result: !ENROLLSUCCESS,
-          message: '유저등록 실패 및 아이디 삭제도 실패'
-        }))
-    }
-
-    return response.status(202).send({
-      result: !ENROLLSUCCESS,
-      message: '유저등록 실패'
-    });
+    await model.user.deleteUser(id)
+    response.status(202).send(e);
   }
 }
 
@@ -131,7 +125,7 @@ export const registUser = async (request: Request, response: Response) => {
 // 토큰 만료시 새로고침할 때에도 유저검증을 해야한다.
 export const slientLogin = async (request: Request, response: Response) => {
   try {
-    if(request.signedCookies['accessToken'] === undefined){
+    if (request.signedCookies['accessToken'] === undefined) {
       throw "토큰이 없습니다";
     }
     const { accessToken } = request.signedCookies['accessToken'];

@@ -11,6 +11,12 @@ export interface UserRow extends RowDataPacket {
   ENROLLDATE: any;
 };
 
+export interface InputUserData {
+  id: string;
+  password: string;
+  email: string
+}
+
 export default class UserModel extends Model {
 
   private readonly table = 'users';
@@ -18,12 +24,12 @@ export default class UserModel extends Model {
     super(c, r);
   }
 
-  public register(id: string, encryptedPassword: string, email: string): Promise<boolean> {
+  public register({ id, password, email }: InputUserData): Promise<boolean> {
     const query = `INSERT INTO ${this.table} (ID, PWD, EMAIL, GRADE, AUTH, ENROLLDATE)
                             VALUES (?, ?, ?, ?, ?, NOW())`;
 
     return new Promise((resolve, reject) => {
-      this.connection.query(query, [id, encryptedPassword, email, 5, 'normal'], (err, result) => {
+      this.connection.query(query, [id, password, email, 5, 'normal'], (err, result) => {
         if (err) {
           reject('register user query fail');
         } else {
@@ -90,10 +96,9 @@ export default class UserModel extends Model {
   }
 
   public deleteUser(id: string): Promise<boolean> {
-    const query = `DELETE FROM ${this.table} WHERE id = ?`;
+    const query = `DELETE FROM ${this.table} WHERE id=?`;
 
     return new Promise((resolve, reject) => {
-
       this.connection.query(query, [id], (err: QueryError | null, result) => {
         if (err) {
           reject('delete user query fail');

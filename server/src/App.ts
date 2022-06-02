@@ -12,7 +12,7 @@ import cors from 'cors';
 import path from 'path';
 import { expressCspHeader, INLINE, NONE, SELF } from 'express-csp-header';
 const app: express.Application = express();
-const port: string = process.env.PORT || '8080';
+const port = 8080;
 
 // 서버단 최적화 
 // 조회수 업데이트 데드락 최적화(캐시?)
@@ -80,11 +80,6 @@ app.get('/', async (request: Request, response: Response) => {
   response.sendFile(path.join(__dirname, '../../client/build/index.html'));
 });
 
-// 서버에서 url 넘겨줄 때 헤당 엔드포인트가 없으므로
-app.get('*', async (request: Request, response: Response) => {
-  response.sendFile(path.join(__dirname, '../../client/build/index.html'));
-});
-
-app.listen(port, () => {
+app.listen(port, "0.0.0.0", () => {
   console.log(`start server port ${port}`);
 });

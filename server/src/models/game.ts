@@ -8,6 +8,7 @@ export interface GameRecord {
   success: string;
   level: string;
   date?: string;
+  clientAnonymousKey?: string;
 };
 
 export interface WinGameSize extends RowDataPacket {
