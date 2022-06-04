@@ -17,7 +17,6 @@ class Connection {
   public readonly post: PostModel;
 
   private constructor(config: ConnectionOptions) {
-
     this.connection = mysql.createConnection(config);
     this.connection.connect();
     this.redis = redis.createClient();
@@ -28,7 +27,6 @@ class Connection {
   }
 
   public static getInstance() {
-
     if (!Connection.instance) {
       Connection.instance = new Connection(config.mysql);
     }

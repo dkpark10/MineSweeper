@@ -1,6 +1,5 @@
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 import express, { Request, Response, NextFunction } from 'express';
-import bodyParser from 'body-parser';
 import helmet from 'helmet';
 import compression from 'compression';
 import sanitize from 'sanitize-html';
@@ -10,7 +9,7 @@ import address from './config/address';
 import cookieParser from 'cookie-parser'
 import cors from 'cors';
 import path from 'path';
-import { expressCspHeader, INLINE, NONE, SELF } from 'express-csp-header';
+import { expressCspHeader, INLINE, SELF } from 'express-csp-header';
 const app: express.Application = express();
 const port = 8080;
 
@@ -31,7 +30,6 @@ app.use(expressCspHeader({
 
 app.use(cors({
   origin: [
-    'http://localhost:3000',
     'http://localhost:80',
     address
   ],
@@ -49,13 +47,13 @@ const sanitizeInput = (arg: any) => {
   Object.entries({ ...arg }).map(([key, value]) => {
     arg[key] = sanitize(value as string, {
       allowedTags: [
-        "address", "article", "aside", "footer", "header", "h1", "h2", "h3", "h4",
-        "h5", "h6", "hgroup", "main", "nav", "section", "blockquote", "dd", "div",
-        "dl", "dt", "figcaption", "figure", "hr", "li", "main", "ol", "p", "pre",
-        "ul", "a", "abbr", "b", "bdi", "bdo", "br", "cite", "code", "data", "dfn",
-        "em", "i", "kbd", "mark", "q", "rb", "rp", "rt", "rtc", "ruby", "s", "samp",
-        "small", "span", "strong", "sub", "sup", "time", "u", "var", "wbr", "caption",
-        "col", "colgroup", "table", "tbody", "td", "tfoot", "th", "thead", "tr"
+        'address', 'article', 'aside', 'footer', 'header', 'h1', 'h2', 'h3', 'h4',
+        'h5', 'h6', 'hgroup', 'main', 'nav', 'section', 'blockquote', 'dd', 'div',
+        'dl', 'dt', 'figcaption', 'figure', 'hr', 'li', 'main', 'ol', 'p', 'pre',
+        'ul', 'a', 'abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'dfn',
+        'em', 'i', 'kbd', 'mark', 'q', 'rb', 'rp', 'rt', 'rtc', 'ruby', 's', 'samp',
+        'small', 'span', 'strong', 'sub', 'sup', 'time', 'u', 'var', 'wbr', 'caption',
+        'col', 'colgroup', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead', 'tr'
       ],
     })
   })
@@ -80,6 +78,6 @@ app.get('/', async (request: Request, response: Response) => {
   response.sendFile(path.join(__dirname, '../../client/build/index.html'));
 });
 
-app.listen(port, "0.0.0.0", () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`start server port ${port}`);
 });

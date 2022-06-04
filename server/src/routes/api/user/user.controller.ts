@@ -88,7 +88,7 @@ export const registUser = async (request: Request<{}, {}, InputUserData>, respon
   const { id, email, password } = request.body;
 
   try {
-    const regList: { [key: string]: RegExp } = {
+    const regList = {
       id: /^[A-za-z0-9]{5,15}$/g,
       email: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i
     };
@@ -116,7 +116,6 @@ export const registUser = async (request: Request<{}, {}, InputUserData>, respon
     response.status(201).send(true);
   }
   catch (e) {
-    await model.user.deleteUser(id)
     response.status(202).send(e);
   }
 }

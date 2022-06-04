@@ -1,9 +1,9 @@
-import { Request, Response, NextFunction } from "express";
-import requestIp from "request-ip";
-import shortid from "shortid";
-import model from "../../../models";
-import { createSalt, getCryptoPassword } from "../../../util/crypto";
-import { GameRecord } from "../../../models/game";
+import { Request, Response, NextFunction } from 'express';
+import requestIp from 'request-ip';
+import shortid from 'shortid';
+import model from '../../../models';
+import { createSalt, getCryptoPassword } from '../../../util/crypto';
+import { GameRecord } from '../../../models/game';
 
 export const getGameInfo = async (request: Request, response: Response, next: NextFunction) => {
   try {
@@ -13,10 +13,10 @@ export const getGameInfo = async (request: Request, response: Response, next: Ne
     }
 
     if (isNaN(Number(page)))
-      throw "숫자가 아닙니다.";
+      throw '숫자가 아닙니다.';
 
-    const end = Number(page) * request.app.get("itemCountPerPage");
-    const begin = end - request.app.get("itemCountPerPage");
+    const end = Number(page) * request.app.get('itemCountPerPage');
+    const begin = end - request.app.get('itemCountPerPage');
     const data = await model.game.getGameLank(request.params.level, { begin, end });
 
     response.status(200).send(data);
@@ -40,13 +40,13 @@ export const getUserGameSearch = async (request: Request, response: Response) =>
 export const recordAnonymousGame = async (request: Request<{}, {}, GameRecord>, response: Response, next: NextFunction) => {
   try {
     const { id, record, success, level, clientAnonymousKey } = request.body;
-    const anonymousKey = request.app.get("secret-key").anonymousKey;
+    const anonymousKey = request.app.get('secret-key').anonymousKey;
 
     if (clientAnonymousKey !== anonymousKey) {
-      throw "유요하지 않은 요청입니다";
+      throw '유요하지 않은 요청입니다';
     }
 
-    if (id !== "anonymous") {
+    if (id !== 'anonymous') {
       return next();
     }
 
@@ -56,14 +56,6 @@ export const recordAnonymousGame = async (request: Request<{}, {}, GameRecord>, 
     if (anonymousId === null) {
       anonymousId = `익명_${shortid.generate()}`;
       model.user.setRedisValue(clientIp, anonymousId);
-      const salt = await createSalt();
-      const encryptedPassword = await getCryptoPassword(shortid.generate(), salt);
-
-      await model.user.register({
-        id: anonymousId,
-        email: "",
-        password: encryptedPassword
-      })
     }
 
     const gameRecord: GameRecord = {

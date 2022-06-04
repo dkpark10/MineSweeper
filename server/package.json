@@ -1,7 +1,7 @@
 {
   "name": "minesweeper2server",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "minesweeper2 server",
   "main": "app.js",
   "scripts": {
     "start": "node dist/app.js",

@@ -45,7 +45,7 @@ export default class UserModel extends Model {
     return new Promise((resolve, reject) => {
       this.connection.query(query, [id, salt], (err, result) => {
         if (err) {
-          reject('registsalt query fail');
+          reject(err);
         } else {
           resolve(true);
         }
