@@ -13,6 +13,7 @@ import { Line } from "react-chartjs-2";
 import { PastGame } from "statistics-type";
 import { useTheme } from "styled-components";
 import Content from "../../../common/atoms/content";
+import styled from "styled-components";
 
 ChartJS.register(
   CategoryScale,
@@ -28,16 +29,22 @@ interface Props {
   pastGame: PastGame[];
 }
 
+const TitleHeaderStyle = styled.div`
+  text-align:center;
+`;
+
 export default function PastGameRecord({ pastGame }: Props) {
   const theme = useTheme();
 
   if (pastGame.length === 0) {
     return (
-      <Content
-        fontSize={"2.0rem"}
-      >
-        "기록이 없습니다."
-      </Content>
+      <TitleHeaderStyle>
+        <Content
+          fontSize={"1.45rem"}
+        >
+          기록이 없습니다.
+        </Content>
+      </TitleHeaderStyle>
     )
   }
 

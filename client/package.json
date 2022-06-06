@@ -61,10 +61,10 @@
     "crypto": false
   },
   "scripts": {
+    "start": "webpack-dev-server --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js",
     "test": "jest",
-    "start": "webpack serve --mode development",
     "prebuild": "rimraf build",
-    "build": "webpack --progress --mode production",
     "servestart": "node server.js"
   },
   "browserslist": {

@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 import requestIp from 'request-ip';
 import shortid from 'shortid';
 import model from '../../../models';
-import { createSalt, getCryptoPassword } from '../../../util/crypto';
 import { GameRecord } from '../../../models/game';
 
 export const getGameInfo = async (request: Request, response: Response, next: NextFunction) => {
@@ -42,12 +41,12 @@ export const recordAnonymousGame = async (request: Request<{}, {}, GameRecord>, 
     const { id, record, success, level, clientAnonymousKey } = request.body;
     const anonymousKey = request.app.get('secret-key').anonymousKey;
 
-    if (clientAnonymousKey !== anonymousKey) {
-      throw '유요하지 않은 요청입니다';
-    }
-
     if (id !== 'anonymous') {
       return next();
+    }
+
+    if (clientAnonymousKey !== anonymousKey) {
+      throw '유요하지 않은 요청입니다';
     }
 
     const clientIp = requestIp.getClientIp(request) as string;

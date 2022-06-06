@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./styles/index.css";
-import App from "./app";
 import { Provider } from "react-redux";
 import { createStore, Store, applyMiddleware } from "redux";
 import rootReducer from "./reducers/index";
@@ -9,6 +8,7 @@ import { composeWithDevTools } from "redux-devtools-extension"; // 리덕스 개
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import defaultTheme from "./styles/theme";
+import App from "./App";
 
 const store: Store = createStore(rootReducer, composeWithDevTools(applyMiddleware()));
 

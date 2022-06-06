@@ -3,7 +3,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import helmet from 'helmet';
 import compression from 'compression';
 import sanitize from 'sanitize-html';
-import apiroute from './routes/api/index';
+import apiroute from './routes/api/Index';
 import secretKey from './config/secretkey';
 import address from './config/address';
 import cookieParser from 'cookie-parser'
@@ -31,6 +31,7 @@ app.use(expressCspHeader({
 app.use(cors({
   origin: [
     'http://localhost:80',
+    'http://localhost:3000',
     address
   ],
   credentials: true

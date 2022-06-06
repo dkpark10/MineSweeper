@@ -1,4 +1,4 @@
-import mysql, { RowDataPacket } from 'mysql2';
+import mysql, { RowDataPacket, QueryError } from 'mysql2';
 import redis from 'redis'
 import Model from './model';
 
@@ -28,14 +28,14 @@ export default class GameModel extends Model {
     super(c, r);
   }
 
-  public insertGameRecord({ id, record, success, level }: GameRecord): Promise<boolean> {
+  public insertGameRecord({ id, record, success, level }: GameRecord): Promise<boolean | QueryError> {
     const query = `INSERT INTO ${level}game (GAMENUM, ID, RECORD, DATE, SUCCESS)
                   VALUES (?,?,?,NOW(),?)`;
 
     return new Promise((resolve, reject) => {
       this.connection.query(query, [null, id, record, success === "success" ? 1 : 0], (err) => {
         if (err) {
-          reject(false);
+          reject(err);
         } else {
           resolve(true);
         }
@@ -43,7 +43,7 @@ export default class GameModel extends Model {
     })
   }
 
-  public getGameSize(level: string): Promise<number> {
+  public getGameSize(level: string): Promise<number | QueryError> {
     const query =
       `SELECT COUNT(*) AS successGameCount
     FROM ${level}game 

@@ -7,7 +7,7 @@ import NotFound from "./components/common/page/notfound";
 
 const Game = lazy(() => import("./components/domain/mine_sweeper/page/index"));
 const SignIn = lazy(() => import("./components/domain/sign/page/signin"));
-const SignUp = lazy(() => import("./components//domain/sign/page/signup"));
+const SignUp = lazy(() => import("./components/domain/sign/page/signup"));
 const Bulletin = lazy(() => import("./components/domain/bulletin/router/index"));
 const MyPage = lazy(() => import("./components/domain/statistics/router/index"));
 const Ranking = lazy(() => import("./components/domain/ranking/page/index"));

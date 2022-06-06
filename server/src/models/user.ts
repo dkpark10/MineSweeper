@@ -59,7 +59,7 @@ export default class UserModel extends Model {
     return new Promise((resolve, reject) => {
       this.connection.query(query, [id], (err: QueryError | null, result: any[]) => {
         if (err) {
-          reject('getSalt query fail');
+          reject(err);
         } else {
           resolve(result[0].salt);
         }
@@ -95,13 +95,13 @@ export default class UserModel extends Model {
     })
   }
 
-  public deleteUser(id: string): Promise<boolean> {
+  public deleteUser(id: string): Promise<boolean | QueryError> {
     const query = `DELETE FROM ${this.table} WHERE id=?`;
 
     return new Promise((resolve, reject) => {
       this.connection.query(query, [id], (err: QueryError | null, result) => {
         if (err) {
-          reject('delete user query fail');
+          reject(err);
         } else {
           resolve(true);
         }
