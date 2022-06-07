@@ -112,7 +112,7 @@ export const registUser = async (request: Request<{}, {}, InputUserData>, respon
       email,
       password: encryptedPassword
     })
-    await model.user.registSalt(id, salt)
+    await model.user.registSalt(id, salt);
     response.status(201).send(true);
   }
   catch (e) {

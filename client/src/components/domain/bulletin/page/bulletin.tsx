@@ -38,7 +38,7 @@ export default function Bulletion({
 }: RouteComponentProps) {
   const { page } = queryString.parse(location.search);
   const [response, loading] = useAxios<PostProps[]>(`/api/posts?page=${page}`, []);
-  const widthRatio = ["68%", "20%", "12%"];
+  const widthRatio = ["60%", "24%", "16%"];
 
   if (loading) {
     return <Loading />;

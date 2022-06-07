@@ -12,13 +12,13 @@ const calculPassedTime = (time: number): string => {
     return `${gap} sec ago`
   }
   else if (gap < ONEHOUR) {
-    return `${Math.floor(gap / ONEMINUTE)} minute ago`
+    return `${Math.floor(gap / ONEMINUTE)} 분전`
   }
   else if (gap < ONEDAY) {
-    return `${Math.floor(gap / ONEHOUR)} hour ago`
+    return `${Math.floor(gap / ONEHOUR)} 시간전`
   }
   else if (gap < ONEMONTH) {
-    return `${Math.floor(gap / ONEDAY)} day ago`
+    return `${Math.floor(gap / ONEDAY)} 일전`
   }
 
   return timeToDate(time * 1000);
@@ -31,7 +31,7 @@ const timeToDate = (time: number) => {
   const month = date.getMonth();
   const year = date.getFullYear();
 
-  return `${year}/${month < 10 ? `0${month}` : month}/${day < 10 ? `0${day}` : day}`;
+  return `${year}.${month < 10 ? `0${month}` : month}.${day < 10 ? `0${day}` : day}`;
 }
 
 export { calculPassedTime, timeToDate };

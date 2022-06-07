@@ -3,7 +3,6 @@ declare module "mine-sweeper-type" {
     row: number;
     col: number;
     countOfMine: number;
-    width: string;
   }
 
   export interface CellData {

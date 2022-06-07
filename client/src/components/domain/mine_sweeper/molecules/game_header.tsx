@@ -1,6 +1,10 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import useInterval from "../../../custom_hooks/useinterval";
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import useInterval from '../../../custom_hooks/useinterval';
+import Image from '../../../common/atoms/image';
+import flagimage from '../../../../assets/flag.png';
+import heartimage from '../../../../assets/heart.png';
+import hourglassimage from '../../../../assets/hourglass.png';
 
 interface Props {
   firstClick: boolean;
@@ -9,23 +13,21 @@ interface Props {
 };
 
 const GameHeaderStyle = styled.div`
-  height: 26px;
+  height: 29px;
   margin-bottom: 9px;
   display:flex;
   justify-content: space-between;
-  align-items: center;
-  min-width: 45px;
   color: #FFF6E3;
-  font-size: 14px;
-  font-family: "Roboto", sans-serif;
-  text-align: center;
+  font-size: 0.94rem;
+`;
 
-  & span{
-   width: 3.5rem;
- }
+const HeaderItem = styled.span`
+  justify-content: center;
+  display:flex;
+  align-items: center;
 
- & .heart{
-   font-size: 18px;
+  .header_text{
+    min-width:26px;
   }
 `;
 
@@ -33,7 +35,6 @@ export default function GameHeader({
   firstClick,
   countOfFlag,
   isGameOver }: Props) {
-
   const [count, setCount] = useState<number>(0);
 
   const getCount = (count: number): string => {
@@ -44,7 +45,7 @@ export default function GameHeader({
     } else if (count >= 100 && count <= 999) {
       return `${count}`;
     } else {
-      return "999";
+      return '999';
     }
   };
 
@@ -56,15 +57,37 @@ export default function GameHeader({
 
   useEffect(() => {
     setCount(0);
-  },[isGameOver]);
+  }, [isGameOver]);
 
   return (
-    <>
-      <GameHeaderStyle>
-        <span> ⏳ {getCount(count)} </span>
-        <span className="heart">💗</span>
-        <span> 🚩{countOfFlag} </span>
-      </GameHeaderStyle>
-    </>
+    <GameHeaderStyle>
+      <HeaderItem>
+        <Image
+          width='19px'
+          height='19px'
+          src={hourglassimage}
+        />
+        <div className='header_text'>
+          {getCount(count)}
+        </div>
+      </HeaderItem>
+      <HeaderItem>
+        <Image
+          width='20px'
+          height='20px'
+          src={heartimage}
+        />
+      </HeaderItem>
+      <HeaderItem>
+        <Image
+          width='19px'
+          height='19px'
+          src={flagimage}
+        />
+        <div className='header_text'>
+          {countOfFlag}
+        </div>
+      </HeaderItem>
+    </GameHeaderStyle>
   )
 }

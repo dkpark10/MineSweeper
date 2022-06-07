@@ -1,56 +1,53 @@
 import React, { ReactText } from "react";
 import styled from "styled-components";
+import Image from '../../../common/atoms/image';
+import flagimage from '../../../../assets/flag.png';
+import CenterWrapper from '../../../common/atoms/center_wrapper';
 
-interface CellProps {
-  value: string | number | ReactText;
+interface Props {
+  value: ReactText;
   isLock: boolean;
   onMouseDown: React.MouseEventHandler<HTMLDivElement>;
   onContextMenu: React.MouseEventHandler<HTMLDivElement>;
 };
 
-const CellStyle = styled.div<Partial<CellProps>>`
-  width: 24px;
-  height: 24px;
-  margin: 0px 0.5px;
+const CellStyle = styled.div<Partial<Props>>`
+  width: 26px;
+  height: 26px;
+  margin: 0.5px;
   display: inline-block;
   border-radius: 2px;
   position: relative;
 
   ${({ isLock }) => {
-    return isLock === true 
-      ?  `background: #3b3b3b;
+    return isLock === true
+      ? `background: #3b3b3b;
           box-shadow: inset 2px 2px 0.5px #303030,
           inset -1px -1px 0.5px #484848;`
-      :  `background: #4e4e50;
+      : `background: #4e4e50;
           box-shadow: inset 2px 2px 5px #464649,
           inset -1px -1px 0.5px #6e6e73;`
   }}
 
   &:hover{
-    ${({ isLock }) => {
-      return isLock === false ? 'background-color: #717180;' : '';
-    }}
+    ${({ isLock }) => isLock ? '' : 'background-color: #717180'};
   }
 `;
 
-const CellTextStyle = styled.div<{
+const CellTextStyle = styled(CenterWrapper) <{
   color: string;
 }>`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   font-size: 9px;
   font-weight: bold;
   color: ${({ color }) => color};
 `;
 
 export default function Cell({
-  value,
   isLock,
+  value,
   onMouseDown,
   onContextMenu
-}: CellProps) {
+}: Props) {
 
   const colorofButtonNumber: string[] = [
     "",
@@ -71,11 +68,22 @@ export default function Cell({
       onMouseDown={onMouseDown}
       onContextMenu={onContextMenu}
     >
-      <CellTextStyle
-        color={colorofButtonNumber[value]}
-      >
-        {value}
-      </CellTextStyle>
+      {value === 'flag'
+        ?
+        <CenterWrapper>
+          <Image
+            width={'100%'}
+            height={'100%'}
+            src={flagimage}
+          />
+        </CenterWrapper>
+        :
+        <CellTextStyle
+          color={colorofButtonNumber[value]}
+        >
+          {value}
+        </CellTextStyle>
+      }
     </CellStyle>
   );
 }

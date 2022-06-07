@@ -20,7 +20,7 @@ class RightClickHandler extends ClickHandler {
     }
 
     cellData[y][x].flaged = !cellData[y][x].flaged;
-    cellData[y][x].visible = cellData[y][x].flaged === true ? '🚩' : ' ';
+    cellData[y][x].visible = cellData[y][x].flaged === true ? 'flag' : ' ';
 
     return {
       render: true,

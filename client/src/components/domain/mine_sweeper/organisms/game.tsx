@@ -1,22 +1,22 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
-import Cell from "../atoms/cell";
-import GameHeader from "../molecules/game_header";
-import ModalWrapper from "../../../common/organisms/modal_wrapper";
-import ModalContent from "./modal_content";
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import Cell from '../atoms/cell';
+import GameHeader from '../molecules/game_header';
+import ModalWrapper from '../../../common/organisms/modal_wrapper';
+import ModalContent from './modal_content';
 
-import createClickFactory from "../../../../utils/mine_sweeper/click_factory";
-import CellHandler from "../../../../utils/mine_sweeper/cell_handler";
+import createClickFactory from '../../../../utils/mine_sweeper/click_factory';
+import CellHandler from '../../../../utils/mine_sweeper/cell_handler';
 
-import styled from "styled-components";
+import styled from 'styled-components';
 import {
   Level,
   Coord,
   CellData,
   ClickRenderStatus,
   LevelType
-} from "mine-sweeper-type"
+} from 'mine-sweeper-type'
 
-const MineSweeperWrapper = styled.div<{ minWidth: string }>`
+const MineSweeperWrapper = styled.div`
   background-color: #2e2d2d;
   border-radius: 5px;
   padding:20px;
@@ -25,46 +25,42 @@ const MineSweeperWrapper = styled.div<{ minWidth: string }>`
   transform: translate(-50%, -50%);
   position: absolute;
   box-shadow:  4px 4px 10px #272626;
-
-  min-width: ${({ minWidth }) => minWidth};
-
-  .game-container-row{
-    margin-bottom: 0px;
-    height:25px;
-  }
-
-  /* @media screen and (${({ theme }) => theme.mobile}) {
-    position:relative;
-    width:100vw;
-    padding:10px;
-  } */
 `;
 
-interface Props{
+const BoardWrapper = styled.div<{ row: number, col: number }>`
+  display: grid;
+  grid-template-rows: repeat(${({ row }) => row}, 1fr);
+  grid-template-columns: repeat(${({ col }) => col}, 1fr);
+`;
+
+interface Props {
   level: LevelType;
+  initCellData?: CellData[][];
 }
 
-export default function MineSweeper({ level }: Props) {
-  const levelList: { [key: string]: Level } = {
-    easy: { row: 9, col: 9, countOfMine: 10, width: "265px" },
-    normal: { row: 16, col: 16, countOfMine: 40, width: "444px" },
-    hard: { row: 16, col: 30, countOfMine: 99, width: "794px" },
-    mhard: { row: 30, col: 16, countOfMine: 99, width: "444px" }
+export default function MineSweeper({
+  level,
+  initCellData }: Props) {
+  const levelList: { [key in LevelType]: Level } = {
+    easy: { row: 9, col: 9, countOfMine: 10 },
+    normal: { row: 16, col: 16, countOfMine: 40 },
+    hard: { row: 16, col: 30, countOfMine: 99 },
+    mhard: { row: 30, col: 16, countOfMine: 99 }
   };
 
-  const { row, col, countOfMine, width } = levelList[level];
+  const { row, col, countOfMine } = levelList[level];
 
-  const [cellData, setCellData] = useState<CellData[][]>([]);
+  const [cellData, setCellData] = useState<CellData[][]>(initCellData || []);
   const [firstClick, setFirstClick] = useState<boolean>(false);
   const [countOfFlag, setCountOfFlag] = useState<number>(countOfMine);
   const [extraCell, setExtraCell] = useState<number>((row * col) - countOfMine);
   const [isGameOver, setGameOver] = useState<boolean>(false);
   const [gameReset, setGameReset] = useState<boolean>(false);
-  const [gameClear, setGameClear] = useState<boolean>(false);
+  const [gameClearSuccess, setGameClearSuccess] = useState<boolean>(false);
 
   const beginTime = useRef<number>(0);
   const endTime = useRef<number>(0);
-  
+
   useEffect(() => {
     const init = Array.from({ length: row }, () => Array)
       .map(() => Array.from({ length: col }, () => ({
@@ -72,7 +68,7 @@ export default function MineSweeper({ level }: Props) {
         neighbor: 0,
         visited: false,
         flaged: false,
-        visible: " "
+        visible: ' '
       })))
 
     setCellData(new CellHandler(init, { row, col }, countOfMine).getCellData());
@@ -80,16 +76,14 @@ export default function MineSweeper({ level }: Props) {
     setCountOfFlag(countOfMine);
     setExtraCell((row * col) - countOfMine);
     setGameOver(false);
-    setGameClear(false);
+    setGameClearSuccess(false);
   }, [gameReset, row, col, countOfMine]);
-
 
   // useeffect를 사용하여 액션발행을 하고 GameInfo 컴포넌트의 렌더링을 방해하지 않도록 한다.
   // useeffect의 내부 수행로직은 렌더링이 된 후 수행을 보장한다. 
   // 그럼으로 setFlag액션을 발행하면 Board가 렌더링이 되었다는 것을
   // 보장한다. 그 후에 GameInfo를 렌더링한다.
   const onCellClick = (e: React.MouseEvent<HTMLDivElement>, { y, x }: Coord) => {
-
     const RIGHTLICK = 2;
     onFirstClick(e.button, { y, x });
 
@@ -102,7 +96,9 @@ export default function MineSweeper({ level }: Props) {
     }
 
     if (e.button === RIGHTLICK) {
-      newCellData[y][x].flaged === true ? setCountOfFlag(countOfFlag - 1) : setCountOfFlag(countOfFlag + 1);
+      newCellData[y][x].flaged === true
+        ? setCountOfFlag(countOfFlag - 1)
+        : setCountOfFlag(countOfFlag + 1);
     }
 
     // 게임 종료 시
@@ -110,7 +106,7 @@ export default function MineSweeper({ level }: Props) {
       endTime.current = new Date().getTime();
       setGameOver(true);
       if (clickResult.clickBomb === false) {
-        setGameClear(true);
+        setGameClearSuccess(true);
       }
     }
 
@@ -120,7 +116,6 @@ export default function MineSweeper({ level }: Props) {
   }
 
   const onFirstClick = (buttonType: number, coord: Coord) => {
-
     const LEFTCLICK = 0;
     const { y, x } = coord;
 
@@ -135,11 +130,9 @@ export default function MineSweeper({ level }: Props) {
     }
   }
 
-
   const clickGameReset = useCallback(() => {
     setGameReset(prev => !prev);
   }, []);
-
 
   return (
     <>
@@ -148,36 +141,32 @@ export default function MineSweeper({ level }: Props) {
           <ModalContent
             takenTime={endTime.current - beginTime.current}
             level={level}
-            isGameSuccess={gameClear}
+            isGameSuccess={gameClearSuccess}
             onMouseClick={clickGameReset}
           />
         </ModalWrapper>
       }
-      <MineSweeperWrapper
-        minWidth={width}
-      >
+      <MineSweeperWrapper>
         <GameHeader
           firstClick={firstClick}
           countOfFlag={countOfFlag}
           isGameOver={isGameOver}
         />
-        {cellData.map((rowItem, y) => {
-          return (
-            <div className="game-container-row" key={y}>
-              {rowItem.map((data, x) => {
-                return (
-                  <Cell
-                    key={(y * rowItem.length) + x}
-                    value={data.mine && isGameOver ? "💣" : data.visible}
-                    isLock={data.visited}
-                    onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => onCellClick(e, { y, x })}
-                    onContextMenu={(e: React.MouseEvent<HTMLDivElement>) => e.preventDefault()}
-                  />
-                )
-              })}
-            </div>
-          )
-        })}
+        <BoardWrapper
+          row={row}
+          col={col}
+        >
+          {cellData.map((rowItem, y) =>
+            rowItem.map((cell, x) =>
+              <Cell
+                key={(y * rowItem.length) + x}
+                isLock={cell.visited}
+                value={cell.mine && isGameOver ? '💣' : cell.visible}
+                onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => onCellClick(e, { y, x })}
+                onContextMenu={(e: React.MouseEvent<HTMLDivElement>) => e.preventDefault()}
+              />
+            ))}
+        </BoardWrapper>
       </MineSweeperWrapper>
     </>
   )
