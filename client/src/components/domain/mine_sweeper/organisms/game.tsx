@@ -151,6 +151,7 @@ export default function MineSweeper({
           firstClick={firstClick}
           countOfFlag={countOfFlag}
           isGameOver={isGameOver}
+          gameReset={clickGameReset}
         />
         <BoardWrapper
           row={row}

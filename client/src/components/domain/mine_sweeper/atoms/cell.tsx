@@ -75,6 +75,7 @@ export default function Cell({
             width={'100%'}
             height={'100%'}
             src={flagimage}
+            alt={'깃발'}
           />
         </CenterWrapper>
         :

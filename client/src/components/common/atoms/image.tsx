@@ -5,6 +5,7 @@ interface Props {
   width: string;
   height: string;
   src: string;
+  alt: string;
 }
 
 const ImageWrapper = styled.div<Partial<Props>>`
@@ -24,6 +25,7 @@ export default function Image({
   width,
   height,
   src,
+  alt
 }: Props) {
 
   return (
@@ -32,7 +34,10 @@ export default function Image({
         width={width}
         height={height}
       >
-        <img src={src} />
+        <img
+          src={src}
+          alt={alt}
+        />
       </ImageWrapper>
     </>
   )

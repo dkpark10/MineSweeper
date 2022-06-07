@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import useInterval from '../../../custom_hooks/useinterval';
-import Image from '../../../common/atoms/image';
-import flagimage from '../../../../assets/flag.png';
-import heartimage from '../../../../assets/heart.png';
-import hourglassimage from '../../../../assets/hourglass.png';
+
+import flag from '../../../../assets/flag.png';
+import heart from '../../../../assets/heart.png';
+import hourglass from '../../../../assets/hourglass.png';
+
+import {
+  Image,
+  Button
+} from '../../../common/atoms/index';
+
 
 interface Props {
   firstClick: boolean;
   countOfFlag: number;
   isGameOver: boolean;
+  gameReset: React.MouseEventHandler<HTMLButtonElement>;
 };
 
 const GameHeaderStyle = styled.div`
@@ -34,6 +41,7 @@ const HeaderItem = styled.span`
 export default function GameHeader({
   firstClick,
   countOfFlag,
+  gameReset,
   isGameOver }: Props) {
   const [count, setCount] = useState<number>(0);
 
@@ -57,7 +65,7 @@ export default function GameHeader({
 
   useEffect(() => {
     setCount(0);
-  }, [isGameOver]);
+  }, [isGameOver, firstClick]);
 
   return (
     <GameHeaderStyle>
@@ -65,24 +73,32 @@ export default function GameHeader({
         <Image
           width='19px'
           height='19px'
-          src={hourglassimage}
+          src={hourglass}
+          alt={'모래시계'}
         />
         <div className='header_text'>
           {getCount(count)}
         </div>
       </HeaderItem>
-      <HeaderItem>
-        <Image
-          width='20px'
-          height='20px'
-          src={heartimage}
-        />
-      </HeaderItem>
+      <Button
+        onClick={gameReset}
+        backgroundColor={'#2e2d2d'}
+      >
+        <HeaderItem>
+          <Image
+            width='20px'
+            height='20px'
+            src={heart}
+            alt={'하트'}
+          />
+        </HeaderItem>
+      </Button>
       <HeaderItem>
         <Image
           width='19px'
           height='19px'
-          src={flagimage}
+          src={flag}
+          alt={'깃발'}
         />
         <div className='header_text'>
           {countOfFlag}
