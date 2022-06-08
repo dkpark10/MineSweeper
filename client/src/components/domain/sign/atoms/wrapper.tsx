@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import CenterWrapper from "../../../common/atoms/center_wrapper";
+import { AbsoluteCenterWrapper } from "../../../common/atoms/wrapper";
 
-const SignWrapper = styled(CenterWrapper)`
+const SignWrapper = styled(AbsoluteCenterWrapper)`
   font-family: "Noto Sans KR", sans-serif;
   background-color: white;
   padding:10px;
@@ -20,7 +20,7 @@ const SignWrapper = styled(CenterWrapper)`
     text-decoration: none;
   }
 
-  @media screen and (${({theme}) => theme.mobile}){
+  @media screen and (${({ theme }) => theme.mobile}){
     width: 100vw;
     padding:12px;
   }

@@ -132,7 +132,7 @@ export default function SignUp({ history }: RouteComponentProps) {
   }
 
   return (
-    <>
+    <main>
       <SignWrapper>
         <Link to="/">
           <Title
@@ -188,7 +188,7 @@ export default function SignUp({ history }: RouteComponentProps) {
             <WarningMessage
               show={validator.password.result === false && value.password.length > 0}
             >
-              {invalidMessage.password}
+              {invalidMessage.password as string}
             </WarningMessage>
           </div>
           <div>
@@ -204,7 +204,7 @@ export default function SignUp({ history }: RouteComponentProps) {
             <WarningMessage
               show={validator.repeatPassword.result === false && value.repeatPassword.length > 0}
             >
-              {invalidMessage.repeatPassword}
+              {invalidMessage.repeatPassword as string}
             </WarningMessage>
           </div>
           <Input
@@ -214,6 +214,6 @@ export default function SignUp({ history }: RouteComponentProps) {
           />
         </form>
       </SignWrapper>
-    </>
+    </main>
   )
 }

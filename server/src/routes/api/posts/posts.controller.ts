@@ -19,20 +19,6 @@ export const getPostListperPage = async (request: Request, response: Response) =
   }
 }
 
-export const updatePostView = async (request: Request, response: Response) => {
-  try {
-    const { column } = request.query;
-    const postid = request.params.postid;
-
-    const ret = await model.post.updatePost(postid, column as string);
-
-    response.status(201).send({ result: true });
-  }
-  catch (e) {
-    response.status(201).send({ result: false, message: e });
-  }
-}
-
 export const getPost = async (request: Request, response: Response) => {
   try {
     const postid = request.params.postid;
@@ -48,6 +34,16 @@ export const getPost = async (request: Request, response: Response) => {
 export const insertPost = async (request: Request, response: Response) => {
   try {
     const result = await model.post.insertPost(request.body);
+    response.status(201).send(result);
+  }
+  catch (e) {
+    response.status(202).send(e);
+  }
+}
+
+export const updatePost = async (request: Request, response: Response) => {
+  try {
+    const result = await model.post.updatePost(request.body);
     response.status(201).send(result);
   }
   catch (e) {

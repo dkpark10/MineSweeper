@@ -9,9 +9,11 @@ export default function Options() {
     <>
       <Header />
       <OptionWrapper>
-        <OptionCard
-          name="난이도"
-        />
+        <main>
+          <OptionCard
+            name="난이도"
+          />
+        </main>
       </OptionWrapper>
     </>
   )

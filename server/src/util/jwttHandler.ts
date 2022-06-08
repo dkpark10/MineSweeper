@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 
 const signToken = (secretKey: string, expDate: string, userInfo = {}): Promise<string> => {
-
   return new Promise((resolve, reject) => {
     jwt.sign(userInfo,
       secretKey, {
@@ -17,7 +16,6 @@ const signToken = (secretKey: string, expDate: string, userInfo = {}): Promise<s
 }
 
 const verifyToken = (key: string, token: string): Promise<jwt.JwtPayload | undefined> => {
-
   return new Promise(resolve => {
     jwt.verify(token, key, (err, decoded) => {
       if (err)

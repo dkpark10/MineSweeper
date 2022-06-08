@@ -31,7 +31,7 @@ export default function PostList({
       {postData.map((post, idx) =>
         <li
           className="post_item" 
-          key={idx}
+          key={post.id}
         >
           <PostCardItem
             widthRatio={widthRatio}

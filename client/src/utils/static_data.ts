@@ -1,4 +1,9 @@
-export const invalidMessage = {
+type InvalidMessageProps = 'id' | 'email' | 'password' | 'repeatPassword';
+type InvalidMessage = {
+  [K in InvalidMessageProps]: string | string[];
+}
+
+export const invalidMessage: InvalidMessage = {
   id: [
     "영어와 숫자 _ 를 포함하는 최소 5글자 최대 15 사이 문자여야 합니다.",
     "이미 존재하는 아이디입니다."

@@ -79,7 +79,7 @@ export default function SignIn({ history }: RouteComponentProps) {
   }
 
   return (
-    <>
+    <main>
       <SignWrapper>
         <Link to="/">
           <Title
@@ -127,6 +127,6 @@ export default function SignIn({ history }: RouteComponentProps) {
           />
         </form>
       </SignWrapper>
-    </>
+    </main>
   )
 }

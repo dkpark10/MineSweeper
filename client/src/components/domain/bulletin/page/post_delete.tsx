@@ -4,7 +4,7 @@ import { RouteComponentProps } from "react-router-dom";
 import axiosInstance from '../../../../utils/default_axios';
 
 import {
-  CenterWrapper,
+  AbsoluteCenterWrapper,
   Input
 }from "../../../common/atoms/index";
 
@@ -12,7 +12,7 @@ interface MatchParams {
   postid: string;
 }
 
-const DeletePostPageWrapper = styled(CenterWrapper)`
+const DeletePostPageWrapper = styled(AbsoluteCenterWrapper)`
   background-color:white;
   box-shadow: 5px 5px 16px -2px rgb(175, 175, 175);
   border-radius:8px;

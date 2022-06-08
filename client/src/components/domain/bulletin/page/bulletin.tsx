@@ -16,7 +16,7 @@ import {
 } from "../../../common/molecules/index";
 
 
-import DefaultBulletinWrapper from "../atoms/bulletin_wrapper";
+import { DefaultBulletinWrapper } from "../atoms/bulletin_wrapper";
 import PostCardHeader from "../molecules/post_card_header";
 import PostList from "../molecules/post_list";
 import BuelltinNavi from "../molecules/post_navigator";

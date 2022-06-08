@@ -4,7 +4,7 @@ export const AlignCenterWrapper = styled.div`
   text-align: center;
 `
 
-const DefaultBulletinWrapper = styled.main`
+export const DefaultBulletinWrapper = styled.main`
   font-family: "Noto Sans KR", sans-serif;
   margin:auto;
 
@@ -33,4 +33,17 @@ const DefaultBulletinWrapper = styled.main`
   }
 `;
 
-export default DefaultBulletinWrapper;
+export const PostControllerWrapper = styled(DefaultBulletinWrapper)`
+  position:relative;
+  background-color:white;
+  box-shadow: 5px 5px 16px -2px rgb(175, 175, 175);
+`;
+
+export const InputWrapper = styled.div`
+  border:1px solid #ccc;
+  padding: 5px;
+
+  @media screen and (${({ theme }) => theme.minTablet}){
+    margin: 10px 0px;
+  }
+`;

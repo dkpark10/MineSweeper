@@ -16,7 +16,6 @@ import {
 import {
   getPostListperPage,
   getPost,
-  updatePostView,
   dropTest
 } from './posts/posts.controller';
 
@@ -36,7 +35,6 @@ router.post('/user', registUser);
 
 router.get('/posts', getPostListperPage);
 router.get('/posts/:postid', getPost);
-router.patch('/posts/:postid', updatePostView);
 
 router.get('/game', getUserGame);
 router.get('/game/:level', getGameInfo, getUserGameSearch);

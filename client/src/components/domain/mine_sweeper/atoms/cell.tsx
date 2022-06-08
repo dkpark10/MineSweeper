@@ -2,7 +2,7 @@ import React, { ReactText } from "react";
 import styled from "styled-components";
 import Image from '../../../common/atoms/image';
 import flagimage from '../../../../assets/flag.png';
-import CenterWrapper from '../../../common/atoms/center_wrapper';
+import { AbsoluteCenterWrapper } from '../../../common/atoms/wrapper';
 
 interface Props {
   value: ReactText;
@@ -34,7 +34,7 @@ const CellStyle = styled.div<Partial<Props>>`
   }
 `;
 
-const CellTextStyle = styled(CenterWrapper) <{
+const CellTextStyle = styled(AbsoluteCenterWrapper) <{
   color: string;
 }>`
   font-size: 9px;
@@ -70,14 +70,14 @@ export default function Cell({
     >
       {value === 'flag'
         ?
-        <CenterWrapper>
+        <AbsoluteCenterWrapper>
           <Image
             width={'100%'}
             height={'100%'}
             src={flagimage}
             alt={'깃발'}
           />
-        </CenterWrapper>
+        </AbsoluteCenterWrapper>
         :
         <CellTextStyle
           color={colorofButtonNumber[value]}

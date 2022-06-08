@@ -8,7 +8,8 @@ import {
   Loading,
   Title,
   Content,
-  UnderLine
+  UnderLine,
+  FlexBetweenWrapper
 } from "../../../common/atoms/index";
 
 import { calculPassedTime } from "../../../../utils/date_handler";
@@ -33,6 +34,10 @@ const PostTitleInfo = styled.div`
 const PostContentWrapper = styled.div`
   width:100%;
   margin:30px 0px;
+`;
+
+const PostHandlerWrapper = styled(FlexBetweenWrapper)`
+  width:59px;
 `;
 
 interface PostProps {
@@ -82,19 +87,32 @@ export default function PostArticle({
       </PostContentWrapper>
       <UnderLine />
       {loginedUser === response.author &&
-        <Link to={{
-          pathname: `/community/delete/${postid}`,
-          state: {
-            postid: response.id,
-            author: response.author
-          }
-        }}>
-          <Content
-            fontSize={"0.86rem"}
-          >
-            삭제
-          </Content>
-        </Link>
+        <PostHandlerWrapper>
+          <Link to={{
+            pathname: `/community/update/${postid}`,
+            state: {
+              postInfo: response
+            }
+          }}>
+            <Content
+              fontSize={"0.86rem"}
+            >
+              수정
+            </Content>
+          </Link>
+          <Link to={{
+            pathname: `/community/delete/${postid}`,
+            state: {
+              postInfo: response
+            }
+          }}>
+            <Content
+              fontSize={"0.86rem"}
+            >
+              삭제
+            </Content>
+          </Link>
+        </PostHandlerWrapper>
       }
     </PostArticleWrapper>
   )

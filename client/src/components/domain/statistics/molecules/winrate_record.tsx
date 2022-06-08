@@ -1,7 +1,7 @@
 import React from "react";
 import { GameStatisticsProps } from "statistics-type";
 import styled from "styled-components";
-import CenterWrapperStyle from "../../../common/atoms/center_wrapper";
+import { AbsoluteCenterWrapper } from "../../../common/atoms/wrapper";
 import Doughnut from "../atoms/doughnut";
 
 const WinRateRecordWrapper = styled.div`
@@ -14,7 +14,7 @@ const WinRateRecordItem = styled.div`
   position:relative;
 `;
 
-const WinRateText = styled(CenterWrapperStyle)`
+const WinRateText = styled(AbsoluteCenterWrapper)`
   font-size: 1.1rem;
   @media screen and (${({ theme }) => theme.mobile}){
     font-size: 0.89rem;

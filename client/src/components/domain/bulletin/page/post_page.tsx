@@ -1,23 +1,23 @@
-import React from "react";
-import { RouteComponentProps, useLocation } from "react-router-dom";
-import styled from "styled-components";
+import React from 'react';
+import { RouteComponentProps, useLocation } from 'react-router-dom';
+import styled from 'styled-components';
 
 import {
   Header,
   Footer
-}from "../../../common/organisms/index";
+}from '../../../common/organisms/index';
 
 import {
   PageNation
-}from "../../../common/molecules/index";
+}from '../../../common/molecules/index';
 
-import DefaultBulletinWrapper from "../atoms/bulletin_wrapper";
-import PostArticle from "../molecules/post_article";
+import { DefaultBulletinWrapper } from '../atoms/bulletin_wrapper';
+import PostArticle from '../molecules/post_article';
 
-import PostCardHeader from "../molecules/post_card_header";
-import PostList from "../molecules/post_list";
-import BuelltinNavi from "../molecules/post_navigator";
-import useAxios from "../../../custom_hooks/useaxios";
+import PostCardHeader from '../molecules/post_card_header';
+import PostList from '../molecules/post_list';
+import BuelltinNavi from '../molecules/post_navigator';
+import useAxios from '../../../custom_hooks/useaxios';
 
 interface PostProps {
   id: number;
@@ -48,7 +48,7 @@ export default function Post({
   const postid = match.params.postid;
   const { state: { page } } = useLocation<State>();
   const [response,] = useAxios<PostProps[]>(`/api/posts?page=${page}`, []);
-  const widthRatio = ["68%", "20%", "12%"];
+  const widthRatio = ['68%', '20%', '12%'];
 
   return (
     <>
@@ -63,7 +63,7 @@ export default function Post({
       <div>
         <DefaultBulletinWrapper>
           <BuelltinNavi
-            url={"/community"}
+            url={'/community'}
           />
           <PostCardHeader
             widthRatio={widthRatio}
@@ -71,11 +71,11 @@ export default function Post({
           <PostList
             postData={response}
             widthRatio={widthRatio}
-            url={"/community"}
+            url={'/community'}
             page={page[0]}
           />
           <PageNation
-            url={"/community"}
+            url={'/community'}
             totalItemCount={response.length === 0 ? 1 : response[0].totalItemCount}
             currentPage={Number(page)}
           />

@@ -1,6 +1,7 @@
 import { Router, Request, Response, NextFunction } from "express";
 import {
   insertPost,
+  updatePost,
   deletePost
 } from "../posts/posts.controller";
 
@@ -37,6 +38,7 @@ router.use(async (request: Request, response: Response, next: NextFunction) => {
 
 router.delete("/posts/:postid", deletePost);
 router.post("/posts", insertPost);
+router.patch("/posts", updatePost);
 router.post("/logout", logout);
 router.post("/game", recordUserGame);
 

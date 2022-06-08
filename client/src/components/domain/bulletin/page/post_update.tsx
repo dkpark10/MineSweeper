@@ -1,14 +1,18 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import { RouteComponentProps } from "react-router-dom";
 
 import Editor from "../molecules/editor";
-import DefaultBulletinWrapper, { AlignCenterWrapper } from "../atoms/bulletin_wrapper";
+import {
+  PostControllerWrapper,
+  AlignCenterWrapper,
+  InputWrapper
+} from '../atoms/bulletin_wrapper';
+
+import SubmitButton from '../atoms/submit_button';
 
 import {
   Input,
-  Button
-} from "../../../common/atoms/index";
+} from '../../../common/atoms/index';
 
 import {
   Header
@@ -17,57 +21,40 @@ import {
 import axiosInstance from '../../../../utils/default_axios';
 import { useStringInput } from "../../../custom_hooks/useinput";
 import { AxiosResponse } from "axios";
+import { PostProps } from 'bulletin-type';
 
-const PostCreatePageWrapper = styled(DefaultBulletinWrapper)`
-  position:relative;
-  background-color:white;
-  box-shadow: 5px 5px 16px -2px rgb(175, 175, 175);
-`;
-
-const InputWrapper = styled.div`
-  border:1px solid #ccc;
-  padding: 5px;
-
-  @media screen and (${({ theme }) => theme.minTablet}){
-    margin: 10px 0px;
-  }
-`;
-
-const SubmitButton = styled(Button)`
-  color:white;
-  border-radius:8px;
-  font-weight: bold;
-`;
-
-interface Props extends RouteComponentProps {
-  author: string;
+interface Props extends RouteComponentProps<{ postid: string }> {
+  postInfo: PostProps;
 }
 
 export default function PostCreatePage({
-  author,
+  match,
+  postInfo,
   history
 }: Props) {
-  const [title, setTitle] = useStringInput("");
-  const [contents, setContetns] = useState<string>("");
+  const postid = match.params.postid;
+  const [title, setTitle] = useStringInput(postInfo.title);
+  const [contents, setContetns] = useState<string>(postInfo.content);
 
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (title.length <= 0) {
       return;
     }
-
     const request = async () => {
       try {
-        const { status }: AxiosResponse = await axiosInstance.post(`/api/auth/posts`, {
-          author: author,
+        const { status }: AxiosResponse = await axiosInstance.patch(`/api/auth/posts`, {
+          postid,
           title: title,
           contents: contents
         })
 
         if (status === 201) {
-          history.replace("/community?page=1");
-        } 
+          ;
+        }
       } catch (e) {
+      } finally {
+        history.replace("/community?page=1");
       }
     }
     request();
@@ -77,7 +64,7 @@ export default function PostCreatePage({
     <>
       <Header />
       <div>
-        <PostCreatePageWrapper>
+        <PostControllerWrapper>
           <form onSubmit={submit}>
             <InputWrapper>
               <Input
@@ -100,11 +87,11 @@ export default function PostCreatePage({
                 width={"80px"}
                 height={"33px"}
               >
-                등록
+                수정
               </SubmitButton>
             </AlignCenterWrapper>
           </form>
-        </PostCreatePageWrapper>
+        </PostControllerWrapper>
       </div>
     </>
   )

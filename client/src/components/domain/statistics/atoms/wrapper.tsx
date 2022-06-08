@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import CenterWrapper from "../../../common/atoms/center_wrapper";
+import { AbsoluteCenterWrapper } from "../../../common/atoms/wrapper";
 
-const DefaultBulletinWrapper = styled.div`
+const DefaultStatisticsWrapper = styled.div`
   font-family: 'Noto Sans KR', sans-serif;
   margin:auto; 
   background-color: white;
@@ -42,10 +42,10 @@ export const ContentHeader = styled.div`
   }
 `;
 
-export const ContentWrapper = styled(CenterWrapper)`
+export const ContentWrapper = styled(AbsoluteCenterWrapper)`
   display:flex;
   justify-content: space-around;
   width:284px;  
 `;
 
-export default DefaultBulletinWrapper;
+export default DefaultStatisticsWrapper;

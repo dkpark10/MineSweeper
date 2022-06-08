@@ -1,8 +1,9 @@
-import mysql from 'mysql2';
+import mysql, { QueryError } from 'mysql2';
 import redis from 'redis'
 import Model from './model';
 
 export interface PostArg {
+  postid?: string;
   author: string;
   title: string;
   contents: string;
@@ -45,20 +46,6 @@ export default class PostModel extends Model {
     });
   }
 
-  public updatePost(postid: string, column: string): Promise<boolean> {
-    const query = `UPDATE ${this.table} SET ${column}=${column}+1 WHERE id=?`;
-
-    return new Promise((resolve, reject) => {
-      this.connection.query(query, [postid], (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(true);
-        }
-      })
-    })
-  }
-
   public getPost(postid: string): Promise<PostResponse> {
     const query =
       `SELECT id, author, content, title, comments, likenum, UNIX_TIMESTAMP(date)as time, views
@@ -97,6 +84,23 @@ export default class PostModel extends Model {
 
     return new Promise((resolve, reject) => {
       this.connection.query(query, [null, author, title, contents], (err, data) => {
+        if (err || !data) {
+          reject(err);
+        } else {
+          resolve(true);
+        }
+      });
+    });
+  }
+
+  public updatePost({ postid, title, contents }: PostArg): Promise<boolean | QueryError> {
+    const query = `
+      UPDATE ${this.table} 
+      SET title=?, content=?
+      WHERE id=?`
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, [title, contents, postid], (err, data) => {
         if (err || !data) {
           reject(err);
         } else {

@@ -59,7 +59,6 @@ export default function Ranking({
         totalItemCount: data.length
       })))
     } catch (e) {
-
     }
     setSearchLoading(false);
   }

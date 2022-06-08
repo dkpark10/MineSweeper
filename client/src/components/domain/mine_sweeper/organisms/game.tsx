@@ -16,7 +16,7 @@ import {
   LevelType
 } from 'mine-sweeper-type'
 
-const MineSweeperWrapper = styled.div`
+const MineSweeperWrapper = styled.main`
   background-color: #2e2d2d;
   border-radius: 5px;
   padding:20px;
