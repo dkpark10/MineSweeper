@@ -13,20 +13,23 @@ export const useObjectInput = <T>(init: T, callback?: (props: CallbackProps) => 
     const { name, value } = e.target;
     setData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
 
     if (callback) {
       callback({
         name,
-        value
+        value,
       });
     }
   };
   return [data, change, setData];
 };
 
-export const useStringInput = (init: string, callback?: (props: CallbackProps) => void): [string, ChangeReturnType] => {
+export const useStringInput = (
+  init: string,
+  callback?: (props: CallbackProps) => void,
+): [string, ChangeReturnType] => {
   const [data, setData] = useState<string>(init);
   const change = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -35,7 +38,7 @@ export const useStringInput = (init: string, callback?: (props: CallbackProps) =
     if (callback) {
       callback({
         name,
-        value
+        value,
       });
     }
   };

@@ -1,6 +1,6 @@
-declare module "statistics-type" {
-  export type Levels = "easy" | "normal" | "hard";
-  export type LevelsProps = "GameTotalCount" | "GameWinCount" | "BestRecord";
+declare module 'statistics-type' {
+  export type Levels = 'easy' | 'normal' | 'hard';
+  export type LevelsProps = 'GameTotalCount' | 'GameWinCount' | 'BestRecord';
   export type AlignmentLevelsProps = `${Levels}${LevelsProps}`;
 
   export interface PastGame {

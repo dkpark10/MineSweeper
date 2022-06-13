@@ -1,9 +1,9 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 import {
   Button,
-  Input
-} from "../../../common/atoms/index";
+  Input,
+} from '../../../common/atoms/index';
 
 const BulletionNaviWrapper = styled.div`
   margin:20px 0px;
@@ -41,30 +41,29 @@ interface Props {
 export default function UserSearchInput({
   value,
   setValue,
-  search
+  search,
 }: Props) {
-
   return (
     <form onSubmit={search}>
       <BulletionNaviWrapper>
         <SearchInputWrapper>
           <SearchInput
-            type={"text"}
-            name={"user_search"}
-            width={"80%"}
-            height={"100%"}
+            type='text'
+            name='user_search'
+            width='80%'
+            height='100%'
             value={value}
             onChange={setValue}
           />
           <Button
-            width={"20%"}
-            height={"100%"}
-            backgroundColor={"white"}
+            width='20%'
+            height='100%'
+            backgroundColor='white'
           >
             검색
           </Button>
         </SearchInputWrapper>
       </BulletionNaviWrapper>
     </form>
-  )
+  );
 }

@@ -1,5 +1,4 @@
-import React from "react";
-import styled from "styled-components";
+import styled from 'styled-components';
 
 interface Props {
   fontSize?: string;
@@ -11,10 +10,10 @@ interface Props {
 
 export default styled.span<Props>`
   font-family: 'Noto Sans KR', sans-serif;
-  color: ${({ fontColor, theme }) => fontColor === true ? theme.mainColor : theme.fontColor};
-  font-size: ${({ fontSize }) => fontSize || "0.9rem"};
-  font-weight: ${({ bold }) => bold === true ? "bold" : ""};
-  margin: ${({margin}) => margin};
+  color: ${({ fontColor, theme }) => (fontColor === true ? theme.mainColor : theme.fontColor)};
+  font-size: ${({ fontSize }) => fontSize || '0.9rem'};
+  font-weight: ${({ bold }) => (bold === true ? 'bold' : '')};
+  margin: ${({ margin }) => margin};
 
   &:hover{
     color: ${({ hoverFontColor }) => hoverFontColor};

@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 interface Props {
   fontSize: string;
@@ -21,15 +21,15 @@ export default function NotFound() {
   return (
     <NotFoundWrapper>
       <NotFoundText
-        fontSize={"5.5rem"}
+        fontSize='5.5rem'
       >
         4 💣 4
       </NotFoundText>
       <NotFoundText
-        fontSize={"2.75rem"}
+        fontSize='2.75rem'
       >
         페이지를 찾을 수 없습니다.
       </NotFoundText>
     </NotFoundWrapper>
-  )
+  );
 }

@@ -1,11 +1,11 @@
-import React from "react";
-import styled from "styled-components"
+import React from 'react';
+import styled from 'styled-components';
 
 const Wrapper = styled.div`
   text-align:center;
   font-size:0.9rem;
   color:#f42e0bdb;
-`
+`;
 
 interface Props {
   show: boolean;
@@ -14,7 +14,7 @@ interface Props {
 
 export default function WarningMessage({
   show,
-  children
+  children,
 }: Props) {
   if (!show) {
     return null;
@@ -24,5 +24,5 @@ export default function WarningMessage({
     <Wrapper>
       {children}
     </Wrapper>
-  )
+  );
 }

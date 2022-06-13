@@ -1,17 +1,25 @@
+import React from 'react';
 import styled from 'styled-components';
 
-interface AbsoluteSize {
-  top: string;
-  left: string;
+interface DefaultProps {
+  value?: string;
+  check?: boolean;
+  size?: {
+    top: string;
+    left: string;
+  }
 }
 
-interface Props {
+const defaultProps: DefaultProps = {
+  value: '',
+  check: false,
+  size: { top: '0.0rem', left: '0.0rem' },
+};
+
+interface Props extends DefaultProps {
   name: string;
   id: string;
-  value?:string;
-  check?: boolean;
-  change?: React.ChangeEventHandler<HTMLInputElement>;
-  size?: AbsoluteSize
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
 }
 
 const RadioStyle = styled.span<Partial<Props>>`
@@ -26,8 +34,8 @@ const RadioStyle = styled.span<Partial<Props>>`
     position: absolute;
     cursor: pointer;
     z-index: 1;
-    top: ${({ size }) => size.top};
-    left : ${({ size }) => size.left};
+    top: ${({ size }) => size?.top};
+    left : ${({ size }) => size?.left};
     width: 100%;
     height: 100%;
   }
@@ -35,8 +43,8 @@ const RadioStyle = styled.span<Partial<Props>>`
   input[type=radio] + label::before{
     position: absolute;
     content: "";
-    top: ${({ size }) => size.top};
-    left : ${({ size }) => size.left};
+    top: ${({ size }) => size?.top};
+    left : ${({ size }) => size?.left};
     width: 100%;
     height: 100%;
     border-radius: 100%;
@@ -52,28 +60,29 @@ const RadioStyle = styled.span<Partial<Props>>`
 `;
 
 export default function RadioButton({
-  value,
   name,
-  check,
   id,
-  change,
-  size = { top: '0.0rem', left: '0.0rem' }
+  value,
+  check,
+  onChange,
+  size,
 }: Props) {
   return (
-    <>
-      <RadioStyle
-        size={size}
-      >
-        <input
-          type="radio"
-          name={name}
-          value={value}
-          id={id}
-          onChange={change}
-          checked={check}
-        />
-        <label htmlFor={name}/>
-      </RadioStyle>
-    </>
-  )
+    <RadioStyle
+      size={size}
+    >
+      <input
+        type='radio'
+        name={name}
+        value={value}
+        id={id}
+        onChange={onChange}
+        checked={check}
+      />
+      {/* eslint-disable-next-line */}
+      <label htmlFor={name} />
+    </RadioStyle>
+  );
 }
+
+RadioButton.defaultProps = defaultProps;

@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import axiosInstance from "../../utils/default_axios";
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import axiosInstance from '../../utils/default_axios';
 
-axios.defaults.baseURL = "http://localhost:8080";
+axios.defaults.baseURL = 'http://localhost:8080';
 type ReturnType<T> = [T, boolean, React.Dispatch<React.SetStateAction<T>>];
 
 export default <T>(initUrl: string, init?: T): ReturnType<T> => {
@@ -17,12 +17,14 @@ export default <T>(initUrl: string, init?: T): ReturnType<T> => {
           setResponse(data);
         }
         setLoading(false);
-      } catch (e) {
+      } catch (error) {
+        // empty
       } finally {
+        // empty
       }
-    }
+    };
     request();
-  }, [initUrl])
+  }, [initUrl]);
 
   return [response, loading, setResponse];
-}
+};

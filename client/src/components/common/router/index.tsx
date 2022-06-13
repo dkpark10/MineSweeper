@@ -1,16 +1,16 @@
-import React from "react";
-import { Route, Redirect, RouteProps } from "react-router-dom";
+import React from 'react';
+import { Route, Redirect, RouteProps } from 'react-router-dom';
 
 interface Props extends RouteProps {
   authentication: boolean;
 }
 
-export const PrivateRoute = ({
+export function PrivateRoute({
   authentication,
-  ...rest }: Props) => {
+  ...rest
+}: Props) {
   if (authentication) {
     return <Route {...rest} />;
-  } else {
-    return <Redirect to="/signin" />;
   }
-};
+  return <Redirect to='/signin' />;
+}

@@ -1,21 +1,18 @@
-import { ClickHandler } from './click_handler';
-import { Coord, CellData, ClickRenderStatus } from 'mine-sweeper-type'
+import { Coord, ClickRenderStatus } from 'mine-sweeper-type';
+import ClickHandler from './click_handler';
 
 class RightClickHandler extends ClickHandler {
-
   public process(): ClickRenderStatus {
-
-    const cellData: CellData[][] = this.cellData;
+    const { cellData } = this;
     const { y, x }: Coord = this.coord;
 
     if (cellData[y][x].visited === true
       && (cellData[y][x].neighbor > 0
         || cellData[y][x].neighbor <= 0)) {
-
       return {
         render: false,
-        clickBomb:false,
-        removeCell: 0
+        clickBomb: false,
+        removeCell: 0,
       };
     }
 
@@ -24,9 +21,9 @@ class RightClickHandler extends ClickHandler {
 
     return {
       render: true,
-      clickBomb:false,
-      removeCell: 0
-    }
+      clickBomb: false,
+      removeCell: 0,
+    };
   }
 }
 

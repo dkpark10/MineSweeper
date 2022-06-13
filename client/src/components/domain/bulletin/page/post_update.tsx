@@ -1,11 +1,13 @@
-import React, { useState } from "react";
-import { RouteComponentProps } from "react-router-dom";
+import React, { useState } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 
-import Editor from "../molecules/editor";
+import { AxiosResponse } from 'axios';
+import { PostProps } from 'bulletin-type';
+import Editor from '../molecules/editor';
 import {
   PostControllerWrapper,
   AlignCenterWrapper,
-  InputWrapper
+  InputWrapper,
 } from '../atoms/bulletin_wrapper';
 
 import SubmitButton from '../atoms/submit_button';
@@ -15,13 +17,11 @@ import {
 } from '../../../common/atoms/index';
 
 import {
-  Header
-} from "../../../common/organisms/index";
+  Header,
+} from '../../../common/organisms/index';
 
 import axiosInstance from '../../../../utils/default_axios';
-import { useStringInput } from "../../../custom_hooks/useinput";
-import { AxiosResponse } from "axios";
-import { PostProps } from 'bulletin-type';
+import { useStringInput } from '../../../custom_hooks/useinput';
 
 interface Props extends RouteComponentProps<{ postid: string }> {
   postInfo: PostProps;
@@ -30,9 +30,9 @@ interface Props extends RouteComponentProps<{ postid: string }> {
 export default function PostCreatePage({
   match,
   postInfo,
-  history
+  history,
 }: Props) {
-  const postid = match.params.postid;
+  const { postid } = match.params;
   const [title, setTitle] = useStringInput(postInfo.title);
   const [contents, setContetns] = useState<string>(postInfo.content);
 
@@ -43,22 +43,23 @@ export default function PostCreatePage({
     }
     const request = async () => {
       try {
-        const { status }: AxiosResponse = await axiosInstance.patch(`/api/auth/posts`, {
+        const { status }: AxiosResponse = await axiosInstance.patch('/api/auth/posts', {
           postid,
-          title: title,
-          contents: contents
-        })
+          title,
+          contents,
+        });
 
         if (status === 201) {
-          ;
+          // empty
         }
-      } catch (e) {
+      } catch (error) {
+        // empty
       } finally {
-        history.replace("/community?page=1");
+        history.replace('/community?page=1');
       }
-    }
+    };
     request();
-  }
+  };
 
   return (
     <>
@@ -68,13 +69,13 @@ export default function PostCreatePage({
           <form onSubmit={submit}>
             <InputWrapper>
               <Input
-                type={"text"}
-                name={"post_title"}
-                width={"100%"}
-                height={"40px"}
+                type='text'
+                name='post_title'
+                width='100%'
+                height='40px'
                 value={title}
                 onChange={setTitle}
-                placeholder={"제목을 입력하세요."}
+                placeholder='제목을 입력하세요.'
               />
             </InputWrapper>
             <Editor
@@ -83,9 +84,9 @@ export default function PostCreatePage({
             />
             <AlignCenterWrapper>
               <SubmitButton
-                type="submit"
-                width={"80px"}
-                height={"33px"}
+                type='submit'
+                width='80px'
+                height='33px'
               >
                 수정
               </SubmitButton>
@@ -94,5 +95,5 @@ export default function PostCreatePage({
         </PostControllerWrapper>
       </div>
     </>
-  )
+  );
 }

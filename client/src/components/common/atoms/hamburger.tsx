@@ -27,15 +27,15 @@ interface Props {
 }
 
 export default function Hamburger({
-  onClick
+  onClick,
 }: Props) {
   return (
-    <HamStyle 
+    <HamStyle
       onClick={onClick}
     >
-      <div></div>
-      <div></div>
-      <div></div>
+      <div />
+      <div />
+      <div />
     </HamStyle>
-  )
+  );
 }

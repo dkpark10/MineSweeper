@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from 'react';
 
-type CallBack = () => void;
-const useInterval = (callback: CallBack, delay: number = 1000) => {
+type CallBack = (...args: any) => any;
+const useInterval = (callback: CallBack, delay = 1000) => {
   const savedCallback = useRef<CallBack>(null);
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const useInterval = (callback: CallBack, delay: number = 1000) => {
     return () => {
       clearInterval(id);
       id = null;
-    }
+    };
   }, [delay]);
 };
 

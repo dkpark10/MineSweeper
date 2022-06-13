@@ -1,21 +1,21 @@
-import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../reducers/index";
-import styled from "styled-components";
-import axiosInstance from "../../../../utils/default_axios";
-import secretKey from "../../../../config/secret_key";
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import styled from 'styled-components';
+import { LevelType } from 'mine-sweeper-type';
+import { RootState } from '../../../../reducers/index';
+import axiosInstance from '../../../../utils/default_axios';
+import secretKey from '../../../../config/secret_key';
 
 import {
   Button,
-  Content
-} from "../../../common/atoms/index";
-
+  Content,
+} from '../../../common/atoms/index';
 
 interface Props {
   takenTime: number;
-  level: string;
+  level: LevelType;
   isGameSuccess: boolean;
-  onMouseClick?: React.MouseEventHandler<HTMLButtonElement>;
+  onMouseClick: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 const ModalContentStyle = styled.div`
@@ -46,29 +46,29 @@ export default function ModalContent({
   takenTime,
   level,
   isGameSuccess,
-  onMouseClick
+  onMouseClick,
 }: Props) {
-
   const userid = useSelector((state: RootState) => state.login.id);
   const levels = {
     easy: '쉬움',
     normal: '보통',
-    hard: '어려움'
-  }
+    hard: '어려움',
+  };
 
   useEffect(() => {
     const request = async () => {
       try {
-        await axiosInstance.post("/api/auth/game", {
-          id: userid === "" ? "anonymous" : userid,
+        await axiosInstance.post('/api/auth/game', {
+          id: userid === '' ? 'anonymous' : userid,
           record: takenTime / 1000,
-          success: isGameSuccess ? "success" : "fail",
-          level: level,
-          clientAnonymousKey: secretKey.anonymousKey
-        })
+          success: isGameSuccess ? 'success' : 'fail',
+          level,
+          clientAnonymousKey: secretKey.anonymousKey,
+        });
       } catch (e) {
+        // empty
       }
-    }
+    };
 
     request();
   }, [isGameSuccess, level, takenTime, userid]);
@@ -76,22 +76,30 @@ export default function ModalContent({
   return (
     <ModalContentStyle>
       <Content
-        fontColor={true}
-        fontSize={'1.15rem'}
+        fontColor
+        fontSize='1.15rem'
       >
         {isGameSuccess ? '성공' : '실패'}
       </Content>
-      <div> 시간 : {(takenTime) / 1000}</div>
-      <div> 레벨 : {levels[level]}</div>
+      <div>
+        {' '}
+        시간 :
+        {(takenTime) / 1000}
+      </div>
+      <div>
+        {' '}
+        레벨 :
+        {levels[level]}
+      </div>
       <CloseButton
-        width={"75px"}
-        height={"25px"}
-        radius={"5px"}
-        border={"none"}
+        width='75px'
+        height='25px'
+        radius='5px'
+        border='none'
         onClick={onMouseClick}
       >
         닫기
       </CloseButton>
     </ModalContentStyle>
-  )
+  );
 }

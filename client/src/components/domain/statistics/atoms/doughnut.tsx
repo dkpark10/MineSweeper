@@ -1,7 +1,10 @@
-import React from "react";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { Doughnut } from "react-chartjs-2";
-import { useTheme } from "styled-components";
+import React from 'react';
+import {
+  Chart as ChartJS, ArcElement, Tooltip, Legend,
+} from 'chart.js';
+import { Doughnut } from 'react-chartjs-2';
+import { useTheme } from 'styled-components';
+
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface Props {
@@ -16,13 +19,13 @@ export default function WinRateRecord({ winRate }: Props) {
         data: [winRate, 100 - winRate],
         backgroundColor: [
           theme.mainColor,
-          "white"
+          'white',
         ],
         borderWidth: 1,
-        cutout: "72%",
-        borderRadius: 100
-      }
-    ]
+        cutout: '72%',
+        borderRadius: 100,
+      },
+    ],
   };
 
   return <Doughnut data={data} />;

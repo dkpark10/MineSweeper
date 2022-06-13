@@ -24,30 +24,28 @@ const ModalWrapperStyle = styled.div<Props>`
 }`;
 
 export default function ModalWrapper({
-  children
+  children,
 }: Props) {
-
   useEffect(() => {
     // 스크롤 막는다.
     document.body.style.overflow = 'hidden';
-  })
+  });
 
   // 모달 바깥을 클릭하면 닫는다.
   const closeModal = (e: React.MouseEvent<HTMLDivElement>) => {
     // 자식한테 이벤트 전파 방지
     if (e.target === e.currentTarget) {
     }
-  }
+  };
 
   return (
-    <>
-      <ModalWrapperStyle>
-        <div className='overlay'
-          onClick={closeModal}
-        >
-          {children}
-        </div>
-      </ModalWrapperStyle>
-    </>
-  )
+    <ModalWrapperStyle>
+      <div
+        className='overlay'
+        onClick={closeModal}
+      >
+        {children}
+      </div>
+    </ModalWrapperStyle>
+  );
 }

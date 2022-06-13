@@ -1,20 +1,20 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Link } from 'react-router-dom';
 import parse from 'html-react-parser';
-import styled from "styled-components";
-import useAxios from "../../../custom_hooks/useaxios";
+import styled from 'styled-components';
+import { useSelector } from 'react-redux';
+import useAxios from '../../../custom_hooks/useaxios';
 
 import {
   Loading,
   Title,
   Content,
   UnderLine,
-  FlexBetweenWrapper
-} from "../../../common/atoms/index";
+  FlexBetweenWrapper,
+} from '../../../common/atoms/index';
 
-import { calculPassedTime } from "../../../../utils/date_handler";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../reducers/index";
+import { calculPassedTime } from '../../../../utils/date_handler';
+import { RootState } from '../../../../reducers/index';
 
 interface Props {
   postid: string;
@@ -50,7 +50,7 @@ interface PostProps {
 }
 
 export default function PostArticle({
-  postid
+  postid,
 }: Props) {
   const [response, loading] = useAxios<PostProps>(`api/posts/${postid}`);
   const loginedUser = useSelector((state: RootState) => state.login.id);
@@ -62,22 +62,26 @@ export default function PostArticle({
   return (
     <PostArticleWrapper>
       <Title
-        fontSize={"1.26rem"}
-        fontBold={true}
+        fontSize='1.26rem'
+        fontBold
       >
         {response.title}
       </Title>
       <UnderLine />
       <PostTitleInfo>
         <Content
-          fontSize={"0.72rem"}
+          fontSize='0.72rem'
         >
-          작성날짜: {calculPassedTime(response.time)}
+          작성날짜:
+          {' '}
+          {calculPassedTime(response.time)}
         </Content>
         <Content
-          fontSize={"0.72rem"}
+          fontSize='0.72rem'
         >
-          작성자: {response.author}
+          작성자:
+          {' '}
+          {response.author}
         </Content>
       </PostTitleInfo>
       <PostContentWrapper>
@@ -86,16 +90,18 @@ export default function PostArticle({
         </Content>
       </PostContentWrapper>
       <UnderLine />
-      {loginedUser === response.author &&
+      {loginedUser === response.author
+        && (
         <PostHandlerWrapper>
           <Link to={{
             pathname: `/community/update/${postid}`,
             state: {
-              postInfo: response
-            }
-          }}>
+              postInfo: response,
+            },
+          }}
+          >
             <Content
-              fontSize={"0.86rem"}
+              fontSize='0.86rem'
             >
               수정
             </Content>
@@ -103,17 +109,18 @@ export default function PostArticle({
           <Link to={{
             pathname: `/community/delete/${postid}`,
             state: {
-              postInfo: response
-            }
-          }}>
+              postInfo: response,
+            },
+          }}
+          >
             <Content
-              fontSize={"0.86rem"}
+              fontSize='0.86rem'
             >
               삭제
             </Content>
           </Link>
         </PostHandlerWrapper>
-      }
+        )}
     </PostArticleWrapper>
-  )
+  );
 }

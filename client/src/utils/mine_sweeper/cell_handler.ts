@@ -1,29 +1,27 @@
-import { CellData, BoardSize } from 'mine-sweeper-type'
+import { CellData, BoardSize } from 'mine-sweeper-type';
 
 export default class CellHandler {
-
   private readonly cellData: CellData[][];
+
   private readonly boardSize: BoardSize;
+
   private readonly countOfMine: number;
 
-  constructor(cd: CellData[][] , bs: BoardSize, cntMine: number) {
-
+  constructor(cd: CellData[][], bs: BoardSize, cntMine: number) {
     this.cellData = cd;
     this.boardSize = bs;
     this.countOfMine = cntMine;
 
     this.plantMine();
     this.getNeighbor();
-    return this;
   }
 
   public plantMine() {
     let tmp = this.countOfMine;
     const { row, col } = this.boardSize;
     while (tmp) {
-
-      let ranY: number = -1;
-      let ranX: number = -1;
+      let ranY = -1;
+      let ranX = -1;
 
       if (process.env.NODE_ENV === 'production') {
         // 보안상 이유로 랜덤함수 교체
@@ -36,16 +34,16 @@ export default class CellHandler {
 
       if (this.cellData[ranY][ranX].mine === false) {
         this.cellData[ranY][ranX].mine = true;
-        tmp--;
+        tmp -= 1;
       }
     }
   }
 
   public getNeighbor() {
-    const { row, col, } = this.boardSize;
+    const { row, col } = this.boardSize;
 
-    for (let i = 0; i < row; i++) {
-      for (let j = 0; j < col; j++) {
+    for (let i = 0; i < row; i += 1) {
+      for (let j = 0; j < col; j += 1) {
         this.cellData[i][j].neighbor = this.calcNeighbor(i, j);
       }
     }
@@ -54,17 +52,17 @@ export default class CellHandler {
   public calcNeighbor(y: number, x: number) {
     let surroundingMineCount = 0;
 
-    for (let i = y - 1; i <= y + 1; i++) {
-      for (let j = x - 1; j <= x + 1; j++) {
+    for (let i = y - 1; i <= y + 1; i += 1) {
+      for (let j = x - 1; j <= x + 1; j += 1) {
+        // eslint-disable-next-line
+        if (this.isOutofRange(i, j)) continue;
 
-        if (this.isOutofRange(i, j))
-          continue;
+        // eslint-disable-next-line
+        if (y === i && x === j) continue;
 
-        if (y === i && x === j)
-          continue;
-
-        if (this.cellData[i][j].mine === true)
-          surroundingMineCount++;
+        if (this.cellData[i][j].mine === true) {
+          surroundingMineCount += 1;
+        }
       }
     }
     return surroundingMineCount;
@@ -75,6 +73,6 @@ export default class CellHandler {
   }
 
   public getCellData(): CellData[][] {
-    return this.cellData
+    return this.cellData;
   }
 }

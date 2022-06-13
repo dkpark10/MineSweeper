@@ -1,8 +1,8 @@
-import React from "react";
-import { GameStatisticsProps } from "statistics-type";
-import styled from "styled-components";
-import { AbsoluteCenterWrapper } from "../../../common/atoms/wrapper";
-import Doughnut from "../atoms/doughnut";
+import React from 'react';
+import { GameStatisticsProps } from 'statistics-type';
+import styled from 'styled-components';
+import { AbsoluteCenterWrapper } from '../../../common/atoms/wrapper';
+import Doughnut from '../atoms/doughnut';
 
 const WinRateRecordWrapper = styled.div`
   display:flex;
@@ -19,7 +19,7 @@ const WinRateText = styled(AbsoluteCenterWrapper)`
   @media screen and (${({ theme }) => theme.mobile}){
     font-size: 0.89rem;
   }
-`
+`;
 
 interface Props {
   gameRecord: GameStatisticsProps;
@@ -36,23 +36,23 @@ export default function WinRateRecord({ gameRecord }: Props) {
   } = gameRecord;
 
   const winRateList = [
-    Math.floor(easyGameWinCount / easyGameTotalCount * 100),
-    Math.floor(normalGameWinCount / normalGameTotalCount * 100),
-    Math.floor(hardGameWinCount / hardGameTotalCount * 100)
+    Math.floor((easyGameWinCount / easyGameTotalCount) * 100),
+    Math.floor((normalGameWinCount / normalGameTotalCount) * 100),
+    Math.floor((hardGameWinCount / hardGameTotalCount) * 100),
   ];
 
   return (
     <WinRateRecordWrapper>
-      {winRateList.map((winRate, idx) =>
-        <WinRateRecordItem key={idx}>
+      {winRateList.map((winRate) => (
+        <WinRateRecordItem key={winRate}>
           <WinRateText>
-            {isNaN(winRate) ? "0%" : `${winRate}%`}
+            {Number.isNaN(winRate) ? '0%' : `${winRate}%`}
           </WinRateText>
           <Doughnut
             winRate={winRate}
           />
         </WinRateRecordItem>
-      )}
+      ))}
     </WinRateRecordWrapper>
-  )
+  );
 }

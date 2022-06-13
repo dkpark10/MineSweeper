@@ -10,7 +10,7 @@ import UnderLine from './under_line';
 import Image from './image';
 import {
   AbsoluteCenterWrapper,
-  FlexBetweenWrapper
+  FlexBetweenWrapper,
 } from './wrapper';
 
 export {
@@ -25,5 +25,5 @@ export {
   RadioButton,
   Title,
   UnderLine,
-  Image
+  Image,
 };

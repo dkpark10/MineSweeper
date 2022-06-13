@@ -4,14 +4,21 @@
     "module": "esnext",
     "moduleResolution": "node",
     "noResolve": false,
-    "noImplicitAny": false,
     "removeComments": false,
     "sourceMap": true,
-    "allowJs": false,
     "jsx": "react-jsx",
     "allowSyntheticDefaultImports": true,
     "keyofStringsOnly": true,
     "outDir": "./dist/app",
+    "allowJs": false,
+    "noImplicitReturns": true, // 함수내 모든 경로에서 리턴하지 않을경우 에러
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true, // 클래스 생성자에서 타입체크 강하게 여부
+    // "typeRoots": [
+    //   "./src/types",
+    //   "./node_modules/@types/*"
+    // ]
   },
   "exclude": [
     "node_modules",
@@ -21,6 +28,6 @@
   ],
   "include": [
     "./src/**/*",
-    "@type"
+    "@types"
   ]
 }

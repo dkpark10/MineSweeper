@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
+import React from 'react';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const SignNavigatorWrapper = styled.div`
   @media screen and (${({ theme }) => theme.mobile}){
@@ -49,31 +49,30 @@ interface Props {
 export default function SignNavigator({
   userid,
   isLogin,
-  logout
+  logout,
 }: Props) {
-
   return (
-    <>
-      <SignNavigatorWrapper>
-        {isLogin === false
-          ?
+    <SignNavigatorWrapper>
+      {isLogin === false
+        ? (
           <>
-            <Link to="/signin">
+            <Link to='/signin'>
               로그인
             </Link>
-            <Link to="/signup">
+            <Link to='/signup'>
               회원가입
             </Link>
           </>
-          :
+        )
+        : (
           <div
-            className="signout"
+            className='signout'
             onClick={logout}
           >
-            {userid}님 | 로그아웃
+            {userid}
+            님 | 로그아웃
           </div>
-        }
-      </SignNavigatorWrapper>
-    </>
-  )
+        )}
+    </SignNavigatorWrapper>
+  );
 }

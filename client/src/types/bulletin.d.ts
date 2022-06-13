@@ -1,4 +1,4 @@
-declare module "bulletin-type" {
+declare module 'bulletin-type' {
   export interface PostProps {
     id: string;
     author: string;

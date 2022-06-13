@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import { AbsoluteCenterWrapper } from "../../../common/atoms/wrapper";
+import React from 'react';
+import styled from 'styled-components';
+import { AbsoluteCenterWrapper } from '../../../common/atoms/wrapper';
 
 const DefaultStatisticsWrapper = styled.div`
   font-family: 'Noto Sans KR', sans-serif;
@@ -22,7 +22,7 @@ const DefaultStatisticsWrapper = styled.div`
     margin-top:10px;
     padding:10px;
   }
-`
+`;
 export const ContentOuterWrapper = styled.div`
   position: relative;
   height:43px;

@@ -11,10 +11,10 @@ interface Props {
 
 const TitleStyle = styled.div<Props>`
   font-family: 'Roboto', sans-serif;
-  margin: ${({ margin }) => margin || "0px"};
-  font-size: ${({ fontSize }) => fontSize || "1.54rem"};
-  font-weight: ${({ fontBold }) => fontBold === true ? "bold" : ""};
-  color:${({ fontColor, theme }) => fontColor === true ? theme.mainColor : theme.fontColor};
+  margin: ${({ margin }) => margin || '0px'};
+  font-size: ${({ fontSize }) => fontSize || '1.54rem'};
+  font-weight: ${({ fontBold }) => (fontBold === true ? 'bold' : '')};
+  color:${({ fontColor, theme }) => (fontColor === true ? theme.mainColor : theme.fontColor)};
 `;
 
 export default function Title({
@@ -22,9 +22,8 @@ export default function Title({
   fontSize,
   fontColor,
   fontBold,
-  margin
+  margin,
 }: Props) {
-
   return (
     <TitleStyle
       fontSize={fontSize}
@@ -34,5 +33,5 @@ export default function Title({
     >
       {children}
     </TitleStyle>
-  )
+  );
 }

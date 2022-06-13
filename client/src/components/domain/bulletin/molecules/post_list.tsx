@@ -1,6 +1,6 @@
-import React from "react";
-import PostCardItem from "../molecules/post_card_item";
-import { calculPassedTime } from "../../../../utils/date_handler";
+import React from 'react';
+import PostCardItem from './post_card_item';
+import { calculPassedTime } from '../../../../utils/date_handler';
 
 interface PostProps {
   id: number;
@@ -23,14 +23,13 @@ export default function PostList({
   postData,
   widthRatio,
   url,
-  page
+  page,
 }: Props) {
-
   return (
     <ul>
-      {postData.map((post, idx) =>
+      {postData.map((post) => (
         <li
-          className="post_item" 
+          className='post_item'
           key={post.id}
         >
           <PostCardItem
@@ -43,7 +42,7 @@ export default function PostList({
             page={page}
           />
         </li>
-      )}
+      ))}
     </ul>
-  )
+  );
 }

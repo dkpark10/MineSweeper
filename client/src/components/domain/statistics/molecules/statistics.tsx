@@ -1,8 +1,8 @@
-import React from "react";
-import styled from "styled-components";
-import Content from "../../../common/atoms/content";
-import { ContentOuterWrapper, ContentWrapper, ContentHeader } from "../atoms/wrapper";
-import { GameStatisticsProps } from "statistics-type";
+import React from 'react';
+import styled from 'styled-components';
+import { GameStatisticsProps } from 'statistics-type';
+import Content from '../../../common/atoms/content';
+import { ContentOuterWrapper, ContentWrapper, ContentHeader } from '../atoms/wrapper';
 
 interface Props {
   data: GameStatisticsProps;
@@ -18,7 +18,7 @@ const StatisticsContent = styled(Content)`
 `;
 
 export default function Statistics({
-  data
+  data,
 }: Props) {
   const {
     easyGameTotalCount,
@@ -29,23 +29,23 @@ export default function Statistics({
     normalBestRecord,
     hardGameTotalCount,
     hardGameWinCount,
-    hardBestRecord
+    hardBestRecord,
   } = data;
 
   return (
     <>
       <ContentOuterWrapper>
         <ContentWrapper>
-          {["쉬움", "보통", "어려움"].map((level, idx) =>
+          {['쉬움', '보통', '어려움'].map((level) => (
             <StatisticsContent
-              key={idx}
-              fontColor={true}
-              fontSize={"1.02rem"}
-              bold={true}
+              key={level}
+              fontColor
+              fontSize='1.02rem'
+              bold
             >
               {level}
             </StatisticsContent>
-          )}
+          ))}
         </ContentWrapper>
       </ContentOuterWrapper>
       <ContentOuterWrapper>
@@ -55,14 +55,14 @@ export default function Statistics({
         <ContentWrapper>
           {[easyGameTotalCount,
             normalGameTotalCount,
-            hardGameTotalCount].map((totalItemCount, idx) =>
+            hardGameTotalCount].map((totalItemCount) => (
               <StatisticsContent
-                key={idx}
-                fontSize={"0.9rem"}
+                key={totalItemCount}
+                fontSize='0.9rem'
               >
                 {totalItemCount}
               </StatisticsContent>
-            )}
+          ))}
         </ContentWrapper>
       </ContentOuterWrapper>
       <ContentOuterWrapper>
@@ -72,14 +72,14 @@ export default function Statistics({
         <ContentWrapper>
           {[easyGameWinCount,
             normalGameWinCount,
-            hardGameWinCount].map((winCount, idx) =>
+            hardGameWinCount].map((winCount) => (
               <StatisticsContent
-                key={idx}
-                fontSize={"0.9rem"}
+                key={winCount}
+                fontSize='0.9rem'
               >
                 {winCount}
               </StatisticsContent>
-            )}
+          ))}
         </ContentWrapper>
       </ContentOuterWrapper>
       <ContentOuterWrapper>
@@ -89,16 +89,16 @@ export default function Statistics({
         <ContentWrapper>
           {[easyBestRecord,
             normalBestRecord,
-            hardBestRecord].map((bestRecord, idx) =>
+            hardBestRecord].map((bestRecord) => (
               <StatisticsContent
-                key={idx}
-                fontSize={"0.9rem"}
+                key={bestRecord}
+                fontSize='0.9rem'
               >
-                {bestRecord === null ? "기록없음" : bestRecord}
+                {bestRecord === null ? '기록없음' : bestRecord}
               </StatisticsContent>
-            )}
+          ))}
         </ContentWrapper>
       </ContentOuterWrapper>
     </>
-  )
+  );
 }

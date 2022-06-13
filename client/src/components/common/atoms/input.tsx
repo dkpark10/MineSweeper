@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 
 interface Props {
@@ -12,7 +11,7 @@ const Input = styled('input').attrs(({
 }: Props) => ({
   style: {
     type,
-  }
+  },
 })) <Props>`
   font-family: 'Noto Sans KR', sans-serif;
   width: ${({ width }) => width};

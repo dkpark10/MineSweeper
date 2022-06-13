@@ -1,51 +1,48 @@
-import { ClickHandler } from './click_handler';
-import { Coord, CellData, ClickRenderStatus } from 'mine-sweeper-type'
+import { Coord, ClickRenderStatus } from 'mine-sweeper-type';
+import ClickHandler from './click_handler';
 
 interface WheelClickInterFace {
   isFlagonMine(y: number, x: number): boolean;
 }
 
 class WheelClickHandler extends ClickHandler implements WheelClickInterFace {
-
   public process(): ClickRenderStatus {
-
-    let numofExtraCell: number = 0;
-    const cellData: CellData[][] = this.cellData;
+    let numofExtraCell = 0;
+    const { cellData } = this;
     const { y, x }: Coord = this.coord;
-
 
     const noRender: ClickRenderStatus = {
       render: false,
       clickBomb: false,
-      removeCell: 0
-    }
+      removeCell: 0,
+    };
 
     const gameOver: ClickRenderStatus = {
       render: true,
       clickBomb: true,
-      removeCell: 987654321
-    }
+      removeCell: 987654321,
+    };
 
     if (cellData[y][x].neighbor < 0
       || cellData[y][x].flaged === true
       || cellData[y][x].visited === false) {
-
       return noRender;
     }
 
-    let numofHit: number = 0;
-    let numofAroundFlag: number = 0;
+    let numofHit = 0;
+    let numofAroundFlag = 0;
 
-    for (let i = y - 1; i <= y + 1; i++) {
-      for (let j = x - 1; j <= x + 1; j++) {
+    for (let i = y - 1; i <= y + 1; i += 1) {
+      for (let j = x - 1; j <= x + 1; j += 1) {
         if (this.checkOutRange(i, j)) {
+          // eslint-disable-next-line
           continue;
         }
         if (cellData[i][j].flaged === true) {
-          numofAroundFlag++;
+          numofAroundFlag += 1;
         }
         if (this.isFlagonMine(i, j)) {
-          numofHit++;
+          numofHit += 1;
         }
       }
     }
@@ -64,18 +61,21 @@ class WheelClickHandler extends ClickHandler implements WheelClickInterFace {
       return noRender;
     }
 
-    for (let i = y - 1; i <= y + 1; i++) {
-      for (let j = x - 1; j <= x + 1; j++) {
+    for (let i = y - 1; i <= y + 1; i += 1) {
+      for (let j = x - 1; j <= x + 1; j += 1) {
         if (this.checkOutRange(i, j)) {
+          // eslint-disable-next-line
           continue;
         }
         if (cellData[i][j].flaged === true || cellData[i][j].visited === true) {
+          // eslint-disable-next-line
           continue;
         }
         if (cellData[i][j].neighbor > 0) {
           cellData[i][j].visible = cellData[i][j].neighbor;
           cellData[i][j].visited = true;
-          numofExtraCell++;
+          numofExtraCell += 1;
+          // eslint-disable-next-line
           continue;
         }
         numofExtraCell += this.depthFirstSearch({ y: i, x: j });
@@ -85,10 +85,9 @@ class WheelClickHandler extends ClickHandler implements WheelClickInterFace {
     return {
       render: true,
       clickBomb: false,
-      removeCell: numofExtraCell
+      removeCell: numofExtraCell,
     };
   }
-
 
   public isFlagonMine(y: number, x: number): boolean {
     return this.cellData[y][x].flaged === true && this.cellData[y][x].mine === true;

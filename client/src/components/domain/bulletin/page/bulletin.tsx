@@ -1,26 +1,25 @@
-import React from "react";
-import { RouteComponentProps } from "react-router-dom";
+import React from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import queryString from 'query-string';
 
 import {
-  Loading
-} from "../../../common/atoms/index";
+  Loading,
+} from '../../../common/atoms/index';
 
 import {
   Header,
-  Footer
-} from "../../../common/organisms/index";
+  Footer,
+} from '../../../common/organisms/index';
 
 import {
-  PageNation
-} from "../../../common/molecules/index";
+  PageNation,
+} from '../../../common/molecules/index';
 
-
-import { DefaultBulletinWrapper } from "../atoms/bulletin_wrapper";
-import PostCardHeader from "../molecules/post_card_header";
-import PostList from "../molecules/post_list";
-import BuelltinNavi from "../molecules/post_navigator";
-import useAxios from "../../../custom_hooks/useaxios";
+import { DefaultBulletinWrapper } from '../atoms/bulletin_wrapper';
+import PostCardHeader from '../molecules/post_card_header';
+import PostList from '../molecules/post_list';
+import BuelltinNavi from '../molecules/post_navigator';
+import useAxios from '../../../custom_hooks/useaxios';
 
 interface PostProps {
   id: number;
@@ -34,11 +33,11 @@ interface PostProps {
 
 export default function Bulletion({
   location,
-  match
+  match,
 }: RouteComponentProps) {
   const { page } = queryString.parse(location.search);
   const [response, loading] = useAxios<PostProps[]>(`/api/posts?page=${page}`, []);
-  const widthRatio = ["60%", "24%", "16%"];
+  const widthRatio = ['60%', '24%', '16%'];
 
   if (loading) {
     return <Loading />;
@@ -70,5 +69,5 @@ export default function Bulletion({
       </div>
       <Footer />
     </>
-  )
+  );
 }

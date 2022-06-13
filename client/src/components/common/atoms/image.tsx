@@ -25,20 +25,17 @@ export default function Image({
   width,
   height,
   src,
-  alt
+  alt,
 }: Props) {
-
   return (
-    <>
-      <ImageWrapper
-        width={width}
-        height={height}
-      >
-        <img
-          src={src}
-          alt={alt}
-        />
-      </ImageWrapper>
-    </>
-  )
+    <ImageWrapper
+      width={width}
+      height={height}
+    >
+      <img
+        src={src}
+        alt={alt}
+      />
+    </ImageWrapper>
+  );
 }

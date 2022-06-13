@@ -1,15 +1,21 @@
-import { Coord, CellData, BoardSize, ClickRenderStatus } from 'mine-sweeper-type'
+import {
+  Coord,
+  CellData,
+  BoardSize,
+  ClickRenderStatus,
+} from 'mine-sweeper-type';
 
 const directionY: number[] = [0, 0, 1, -1, -1, -1, 1, 1];
 const directionX: number[] = [1, -1, 0, 0, -1, 1, -1, 1];
 
-export abstract class ClickHandler {
-
+export default abstract class ClickHandler {
   protected readonly cellData: CellData[][];
-  protected readonly coord: Coord;
-  protected readonly boardSize?: BoardSize;
 
-  constructor(c: CellData[][], coo: Coord, bs?: BoardSize) {
+  protected readonly coord: Coord;
+
+  protected readonly boardSize: BoardSize;
+
+  constructor(c: CellData[][], coo: Coord, bs = { row: 9, col: 9 }) {
     this.cellData = c;
     this.coord = coo;
     this.boardSize = bs;
@@ -24,20 +30,20 @@ export abstract class ClickHandler {
   }
 
   public depthFirstSearch(coord: Coord): number {
-
-    let numofExtraCell: number = 1;
+    let numofExtraCell = 1;
     const { y, x }: Coord = coord;
-    const cellData: CellData[][] = this.cellData;
-    
+    const { cellData } = this;
+
     cellData[y][x].visited = true;
 
     numofExtraCell += this.setNeighborCell(coord);
 
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 8; i += 1) {
       const nextY = y + directionY[i];
       const nextX = x + directionX[i];
 
       if (this.checkOutRange(nextY, nextX)) {
+        // eslint-disable-next-line
         continue;
       }
 
@@ -58,27 +64,28 @@ export abstract class ClickHandler {
 
   // 연쇄 충돌을 일으키기전 빈칸주위(근처지뢰가 있는 셀)을 체크하는 함수
   public setNeighborCell(coord: Coord): number {
-
-    let numofExtraCell: number = 0;
+    let numofExtraCell = 0;
     const { y, x }: Coord = coord;
-    const cellData: CellData[][] = this.cellData;
+    const { cellData } = this;
 
-    for (let i = y - 1; i <= y + 1; i++) {
-      for (let j = x - 1; j <= x + 1; j++) {
-
+    for (let i = y - 1; i <= y + 1; i += 1) {
+      for (let j = x - 1; j <= x + 1; j += 1) {
         if (this.checkOutRange(i, j)) {
+          // eslint-disable-next-line
           continue;
         }
         if (i === y && j === x) {
+          // eslint-disable-next-line
           continue;
         }
         if (cellData[i][j].visited === true) {
+          // eslint-disable-next-line
           continue;
         }
         if (cellData[i][j].neighbor > 0 && cellData[i][j].flaged === false) {
           cellData[i][j].visible = cellData[i][j].neighbor;
           cellData[i][j].visited = true;
-          numofExtraCell++;
+          numofExtraCell += 1;
         }
       }
     }

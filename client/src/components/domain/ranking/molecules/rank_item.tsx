@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 const RankItemWrapper = styled.div`
   display:flex;
@@ -16,9 +16,9 @@ const RankItemWrapper = styled.div`
 const RankItem = styled.span<{ width: string, center?: boolean, fontColor?: boolean }>`
   display:inline-block;
   width:${({ width }) => width};
-  text-align: ${({ center }) => center ? "center" : ""};
-  color:${({ theme, fontColor }) => fontColor === true ? theme.mainColor : theme.fontColor};
-  font-weight:${({ fontColor }) => fontColor === true ? "bold" : ""};
+  text-align: ${({ center }) => (center ? 'center' : '')};
+  color:${({ theme, fontColor }) => (fontColor === true ? theme.mainColor : theme.fontColor)};
+  font-weight:${({ fontColor }) => (fontColor === true ? 'bold' : '')};
 `;
 
 interface Props {
@@ -27,31 +27,38 @@ interface Props {
   record?: string;
 }
 
-export default function RankNavigator({
-  rank = "순위",
-  id = "아이디",
-  record = "기록"
-}: Props) {
+const defaultProps: Props = {
+  rank: '순위',
+  id: '아이디',
+  record: '기록',
+};
 
+export default function RankNavigator({
+  rank,
+  id,
+  record,
+}: Props) {
   return (
     <RankItemWrapper>
       <RankItem
-        width={"12%"}
-        center={true}
-        fontColor={true}
+        width='12%'
+        center
+        fontColor
       >
         {rank}
       </RankItem>
       <RankItem
-        width={"60%"}
+        width='60%'
       >
         {id}
       </RankItem>
       <RankItem
-        width={"22%"}
+        width='22%'
       >
         {record}
       </RankItem>
     </RankItemWrapper>
-  )
+  );
 }
+
+RankNavigator.defaultProps = defaultProps;

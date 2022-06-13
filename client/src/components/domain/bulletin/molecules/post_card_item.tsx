@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
+import React from 'react';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const PostItemWrapper = styled.div`
   display:flex;
@@ -13,7 +13,7 @@ const PostItemWrapper = styled.div`
 const PostItem = styled.span<{ width: string, fontSize: string, center?: boolean }>`
   display:inline-block;
   width:${({ width }) => width};
-  text-align: ${({ center }) => center ? "center" : ""};
+  text-align: ${({ center }) => (center ? 'center' : '')};
   font-size: ${({ fontSize }) => fontSize};
   text-overflow: ellipsis;
   overflow:hidden;
@@ -32,10 +32,19 @@ const PostItem = styled.span<{ width: string, fontSize: string, center?: boolean
   }
 `;
 
-interface Props {
+interface DefaultProps {
   title?: string;
   author?: string;
   date?: string;
+}
+
+const defaultProps: DefaultProps = {
+  title: '',
+  author: '',
+  date: '',
+};
+
+interface Props extends DefaultProps {
   widthRatio: string[];
   url: string;
   postid: number;
@@ -43,15 +52,15 @@ interface Props {
 }
 
 export default function PostCardItem({
-  title,
-  author,
-  date,
   widthRatio,
   url,
   postid,
-  page
+  page,
+  title,
+  author,
+  date,
 }: Props) {
-  const defaultFontSize = "0.9rem";
+  const defaultFontSize = '0.9rem';
 
   return (
     <PostItemWrapper>
@@ -63,26 +72,29 @@ export default function PostCardItem({
         <Link to={{
           pathname: `${url}/${postid}`,
           state: {
-            page
-          }
-        }}>
+            page,
+          },
+        }}
+        >
           {title}
         </Link>
       </PostItem>
       <PostItem
         width={widthRatio[1]}
-        fontSize={"0.75rem"}
+        fontSize='0.75rem'
         center={false}
       >
         {author}
       </PostItem>
       <PostItem
         width={widthRatio[2]}
-        fontSize={"0.75rem"}
+        fontSize='0.75rem'
         center={false}
       >
         {date}
       </PostItem>
     </PostItemWrapper>
-  )
+  );
 }
+
+PostCardItem.defaultProps = defaultProps;

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -8,12 +8,11 @@ import {
   Title,
   Tooltip,
   Legend,
-} from "chart.js";
-import { Line } from "react-chartjs-2";
-import { PastGame } from "statistics-type";
-import { useTheme } from "styled-components";
-import Content from "../../../common/atoms/content";
-import styled from "styled-components";
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+import { PastGame } from 'statistics-type';
+import styled, { useTheme } from 'styled-components';
+import Content from '../../../common/atoms/content';
 
 ChartJS.register(
   CategoryScale,
@@ -22,7 +21,7 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 
 interface Props {
@@ -40,12 +39,12 @@ export default function PastGameRecord({ pastGame }: Props) {
     return (
       <TitleHeaderStyle>
         <Content
-          fontSize={"1.45rem"}
+          fontSize='1.45rem'
         >
           기록이 없습니다.
         </Content>
       </TitleHeaderStyle>
-    )
+    );
   }
 
   return (
@@ -54,13 +53,13 @@ export default function PastGameRecord({ pastGame }: Props) {
         labels: pastGame.map((game) => game.date.slice(2)),
         datasets: [
           {
-            label: "시간(sec)",
+            label: '시간(sec)',
             data: pastGame.map((game) => Math.floor(Number(game.record))),
             borderColor: theme.mainColor,
-            backgroundColor: theme.mainColor
+            backgroundColor: theme.mainColor,
           },
         ],
       }}
     />
-  )
+  );
 }

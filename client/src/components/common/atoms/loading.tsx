@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 const LoadingStyle = styled.div`
   position: fixed;
@@ -46,12 +46,12 @@ const LoadingStyle = styled.div`
 export default function Loading() {
   return (
     <LoadingStyle>
-      <div className="lds-ring">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
+      <div className='lds-ring'>
+        <div />
+        <div />
+        <div />
+        <div />
       </div>
     </LoadingStyle>
   );
-};
+}

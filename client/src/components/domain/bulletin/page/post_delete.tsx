@@ -1,12 +1,12 @@
 import React from 'react';
-import styled from "styled-components";
-import { RouteComponentProps } from "react-router-dom";
+import styled from 'styled-components';
+import { RouteComponentProps } from 'react-router-dom';
 import axiosInstance from '../../../../utils/default_axios';
 
 import {
   AbsoluteCenterWrapper,
-  Input
-}from "../../../common/atoms/index";
+  Input,
+} from '../../../common/atoms/index';
 
 interface MatchParams {
   postid: string;
@@ -18,7 +18,7 @@ const DeletePostPageWrapper = styled(AbsoluteCenterWrapper)`
   border-radius:8px;
   padding:20px;
   width: 342px;
-`
+`;
 
 const TextWrapper = styled.div`
   display:flex;
@@ -29,27 +29,23 @@ const TextWrapper = styled.div`
 const InputButton = styled(Input)`
   cursor:pointer;
   border-radius: 8px;
-  background-color: ${({ theme, type }) =>
-    type === "submit" ? theme.grayMainColor : theme.grayBackGround
-  };
+  background-color: ${({ theme, type }) => (type === 'submit' ? theme.grayMainColor : theme.grayBackGround)
+};
 
-  color: ${({ type }) =>
-    type === "submit" ? "white" : ""
-  };
+  color: ${({ type }) => (type === 'submit' ? 'white' : '')
+};
 
   &:hover{
-    background-image: ${({ type }) => {
-    return type === "submit" ?
-      `linear-gradient(70deg,#1033e3, #f74bf7);` : "";
-  }};
+    background-image: ${({ type }) => (type === 'submit'
+    ? 'linear-gradient(70deg,#1033e3, #f74bf7);' : '')};
   }
 `;
 
 export default function PostDeletePage({
   match,
-  history
+  history,
 }: RouteComponentProps<MatchParams>) {
-  const postid = match.params.postid;
+  const { postid } = match.params;
 
   const submintHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -58,18 +54,18 @@ export default function PostDeletePage({
       if (status === 200) {
         history.replace('/community?page=1');
       }
+    } catch (error) {
+      // empty
     }
-    catch (error) {
-    }
-  }
+  };
 
   const cancle = () => {
     history.goBack();
-  }
+  };
 
-  const width = "84px";
-  const height = "29px;"
-  
+  const width = '84px';
+  const height = '29px;';
+
   return (
     <DeletePostPageWrapper>
       <form onSubmit={submintHandler}>
@@ -80,18 +76,18 @@ export default function PostDeletePage({
           <InputButton
             width={width}
             height={height}
-            type="submit"
-            value="삭제"
+            type='submit'
+            value='삭제'
           />
           <InputButton
             onClick={cancle}
             width={width}
             height={height}
-            type="button"
-            value="취소"
+            type='button'
+            value='취소'
           />
         </TextWrapper>
       </form>
     </DeletePostPageWrapper>
-  )
+  );
 }

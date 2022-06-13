@@ -1,4 +1,4 @@
-declare module "mine-sweeper-type" {
+declare module 'mine-sweeper-type' {
   export interface Level {
     row: number;
     col: number;
@@ -6,6 +6,7 @@ declare module "mine-sweeper-type" {
   }
 
   export interface CellData {
+    primaryIndex: number;
     mine: boolean;
     neighbor: number;
     visited: boolean;
@@ -29,5 +30,5 @@ declare module "mine-sweeper-type" {
     removeCell: number;
   }
 
-  export type LevelType = 'easy' | 'normal' | 'hard' | 'mhard';
+  export type LevelType = 'easy' | 'normal' | 'hard';
 }

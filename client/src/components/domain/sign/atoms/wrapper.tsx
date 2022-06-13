@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { AbsoluteCenterWrapper } from "../../../common/atoms/wrapper";
+import styled from 'styled-components';
+import { AbsoluteCenterWrapper } from '../../../common/atoms/wrapper';
 
 const SignWrapper = styled(AbsoluteCenterWrapper)`
   font-family: "Noto Sans KR", sans-serif;

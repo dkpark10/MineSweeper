@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
+import React from 'react';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 interface Props {
   value: string;
@@ -17,17 +17,15 @@ const PageNationItemWrapper = styled.span<Partial<Props>>`
   padding:4px;
   min-width: 32px;
   text-align:center;
-  font-size: ${({fontSize}) => fontSize || "0.85rem"};
+  font-size: ${({ fontSize }) => fontSize || '0.85rem'};
 
-  background-color:${({ theme, currentPage }) =>
-    currentPage === true
-      ? theme.mainColor
-      : ""};
+  background-color:${({ theme, currentPage }) => (currentPage === true
+    ? theme.mainColor
+    : '')};
 
-  color:${({ theme, currentPage }) =>
-    currentPage === true
-      ? "white"
-      : theme.fontColor};
+  color:${({ theme, currentPage }) => (currentPage === true
+    ? 'white'
+    : theme.fontColor)};
 
   &:hover{
     color:${({ theme }) => theme.mainColor};
@@ -38,7 +36,7 @@ export default function PageNationItem({
   value,
   url,
   fontSize,
-  currentPage = false
+  currentPage = false,
 }: Props) {
   return (
     <Link to={url}>
@@ -49,5 +47,5 @@ export default function PageNationItem({
         {value}
       </PageNationItemWrapper>
     </Link>
-  )
+  );
 }

@@ -1,11 +1,11 @@
-import axios from "axios";
-import address from "../config/server_address";
+import axios from 'axios';
+import address from '../config/server_address';
 
 export default axios.create({
-  baseURL: process.env.NODE_ENV === "development" ? "http://localhost:8080" : address,
+  baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : address,
   headers: {
-    "Content-type": "application/json",
-    "Accept": "application/json",
+    'Content-type': 'application/json',
+    Accept: 'application/json',
   },
-  withCredentials: true
-})
+  withCredentials: true,
+});

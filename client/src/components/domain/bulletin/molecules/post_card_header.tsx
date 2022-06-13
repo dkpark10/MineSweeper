@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 const PostItemWrapper = styled.div`
   display:flex;
@@ -12,7 +12,7 @@ const PostItemWrapper = styled.div`
 const PostItem = styled.span<{ width: string, fontSize: string, center?: boolean }>`
   display:inline-block;
   width:${({ width }) => width};
-  text-align: ${({ center }) => center ? "center" : ""};
+  text-align: ${({ center }) => (center ? 'center' : '')};
   font-size: ${({ fontSize }) => fontSize};
 `;
 
@@ -21,16 +21,15 @@ interface Props {
 }
 
 export default function PostCardHeader({
-  widthRatio
+  widthRatio,
 }: Props) {
-
-  const defaultFontSize = "0.85rem";
+  const defaultFontSize = '0.85rem';
 
   return (
     <PostItemWrapper>
       <PostItem
         width={widthRatio[0]}
-        center={true}
+        center
         fontSize={defaultFontSize}
       >
         제목
@@ -50,5 +49,5 @@ export default function PostCardHeader({
         날짜
       </PostItem>
     </PostItemWrapper>
-  )
+  );
 }

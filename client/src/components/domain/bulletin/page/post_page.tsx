@@ -4,12 +4,12 @@ import styled from 'styled-components';
 
 import {
   Header,
-  Footer
-}from '../../../common/organisms/index';
+  Footer,
+} from '../../../common/organisms/index';
 
 import {
-  PageNation
-}from '../../../common/molecules/index';
+  PageNation,
+} from '../../../common/molecules/index';
 
 import { DefaultBulletinWrapper } from '../atoms/bulletin_wrapper';
 import PostArticle from '../molecules/post_article';
@@ -45,9 +45,9 @@ const PostPageWrapper = styled(DefaultBulletinWrapper)`
 export default function Post({
   match,
 }: RouteComponentProps<MatchParams>) {
-  const postid = match.params.postid;
+  const { postid } = match.params;
   const { state: { page } } = useLocation<State>();
-  const [response,] = useAxios<PostProps[]>(`/api/posts?page=${page}`, []);
+  const [response] = useAxios<PostProps[]>(`/api/posts?page=${page}`, []);
   const widthRatio = ['68%', '20%', '12%'];
 
   return (
@@ -63,7 +63,7 @@ export default function Post({
       <div>
         <DefaultBulletinWrapper>
           <BuelltinNavi
-            url={'/community'}
+            url='/community'
           />
           <PostCardHeader
             widthRatio={widthRatio}
@@ -71,11 +71,11 @@ export default function Post({
           <PostList
             postData={response}
             widthRatio={widthRatio}
-            url={'/community'}
+            url='/community'
             page={page[0]}
           />
           <PageNation
-            url={'/community'}
+            url='/community'
             totalItemCount={response.length === 0 ? 1 : response[0].totalItemCount}
             currentPage={Number(page)}
           />
@@ -83,5 +83,5 @@ export default function Post({
       </div>
       <Footer />
     </>
-  )
+  );
 }

@@ -8,16 +8,15 @@ import hourglass from '../../../../assets/hourglass.png';
 
 import {
   Image,
-  Button
+  Button,
 } from '../../../common/atoms/index';
-
 
 interface Props {
   firstClick: boolean;
   countOfFlag: number;
   isGameOver: boolean;
   gameReset: React.MouseEventHandler<HTMLButtonElement>;
-};
+}
 
 const GameHeaderStyle = styled.div`
   height: 29px;
@@ -42,24 +41,24 @@ export default function GameHeader({
   firstClick,
   countOfFlag,
   gameReset,
-  isGameOver }: Props) {
+  isGameOver,
+}: Props) {
   const [count, setCount] = useState<number>(0);
 
-  const getCount = (count: number): string => {
-    if (count < 10) {
-      return `00${count}`;
-    } else if (count >= 10 && count < 100) {
-      return `0${count}`;
-    } else if (count >= 100 && count <= 999) {
-      return `${count}`;
-    } else {
-      return '999';
+  const getCount = (time: number): string => {
+    if (time < 10) {
+      return `00${time}`;
+    } if (time >= 10 && time < 100) {
+      return `0${time}`;
+    } if (time >= 100 && time <= 999) {
+      return `${time}`;
     }
+    return '999';
   };
 
   useInterval(() => {
     if (firstClick === true && isGameOver === false) {
-      setCount(prev => prev + 1);
+      setCount((prev) => prev + 1);
     }
   }, 1000);
 
@@ -74,7 +73,7 @@ export default function GameHeader({
           width='19px'
           height='19px'
           src={hourglass}
-          alt={'모래시계'}
+          alt='모래시계'
         />
         <div className='header_text'>
           {getCount(count)}
@@ -82,14 +81,14 @@ export default function GameHeader({
       </HeaderItem>
       <Button
         onClick={gameReset}
-        backgroundColor={'#2e2d2d'}
+        backgroundColor='#2e2d2d'
       >
         <HeaderItem>
           <Image
             width='20px'
             height='20px'
             src={heart}
-            alt={'하트'}
+            alt='하트'
           />
         </HeaderItem>
       </Button>
@@ -98,12 +97,12 @@ export default function GameHeader({
           width='19px'
           height='19px'
           src={flag}
-          alt={'깃발'}
+          alt='깃발'
         />
         <div className='header_text'>
           {countOfFlag}
         </div>
       </HeaderItem>
     </GameHeaderStyle>
-  )
+  );
 }

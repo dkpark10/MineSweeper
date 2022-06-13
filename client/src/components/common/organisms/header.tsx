@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import styled, { css, keyframes } from "styled-components";
-import { Link } from "react-router-dom";
-import { RootState } from "../../../reducers";
-import { useSelector } from "react-redux";
-import { setLogin } from "../../../reducers/login";
-import { useDispatch } from "react-redux";
-import { AxiosResponse } from "axios";
-import { Response } from "response-type";
+import React, { useState } from 'react';
+import styled, { css, keyframes } from 'styled-components';
+import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
-import HeaderTitle from "../molecules/header_title";
-import SignNavigator from "../molecules/sign_navigator";
+import { AxiosResponse } from 'axios';
+import { Response } from 'response-type';
+import { setLogin } from '../../../reducers/login';
+import { RootState } from '../../../reducers';
 
-import axiosInstance from "../../../utils/default_axios";
+import HeaderTitle from '../molecules/header_title';
+import SignNavigator from '../molecules/sign_navigator';
+
+import axiosInstance from '../../../utils/default_axios';
 
 const HeaderWrapper = styled.header`
   position: relative;
@@ -55,9 +55,8 @@ const NavigatorWrapper = styled.nav<{ show: boolean }>`
     background-color: rgba(0, 0, 0, 0.5);
     z-index:98;
     font-size:1.25rem;
-    animation: ${({ show }) =>
-    show === true ?
-      css`${MenuMoveAnimation(0)} 0.1s linear forwards` : ''};
+    animation: ${({ show }) => (show === true
+    ? css`${MenuMoveAnimation(0)} 0.1s linear forwards` : '')};
 
     .menu_content{
       position:relative;
@@ -115,92 +114,91 @@ export default function Header() {
     isLogin: state.login.isLogin,
   }));
   const [mobileShowMenu, setMobileShowMenu] = useState<boolean>(false);
-  const menus =
-    [
-      { title: "게임", url: "/" },
-      { title: "랭킹", url: "/ranking/easy?page=1" },
-      { title: "게시판", url: "/community?page=1" },
-      { title: "나의 페이지", url: "/mypage" },
-      { title: "옵션", url: "/option" }
-    ] as const;
+  const menus = [
+    { title: '게임', url: '/' },
+    { title: '랭킹', url: '/ranking/easy?page=1' },
+    { title: '게시판', url: '/community?page=1' },
+    { title: '나의 페이지', url: '/mypage' },
+    { title: '옵션', url: '/option' },
+  ] as const;
 
   const openMenu = () => {
     setMobileShowMenu((prev) => !prev);
-  }
+  };
 
   const closeMenu = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.currentTarget === e.target) {
       setMobileShowMenu(false);
     }
-  }
+  };
 
   const dispatch = useDispatch();
   const logout = async () => {
     try {
-      const { data }: AxiosResponse<Response> = await axiosInstance.post("/api/auth/logout");
+      const { data }: AxiosResponse<Response> = await axiosInstance.post('/api/auth/logout');
       if (data.result === true) {
         dispatch(setLogin({
           isLogin: false,
-          id: ""
+          id: '',
         }));
       }
     } catch (e) {
     }
-  }
+  };
 
   return (
-    <>
-      <HeaderWrapper>
-        <HeaderTitle
-          onClick={openMenu}
-        />
-        <NavigatorWrapper
-          className="menu"
-          onClick={closeMenu}
-          show={mobileShowMenu}
-        >
-          <div className="menu_content">
-            <ul>
-              {menus.map((menu, idx) =>
-                <li key={idx}>
-                  <Link
-                    to={menu.url}
-                  >
-                    {menu.title}
-                  </Link>
-                </li>
-              )}
-              {mobileShowMenu && (isLogin
-                ?
+    <HeaderWrapper>
+      <HeaderTitle
+        onClick={openMenu}
+      />
+      <NavigatorWrapper
+        className='menu'
+        onClick={closeMenu}
+        show={mobileShowMenu}
+      >
+        <div className='menu_content'>
+          <ul>
+            {menus.map((menu, idx) => (
+              <li key={idx}>
+                <Link
+                  to={menu.url}
+                >
+                  {menu.title}
+                </Link>
+              </li>
+            ))}
+            {mobileShowMenu && (isLogin
+              ? (
                 <li
-                  className="signout"
+                  className='signout'
                   onClick={logout}
                 >
                   로그아웃
                 </li>
-                :
+              )
+              : (
                 <>
                   <li>
-                    <Link to="signin">
+                    <Link to='signin'>
                       로그인
                     </Link>
                   </li>
                   <li>
-                    <Link to="signup">
+                    <Link to='signup'>
                       회원가입
                     </Link>
                   </li>
                 </>
-              )}
-            </ul>
-          </div>
-        </NavigatorWrapper>
-        <SignNavigator
-          userid={userid}
-          isLogin={isLogin}
-          logout={logout}
-        />
-      </HeaderWrapper>
-    </>
-  )
+              )
+            )}
+          </ul>
+        </div>
+      </NavigatorWrapper>
+      <SignNavigator
+        userid={userid}
+        isLogin={isLogin}
+        logout={logout}
+      />
+    </HeaderWrapper>
+  );
 }

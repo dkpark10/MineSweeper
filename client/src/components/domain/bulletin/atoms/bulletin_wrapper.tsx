@@ -1,8 +1,8 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const AlignCenterWrapper = styled.div`
   text-align: center;
-`
+`;
 
 export const DefaultBulletinWrapper = styled.main`
   font-family: "Noto Sans KR", sans-serif;

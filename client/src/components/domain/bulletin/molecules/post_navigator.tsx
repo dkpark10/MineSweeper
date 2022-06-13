@@ -1,13 +1,13 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
 import {
   Input,
   Button,
-  Content
-}from "../../../common/atoms/index";
-import { useStringInput } from "../../../custom_hooks/useinput";
+  Content,
+} from '../../../common/atoms/index';
+import { useStringInput } from '../../../custom_hooks/useinput';
 
 const BulletionNaviWrapper = styled.div`
   display:flex;
@@ -29,27 +29,27 @@ interface Props {
 }
 
 export default function BulletionNavi({ url }: Props) {
-  const [value, setValue] = useStringInput("");
+  const [value, setValue] = useStringInput('');
 
   return (
     <BulletionNaviWrapper>
-      <div style={{ height: "100%", width: "64%" }}>
+      <div style={{ height: '100%', width: '64%' }}>
         <SearchInput
-          type={"text"}
-          name={"post_search"}
-          width={"70%"}
-          height={"100%"}
+          type='text'
+          name='post_search'
+          width='70%'
+          height='100%'
           value={value}
           onChange={setValue}
         />
         <Button
-          width={"40px"}
-          height={"100%"}
-          backgroundColor={"white"}
+          width='40px'
+          height='100%'
+          backgroundColor='white'
         >
           <Content
             fontColor={false}
-            fontSize={"0.95rem"}
+            fontSize='0.95rem'
           >
             검색
           </Content>
@@ -58,12 +58,12 @@ export default function BulletionNavi({ url }: Props) {
       <Link to={`${url}/create`}>
         <Content
           fontColor={false}
-          bold={true}
-          fontSize={"0.85rem"}
+          bold
+          fontSize='0.85rem'
         >
           글쓰기
         </Content>
       </Link>
     </BulletionNaviWrapper>
-  )
+  );
 }

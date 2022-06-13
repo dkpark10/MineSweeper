@@ -1,7 +1,7 @@
 export interface StyleState {
   mainFontColor: string;
   mainThemeColor: string;
-};
+}
 
 interface GameAction {
   type: string,

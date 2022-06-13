@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const RankWrapper = styled.main`
   font-family: "Noto Sans KR", sans-serif;

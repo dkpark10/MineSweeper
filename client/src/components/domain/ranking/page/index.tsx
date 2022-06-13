@@ -1,29 +1,29 @@
-import React, { useState } from "react";
-import { RouteComponentProps, Link } from "react-router-dom";
+import React, { useState } from 'react';
+import { RouteComponentProps, Link } from 'react-router-dom';
 import queryString from 'query-string';
 
+import { AxiosResponse } from 'axios';
 import {
   Header,
-  Footer
-}from "../../../common/organisms/index";
+  Footer,
+} from '../../../common/organisms/index';
 
 import {
-  PageNation
-}from "../../../common/molecules/index";
+  PageNation,
+} from '../../../common/molecules/index';
 
 import {
-  Loading
-}from "../../../common/atoms/index";
+  Loading,
+} from '../../../common/atoms/index';
 
-import RankWrapper from "../atoms/rank_wrapper";
-import RankNavigator from "../molecules/rank_navigator";
-import RankItem from "../molecules/rank_item";
-import SearchInput from "../atoms/search_input";
+import RankWrapper from '../atoms/rank_wrapper';
+import RankNavigator from '../molecules/rank_navigator';
+import RankItem from '../molecules/rank_item';
+import SearchInput from '../atoms/search_input';
 
-import axiosInstance from "../../../../utils/default_axios";
-import useAxios from "../../../custom_hooks/useaxios";
-import { useStringInput } from "../../../custom_hooks/useinput";
-import { AxiosResponse } from "axios";
+import axiosInstance from '../../../../utils/default_axios';
+import useAxios from '../../../custom_hooks/useaxios';
+import { useStringInput } from '../../../custom_hooks/useinput';
 
 interface MatchParams {
   level: string;
@@ -39,12 +39,13 @@ interface GameProps {
 
 export default function Ranking({
   match,
-  location }: RouteComponentProps<MatchParams>) {
+  location,
+}: RouteComponentProps<MatchParams>) {
   const { page } = queryString.parse(location.search);
-  const level = match.params.level;
+  const { level } = match.params;
   const INITURL = `/api/game/${level}?page=${page}`;
   const [rankData, loading, setRankData] = useAxios<GameProps[]>(INITURL);
-  const [value, setValue] = useStringInput("");
+  const [value, setValue] = useStringInput('');
   const [searchLoading, setSearchLoading] = useState(false);
 
   const searchUser = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -54,14 +55,15 @@ export default function Ranking({
     try {
       setSearchLoading(true);
       const { data }: AxiosResponse<GameProps[]> = await axiosInstance.get(url);
-      setRankData(data.map(item => ({
+      setRankData(data.map((item) => ({
         ...item,
-        totalItemCount: data.length
-      })))
-    } catch (e) {
+        totalItemCount: data.length,
+      })));
+    } catch (error) {
+      // empty
     }
     setSearchLoading(false);
-  }
+  };
 
   if (loading || searchLoading) {
     return <Loading />;
@@ -82,8 +84,8 @@ export default function Ranking({
           />
           <RankItem />
           <ul>
-            {rankData.map((rank, idx) =>
-              <li key={idx}>
+            {rankData.map((rank, idx) => (
+              <li key={rank.ranking}>
                 <Link to={`/mypage/${rank.id}`} replace>
                   <RankItem
                     rank={Number(page) + idx}
@@ -92,7 +94,7 @@ export default function Ranking({
                   />
                 </Link>
               </li>
-            )}
+            ))}
           </ul>
           <PageNation
             url={match.url}
@@ -103,5 +105,5 @@ export default function Ranking({
       </div>
       <Footer />
     </>
-  )
+  );
 }

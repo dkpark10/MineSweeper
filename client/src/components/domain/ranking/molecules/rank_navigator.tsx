@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import PageNationItem from "../../../common/atoms/page_nation_item";
+import React from 'react';
+import styled from 'styled-components';
+import PageNationItem from '../../../common/atoms/page_nation_item';
 
 interface Props {
   currentLevel: string;
@@ -29,23 +29,23 @@ const LevelNationWrapper = styled.div<Props>`
 `;
 
 export default function RankNavigator({
-  currentLevel
+  currentLevel,
 }: Props) {
-  const levels = ["easy", "normal", "hard"];
+  const levels = ['easy', 'normal', 'hard'];
 
   return (
     <LevelNationWrapper
       currentLevel={currentLevel}
     >
-      {["쉬움", "보통", "어려움"].map((item, idx) =>
+      {['쉬움', '보통', '어려움'].map((item, idx) => (
         <PageNationItem
-          key={idx}
+          key={item}
           value={item}
           url={`${levels[idx]}?page=1`}
           currentPage={currentLevel === levels[idx]}
-          fontSize={"1.0rem"}
+          fontSize='1.0rem'
         />
-      )}
+      ))}
     </LevelNationWrapper>
-  )
+  );
 }

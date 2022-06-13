@@ -9,5 +9,5 @@ export interface RootState {
 
 export default combineReducers<RootState>({
   login: loginReducer,
-  style: styleReducer
+  style: styleReducer,
 });

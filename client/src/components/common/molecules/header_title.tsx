@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import Hamburger from '../atoms/hamburger';
 import Title from '../atoms/title';
-import { Link } from "react-router-dom";
 
 export const HeaderTitleWrapper = styled.div`
   display: flex;
@@ -17,22 +17,20 @@ interface Props {
 }
 
 export default function HeaderTitle({
-  onClick
+  onClick,
 }: Props) {
   return (
-    <>
-      <HeaderTitleWrapper>
-        <Hamburger
-          onClick={onClick}
-        />
-        <Link to="/">
-          <Title
-            fontColor={true}
-          >
-            Mine Sweeper
-          </Title>
-        </Link>
-      </HeaderTitleWrapper>
-    </>
-  )
+    <HeaderTitleWrapper>
+      <Hamburger
+        onClick={onClick}
+      />
+      <Link to='/'>
+        <Title
+          fontColor
+        >
+          Mine Sweeper
+        </Title>
+      </Link>
+    </HeaderTitleWrapper>
+  );
 }
