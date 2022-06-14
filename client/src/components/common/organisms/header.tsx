@@ -115,11 +115,11 @@ export default function Header() {
   }));
   const [mobileShowMenu, setMobileShowMenu] = useState<boolean>(false);
   const menus = [
-    { title: '게임', url: '/' },
-    { title: '랭킹', url: '/ranking/easy?page=1' },
-    { title: '게시판', url: '/community?page=1' },
-    { title: '나의 페이지', url: '/mypage' },
-    { title: '옵션', url: '/option' },
+    { id: 0, title: '게임', url: '/' },
+    { id: 1, title: '랭킹', url: '/ranking/easy?page=1' },
+    { id: 2, title: '게시판', url: '/community?page=1' },
+    { id: 3, title: '나의 페이지', url: '/mypage' },
+    { id: 4, title: '옵션', url: '/option' },
   ] as const;
 
   const openMenu = () => {
@@ -143,6 +143,7 @@ export default function Header() {
         }));
       }
     } catch (e) {
+      // empty
     }
   };
 
@@ -158,8 +159,8 @@ export default function Header() {
       >
         <div className='menu_content'>
           <ul>
-            {menus.map((menu, idx) => (
-              <li key={idx}>
+            {menus.map((menu) => (
+              <li key={menu.id}>
                 <Link
                   to={menu.url}
                 >
@@ -172,6 +173,8 @@ export default function Header() {
                 <li
                   className='signout'
                   onClick={logout}
+                  onKeyPress={() => { }}
+                  role='presentation'
                 >
                   로그아웃
                 </li>

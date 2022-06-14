@@ -68,6 +68,9 @@ export default function SignNavigator({
           <div
             className='signout'
             onClick={logout}
+            onKeyPress={() => {}}
+            role='button'
+            tabIndex={0}
           >
             {userid}
             님 | 로그아웃

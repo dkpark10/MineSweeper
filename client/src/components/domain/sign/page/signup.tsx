@@ -3,7 +3,7 @@ import { RouteComponentProps, Link } from 'react-router-dom';
 import { AxiosResponse } from 'axios';
 import { debounce } from 'lodash';
 
-import Input from '../atoms/input';
+import Input, { Label } from '../atoms/input';
 import Title from '../../../common/atoms/title';
 import { useObjectInput } from '../../../custom_hooks/useinput';
 import SignWrapper from '../atoms/wrapper';
@@ -20,7 +20,15 @@ interface InputProps {
 }
 
 export default function SignUp({ history }: RouteComponentProps) {
-  const duplicateCheck = useMemo(() => debounce(async ({ name, value }) => {
+  const [validator, setValidator] = useState({
+    id: { result: false, msg: '' },
+    email: { result: false, msg: '' },
+    password: { result: false },
+    repeatPassword: { result: false },
+  });
+
+  const duplicateCheck = useMemo(() => debounce(async ({ name, value }:
+  { name: string, value: string }) => {
     if (name !== 'id' && name !== 'email') {
       return;
     }
@@ -69,13 +77,6 @@ export default function SignUp({ history }: RouteComponentProps) {
     repeatPassword: '',
   }, duplicateCheck);
 
-  const [validator, setValidator] = useState({
-    id: { result: false, msg: '' },
-    email: { result: false, msg: '' },
-    password: { result: false },
-    repeatPassword: { result: false },
-  });
-
   useEffect(() => {
     const passwordReg = /^[A-Za-z0-9]{6,15}$/;
     if (value.password) {
@@ -100,9 +101,10 @@ export default function SignUp({ history }: RouteComponentProps) {
   const submintHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const checkValidValue = Object.entries(validator)
-      .filter(([key, validator]) => validator.result === false).length > 0;
+      .filter(([, validatorElement]) => validatorElement.result === false).length > 0;
 
     if (checkValidValue) {
+      // eslint-disable-next-line
       alert('양식에 맞게 다시 작성해 주세요.');
       return;
     }
@@ -121,6 +123,7 @@ export default function SignUp({ history }: RouteComponentProps) {
           throw new Error('유저 등록에 실패하였습니다.');
         }
       } catch (error) {
+        // eslint-disable-next-line
         alert(error.message);
       }
     };
@@ -140,15 +143,16 @@ export default function SignUp({ history }: RouteComponentProps) {
         </Link>
         <form onSubmit={submintHandler}>
           <div>
-            <label htmlFor='id' />
-            <Input
-              type='text'
-              placeholder='아이디'
-              name='id'
-              id='id'
-              value={value.id}
-              onChange={changeValue}
-            />
+            <Label htmlFor='id'>
+              <Input
+                type='text'
+                placeholder='아이디'
+                name='id'
+                id='id'
+                value={value.id}
+                onChange={changeValue}
+              />
+            </Label>
             <WarningMessage
               show={validator.id.result === false && value.id.length > 0}
             >
@@ -156,15 +160,16 @@ export default function SignUp({ history }: RouteComponentProps) {
             </WarningMessage>
           </div>
           <div>
-            <label htmlFor='email' />
-            <Input
-              type='eamil'
-              placeholder='이메일'
-              name='email'
-              id='email'
-              value={value.email}
-              onChange={changeValue}
-            />
+            <Label htmlFor='email'>
+              <Input
+                type='eamil'
+                placeholder='이메일'
+                name='email'
+                id='email'
+                value={value.email}
+                onChange={changeValue}
+              />
+            </Label>
             <WarningMessage
               show={validator.email.result === false && value.email.length > 0}
             >
@@ -172,15 +177,16 @@ export default function SignUp({ history }: RouteComponentProps) {
             </WarningMessage>
           </div>
           <div>
-            <label htmlFor='password' />
-            <Input
-              type='password'
-              placeholder='비밀번호'
-              name='password'
-              id='password'
-              value={value.password}
-              onChange={changeValue}
-            />
+            <Label htmlFor='password'>
+              <Input
+                type='password'
+                placeholder='비밀번호'
+                name='password'
+                id='password'
+                value={value.password}
+                onChange={changeValue}
+              />
+            </Label>
             <WarningMessage
               show={validator.password.result === false && value.password.length > 0}
             >
@@ -188,15 +194,16 @@ export default function SignUp({ history }: RouteComponentProps) {
             </WarningMessage>
           </div>
           <div>
-            <label htmlFor='repeat-password' />
-            <Input
-              type='password'
-              placeholder='비밀번호 확인'
-              name='repeatPassword'
-              id='repeat-password'
-              value={value.repeatPassword}
-              onChange={changeValue}
-            />
+            <Label htmlFor='repeat-password'>
+              <Input
+                type='password'
+                placeholder='비밀번호 확인'
+                name='repeatPassword'
+                id='repeat-password'
+                value={value.repeatPassword}
+                onChange={changeValue}
+              />
+            </Label>
             <WarningMessage
               show={validator.repeatPassword.result === false && value.repeatPassword.length > 0}
             >

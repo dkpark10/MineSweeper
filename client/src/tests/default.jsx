@@ -1,13 +1,12 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension'; // 리덕스 개발자 도구
-import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import { Route, Switch } from 'react-router-dom';
-import theme from '../styles/theme';
+import { BrowserRouter } from 'react-router-dom';
+import theme from '../styles/style_theme';
 import rootReducer from '../reducers/index';
-import App from '../app';
+import App from '../App';
 
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware()));
 

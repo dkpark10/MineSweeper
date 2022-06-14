@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 
 type ChangeReturnType = (e: React.ChangeEvent<HTMLInputElement>) => void;
+type ReturnType<T> = [T, ChangeReturnType, React.Dispatch<React.SetStateAction<T>>];
+
 interface CallbackProps {
   name?: string;
   value?: string;
 }
 
-export const useObjectInput = <T>(init: T, callback?: (props: CallbackProps) => void):
-  [T, ChangeReturnType, React.Dispatch<React.SetStateAction<T>>] => {
+export const useObjectInput = <T>(init: T, callback?: (props: CallbackProps) => void)
+  : ReturnType<T> => {
   const [data, setData] = useState<T>(init);
   const change = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

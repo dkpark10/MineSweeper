@@ -14,9 +14,15 @@
   "extends": [
     "airbnb",
     "airbnb/hooks",
+    "airbnb-typescript",
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended"
   ],
+  "parserOptions": {
+    "project": [
+      "./tsconfig.json"
+    ]
+  },
   "ignorePatterns": [
     "node_modules/"
   ],
@@ -36,17 +42,17 @@
         "devDependencies": true
       }
     ],
-    "react/jsx-filename-extension": [
-      "error",
-      {
-        "extensions": [
-          ".js",
-          ".ts",
-          ".jsx",
-          ".tsx"
-        ]
-      }
-    ],
+    // "react/jsx-filename-extension": [
+    //   "error",
+    //   {
+    //     "extensions": [
+    //       ".js",
+    //       ".ts",
+    //       ".jsx",
+    //       ".tsx"
+    //     ]
+    //   }
+    // ],
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -64,8 +70,7 @@
           ".js",
           ".jsx",
           ".ts",
-          ".tsx",
-          ".d.ts"
+          ".tsx"
         ],
         "moduleDirectory": [
           "node_modules",

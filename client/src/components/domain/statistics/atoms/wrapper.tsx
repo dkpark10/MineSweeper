@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { AbsoluteCenterWrapper } from '../../../common/atoms/wrapper';
 

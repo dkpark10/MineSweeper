@@ -6,7 +6,7 @@ import { createStore, Store, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension'; // 리덕스 개발자 도구
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import defaultTheme from './styles/theme';
+import defaultTheme from './styles/style_theme';
 import rootReducer from './reducers/index';
 import App from './App';
 

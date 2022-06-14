@@ -36,11 +36,16 @@ export default function Bulletion({
   match,
 }: RouteComponentProps) {
   const { page } = queryString.parse(location.search);
-  const [response, loading] = useAxios<PostProps[]>(`/api/posts?page=${page}`, []);
+  const [response, loading, error] = useAxios<PostProps[]>(`/api/posts?page=${page}`, []);
   const widthRatio = ['60%', '24%', '16%'];
 
   if (loading) {
     return <Loading />;
+  }
+
+  if (error) {
+    // error 페이지는 다시 구현해라
+    return <div>error</div>;
   }
 
   return (
@@ -58,7 +63,7 @@ export default function Bulletion({
             postData={response}
             widthRatio={widthRatio}
             url={match.url}
-            page={page[0]}
+            page={page as string}
           />
           <PageNation
             url={location.pathname}

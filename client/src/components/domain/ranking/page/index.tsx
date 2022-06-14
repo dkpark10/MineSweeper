@@ -44,7 +44,7 @@ export default function Ranking({
   const { page } = queryString.parse(location.search);
   const { level } = match.params;
   const INITURL = `/api/game/${level}?page=${page}`;
-  const [rankData, loading, setRankData] = useAxios<GameProps[]>(INITURL);
+  const [rankData, loading, error, setRankData] = useAxios<GameProps[]>(INITURL);
   const [value, setValue] = useStringInput('');
   const [searchLoading, setSearchLoading] = useState(false);
 
@@ -59,7 +59,7 @@ export default function Ranking({
         ...item,
         totalItemCount: data.length,
       })));
-    } catch (error) {
+    } catch (err) {
       // empty
     }
     setSearchLoading(false);
@@ -67,6 +67,10 @@ export default function Ranking({
 
   if (loading || searchLoading) {
     return <Loading />;
+  }
+
+  if (error) {
+    return <div>error</div>;
   }
 
   return (

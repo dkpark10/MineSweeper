@@ -50,7 +50,7 @@ export default function OptionCard({
             name='level'
             value={level[0]}
             id={level[0]}
-            change={onChange}
+            onChange={onChange}
             check={level[0] === currentLevel}
           />
           <label htmlFor={level[0]}>

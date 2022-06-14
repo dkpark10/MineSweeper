@@ -1,10 +1,11 @@
 declare module 'response-type' {
+  export interface LoginInfo {
+    id: string;
+    accessToken: string;
+  }
+
   export interface Response {
     result: boolean;
-    message?: string;
-    loginInfo?: {
-      id: string;
-      accessToken: string;
-    }
+    loginInfo?: LoginInfo;
   }
 }

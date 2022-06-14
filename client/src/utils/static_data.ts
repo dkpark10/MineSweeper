@@ -1,7 +1,7 @@
 type InvalidMessageProps = 'id' | 'email' | 'password' | 'repeatPassword';
 type InvalidMessage = {
   [K in InvalidMessageProps]: string | string[];
-}
+};
 
 export const invalidMessage: InvalidMessage = {
   id: [

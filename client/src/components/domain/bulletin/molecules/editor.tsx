@@ -22,9 +22,9 @@ const EditorWrapper = styled.div`
   height:554px;
 `;
 
-interface Props{
+interface Props {
   contents:string;
-  setContents: React.Dispatch<React.SetStateAction<any>>;
+  setContents: React.Dispatch<React.SetStateAction<string>>;
 }
 
 function Editor({

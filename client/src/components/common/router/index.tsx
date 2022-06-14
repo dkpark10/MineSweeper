@@ -5,11 +5,12 @@ interface Props extends RouteProps {
   authentication: boolean;
 }
 
-export function PrivateRoute({
+export default function PrivateRoute({
   authentication,
   ...rest
 }: Props) {
   if (authentication) {
+    // eslint-disable-next-line
     return <Route {...rest} />;
   }
   return <Redirect to='/signin' />;

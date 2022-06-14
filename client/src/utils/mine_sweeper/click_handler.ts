@@ -93,5 +93,5 @@ export default abstract class ClickHandler {
     return numofExtraCell;
   }
 
-  public abstract process(): ClickRenderStatus
+  public abstract process(): ClickRenderStatus;
 }

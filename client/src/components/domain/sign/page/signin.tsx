@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { RouteComponentProps, Link } from 'react-router-dom';
 import { AxiosResponse } from 'axios';
 import { useDispatch } from 'react-redux';
-import { Response } from 'response-type';
+import { Response, LoginInfo } from 'response-type';
 import { useObjectInput } from '../../../custom_hooks/useinput';
 import axiosInstance from '../../../../utils/default_axios';
 import { setLogin } from '../../../../reducers/login';
@@ -53,7 +53,7 @@ export default function SignIn({ history }: RouteComponentProps) {
         throw new Error('로그인 실패');
       }
 
-      const { accessToken } = data.loginInfo;
+      const { accessToken } = data.loginInfo as LoginInfo;
       // Authorization 헤더에 토큰을 박는다.
       axiosInstance.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 
@@ -63,7 +63,7 @@ export default function SignIn({ history }: RouteComponentProps) {
       }));
 
       history.goBack();
-    } catch (error) {
+    } catch (err) {
       setError(true);
     }
   };

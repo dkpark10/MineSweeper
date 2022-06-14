@@ -36,12 +36,10 @@ const BoardWrapper = styled.div<{ row: number, col: number }>`
 
 interface Props {
   level: LevelType;
-  initCellData?: CellData[][];
 }
 
 export default function MineSweeper({
   level,
-  initCellData,
 }: Props) {
   const levelList: { [key in LevelType]: Level } = {
     easy: { row: 9, col: 9, countOfMine: 10 },
@@ -51,7 +49,7 @@ export default function MineSweeper({
 
   const { row, col, countOfMine } = levelList[level];
 
-  const [cellData, setCellData] = useState<CellData[][]>(initCellData || []);
+  const [cellData, setCellData] = useState<CellData[][]>([]);
   const [firstClick, setFirstClick] = useState<boolean>(false);
   const [countOfFlag, setCountOfFlag] = useState<number>(countOfMine);
   const [extraCell, setExtraCell] = useState<number>((row * col) - countOfMine);

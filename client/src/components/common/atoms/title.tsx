@@ -1,18 +1,28 @@
 import React from 'react';
 import styled from 'styled-components';
 
-interface Props {
-  children: JSX.Element | string;
+interface DefaultProps {
   fontSize?: string;
   fontColor?: boolean;
   fontBold?: boolean;
   margin?: string;
 }
 
+interface Props extends DefaultProps {
+  children: JSX.Element | string;
+}
+
+const defaultProps: DefaultProps = {
+  fontSize: '1.54rem',
+  fontColor: false,
+  fontBold: false,
+  margin: '0px',
+};
+
 const TitleStyle = styled.div<Props>`
   font-family: 'Roboto', sans-serif;
-  margin: ${({ margin }) => margin || '0px'};
-  font-size: ${({ fontSize }) => fontSize || '1.54rem'};
+  margin: ${({ margin }) => margin};
+  font-size: ${({ fontSize }) => fontSize};
   font-weight: ${({ fontBold }) => (fontBold === true ? 'bold' : '')};
   color:${({ fontColor, theme }) => (fontColor === true ? theme.mainColor : theme.fontColor)};
 `;
@@ -35,3 +45,5 @@ export default function Title({
     </TitleStyle>
   );
 }
+
+Title.defaultProps = defaultProps;

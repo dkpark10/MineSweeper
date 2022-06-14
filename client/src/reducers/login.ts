@@ -22,7 +22,7 @@ export const setLogin = (loginInfo: LoginStatus): LoginAction => ({
 });
 
 // 리듀서
-export default function loginReducer(state: LoginStatus = initialState, action: LoginAction): LoginStatus {
+export default function loginReducer(state: LoginStatus, action: LoginAction): LoginStatus {
   switch (action.type) {
     case ISLOGIN:
       return {
@@ -31,6 +31,6 @@ export default function loginReducer(state: LoginStatus = initialState, action: 
         id: action.payload.id,
       };
     default:
-      return state;
+      return state || initialState;
   }
 }

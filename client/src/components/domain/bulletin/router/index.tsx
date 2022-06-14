@@ -14,7 +14,7 @@ import PostCreate from '../page/post_create';
 import PostUpdate from '../page/post_update';
 import PostDelete from '../page/post_delete';
 
-import { PrivateRoute } from '../../../common/router/index';
+import PrivateRoute from '../../../common/router/index';
 import NotFound from '../../../common/page/notfound';
 
 import { RootState } from '../../../../reducers';

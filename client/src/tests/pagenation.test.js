@@ -1,7 +1,5 @@
 import {
   calculBeginPage,
-  calculNextButtonBeginPage,
-  calculPrevButtonBeginPage,
 } from '../utils/common';
 
 describe('페이지네이션 테스트', () => {

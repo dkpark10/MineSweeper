@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 
 interface Props {
@@ -38,6 +37,10 @@ const Input = styled('input').attrs(({ type, value }: Props) => ({
       : ''
   )}
   }
+`;
+
+export const Label = styled.label`
+  display:none;
 `;
 
 export default Input;

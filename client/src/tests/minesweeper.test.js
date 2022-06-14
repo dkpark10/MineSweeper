@@ -1,6 +1,5 @@
-import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import defaultComponent from './default.js';
+import defaultComponent from './default';
 
 describe('메인 게임 테스트', () => {
   const levelList = {
