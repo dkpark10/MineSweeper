@@ -50,7 +50,7 @@ describe('메인 게임 테스트', () => {
     });
   });
 
-  test('좌클릭 테스트', async () => {
+  test('첫 클릭 폭탄 테스트', async () => {
     global.localStorage.setItem('difficulty', 'easy');
     const { container } = render(defaultComponent());
 

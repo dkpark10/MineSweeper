@@ -1,32 +1,29 @@
-{
-  "root": true,
-  "env": {
-    "browser": true,
-    "es2021": true,
-    "node": true,
-    "jest": true
+module.exports = {
+  root: true,
+  env: {
+    browser: true,
+    es2021: true,
+    node: true,
+    jest: true
   },
-  "parser": "@typescript-eslint/parser",
-  "plugins": [
+  parser: "@typescript-eslint/parser",
+  plugins: [
     "react",
     "@typescript-eslint"
   ],
-  "extends": [
+  extends: [
     "airbnb",
     "airbnb/hooks",
     "airbnb-typescript",
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended"
   ],
-  "parserOptions": {
-    "project": [
-      "./tsconfig.json"
-    ]
+  parserOptions: {
+    project: "./tsconfig.json",
+    tsconfigRootDir: __dirname,
+    sourceType: "module"
   },
-  "ignorePatterns": [
-    "node_modules/"
-  ],
-  "rules": {
+  rules: {
     "no-console": "off",
     "no-use-before-define": "off",
     "@typescript-eslint/no-use-before-define": [
@@ -42,28 +39,28 @@
         "devDependencies": true
       }
     ],
-    // "react/jsx-filename-extension": [
-    //   "error",
-    //   {
-    //     "extensions": [
-    //       ".js",
-    //       ".ts",
-    //       ".jsx",
-    //       ".tsx"
-    //     ]
-    //   }
-    // ],
-    "import/extensions": [
+    "react/jsx-filename-extension": [
       "error",
-      "ignorePackages",
       {
-        "ts": "never",
-        "tsx": "never"
+        "extensions": [
+          ".js",
+          ".ts",
+          ".jsx",
+          ".tsx"
+        ]
       }
     ],
+    // "import/extensions": [
+    //   "error",
+    //   "ignorePackages",
+    //   {
+    //     "ts": "never",
+    //     "tsx": "never"
+    //   }
+    // ],
     "linebreak-style": 0
   },
-  "settings": {
+  settings: {
     "import/resolver": {
       "node": {
         "extensions": [

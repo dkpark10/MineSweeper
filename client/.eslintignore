@@ -1,4 +1,5 @@
 ./build/**
 /node_modules
 /**/*.d.ts
-./src/tests/**/*
+src/tests/**
+webpack.common.js

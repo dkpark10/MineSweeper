@@ -2,12 +2,20 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
-interface Props {
-  value: string;
-  url: string;
+interface DefaultProps {
   fontSize?: string;
   currentPage?: boolean;
 }
+
+interface Props extends DefaultProps {
+  value: string;
+  url: string;
+}
+
+const defaultProps: DefaultProps = {
+  fontSize: '0.85rem',
+  currentPage: false,
+};
 
 const PageNationItemWrapper = styled.span<Partial<Props>>`
   display:inline-block;
@@ -36,7 +44,7 @@ export default function PageNationItem({
   value,
   url,
   fontSize,
-  currentPage = false,
+  currentPage,
 }: Props) {
   return (
     <Link to={url}>
@@ -49,3 +57,5 @@ export default function PageNationItem({
     </Link>
   );
 }
+
+PageNationItem.defaultProps = defaultProps;
