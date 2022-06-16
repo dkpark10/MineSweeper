@@ -2,4 +2,3 @@
 /node_modules
 /**/*.d.ts
 src/tests/**
-webpack.common.js
