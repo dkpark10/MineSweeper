@@ -79,6 +79,10 @@ app.get('/', async (request: Request, response: Response) => {
   response.sendFile(path.join(__dirname, '../../client/build/index.html'));
 });
 
+app.use('*', async (request: Request, response: Response) => {
+  response.sendFile(path.join(__dirname, '../../client/build/index.html'));
+});
+
 app.listen(port, '0.0.0.0', () => {
   console.log(`start server port ${port}`);
 });
