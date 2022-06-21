@@ -1,7 +1,7 @@
 import { Coord, ClickRenderStatus } from 'mine-sweeper-type';
 import ClickHandler from './click_handler';
 
-class RightClickHandler extends ClickHandler {
+export default class RightClickHandler extends ClickHandler {
   public process(): ClickRenderStatus {
     const { cellData } = this;
     const { y, x }: Coord = this.coord;
@@ -26,5 +26,3 @@ class RightClickHandler extends ClickHandler {
     };
   }
 }
-
-export default RightClickHandler;

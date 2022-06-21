@@ -1,5 +1,5 @@
 import { Coord, ClickRenderStatus } from 'mine-sweeper-type';
-import ClickHandler from './click_handler';
+import ClickLeftOrWheelHandler from './click_leftorwheel_handler';
 
 const noRender: ClickRenderStatus = {
   render: false,
@@ -7,7 +7,7 @@ const noRender: ClickRenderStatus = {
   removeCell: 0,
 };
 
-class LeftClickHandler extends ClickHandler {
+export default class LeftClickHandler extends ClickLeftOrWheelHandler {
   public process(): ClickRenderStatus {
     const { y, x }: Coord = this.coord;
     const { cellData } = this;
@@ -52,5 +52,3 @@ class LeftClickHandler extends ClickHandler {
     };
   }
 }
-
-export default LeftClickHandler;

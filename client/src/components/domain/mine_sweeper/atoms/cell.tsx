@@ -1,14 +1,17 @@
 import React, { ReactText } from 'react';
 import styled from 'styled-components';
-import Image from '../../../common/atoms/image';
 import flagimage from '../../../../assets/flag.png';
 import { AbsoluteCenterWrapper } from '../../../common/atoms/wrapper';
+import Image from '../../../common/atoms/image';
 
 interface Props {
   value: ReactText;
   isLock: boolean;
+  onMouseOver: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown: React.MouseEventHandler<HTMLDivElement>;
+  onMouseUp: React.MouseEventHandler<HTMLDivElement>;
   onContextMenu: React.MouseEventHandler<HTMLDivElement>;
+  isPointerHover: boolean;
 }
 
 const CellStyle = styled.div<Partial<Props>>`
@@ -43,8 +46,11 @@ const CellTextStyle = styled(AbsoluteCenterWrapper) <{
 export default function Cell({
   isLock,
   value,
+  onMouseOver,
   onMouseDown,
+  onMouseUp,
   onContextMenu,
+  isPointerHover,
 }: Props) {
   const colorofButtonNumber: string[] = [
     '',
@@ -62,8 +68,11 @@ export default function Cell({
     <CellStyle
       className='cell'
       isLock={isLock}
+      onMouseOver={onMouseOver}
       onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
       onContextMenu={onContextMenu}
+      isPointerHover={isPointerHover}
     >
       {value === 'flag'
         ? (
@@ -72,7 +81,7 @@ export default function Cell({
               width='100%'
               height='100%'
               src={flagimage}
-              alt='깃발'
+              alt='flag'
             />
           </AbsoluteCenterWrapper>
         )

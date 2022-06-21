@@ -12,6 +12,16 @@ declare module 'mine-sweeper-type' {
     visited: boolean;
     flaged: boolean;
     visible: number | string;
+    isPointerHover: boolean;
+  }
+
+  export interface GameInfo {
+    firstClick: boolean;
+    countOfFlag: number;
+    extraCell: number;
+    isGameOver: boolean;
+    gameReset: boolean;
+    gameClearSuccess: boolean;
   }
 
   export interface Coord {

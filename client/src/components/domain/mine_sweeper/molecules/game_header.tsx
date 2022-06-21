@@ -57,7 +57,7 @@ export default function GameHeader({
   };
 
   useInterval(() => {
-    if (firstClick === true && isGameOver === false) {
+    if (firstClick === false && isGameOver === false) {
       setCount((prev) => prev + 1);
     }
   }, 1000);

@@ -1,11 +1,13 @@
 import { Coord, ClickRenderStatus } from 'mine-sweeper-type';
-import ClickHandler from './click_handler';
+import ClickLeftOrWheelHandler from './click_leftorwheel_handler';
 
 interface WheelClickInterFace {
   isFlagonMine(y: number, x: number): boolean;
 }
 
-class WheelClickHandler extends ClickHandler implements WheelClickInterFace {
+export default class WheelClickHandler
+  extends ClickLeftOrWheelHandler
+  implements WheelClickInterFace {
   public process(): ClickRenderStatus {
     let numofExtraCell = 0;
     const { cellData } = this;
@@ -93,5 +95,3 @@ class WheelClickHandler extends ClickHandler implements WheelClickInterFace {
     return this.cellData[y][x].flaged === true && this.cellData[y][x].mine === true;
   }
 }
-
-export default WheelClickHandler;

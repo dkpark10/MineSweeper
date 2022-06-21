@@ -25,7 +25,7 @@ module.exports = {
     createDefaultProgram: true,
   },
   rules: {
-    'no-console': 'off',
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': [
       'error',
@@ -55,9 +55,8 @@ module.exports = {
     //   'error',
     //   'ignorePackages',
     //   {
-    //     'ts': 'never',
-    //     'tsx': 'never'
-    //   }
+    //     js: 'never',
+    //   },
     // ],
     'linebreak-style': 0,
   },
