@@ -34,12 +34,6 @@ declare module 'mine-sweeper-type' {
     col: number
   }
 
-  export interface ClickRenderStatus {
-    render: boolean;
-    clickBomb: boolean;
-    removeCell: number;
-  }
-
   export interface WheelClickDown {
     isWheelClickDown: boolean;
     prevHoverY: number;

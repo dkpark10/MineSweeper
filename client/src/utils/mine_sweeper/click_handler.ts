@@ -2,7 +2,7 @@ import {
   Coord,
   CellData,
   BoardSize,
-  ClickRenderStatus,
+  GameInfo,
   WheelClickDown,
 } from 'mine-sweeper-type';
 
@@ -74,5 +74,5 @@ export default abstract class ClickHandler {
     return numofExtraCell;
   }
 
-  public abstract process(): ClickRenderStatus;
+  public abstract process(gameInfo: GameInfo): GameInfo;
 }

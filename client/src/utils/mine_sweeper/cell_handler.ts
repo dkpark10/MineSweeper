@@ -7,10 +7,10 @@ export default class CellHandler {
 
   private readonly countOfMine: number;
 
-  constructor(bs: BoardSize, cntMine: number) {
+  constructor(bs: BoardSize, cntMine: number, cells?: CellData[][]) {
     this.boardSize = bs;
     this.countOfMine = cntMine;
-    this.cellData = Array.from({ length: bs.row }, (v1, y) => (
+    this.cellData = cells || Array.from({ length: bs.row }, (v1, y) => (
       Array.from({ length: bs.col }, (v2, x) => ({
         primaryIndex: (y * bs.row) + x,
         mine: false,

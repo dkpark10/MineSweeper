@@ -1,6 +1,5 @@
 import {
   Coord,
-  ClickRenderStatus,
 } from 'mine-sweeper-type';
 
 import ClickHandler from './click_handler';

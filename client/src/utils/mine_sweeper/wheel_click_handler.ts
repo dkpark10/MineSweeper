@@ -1,4 +1,7 @@
-import { Coord, ClickRenderStatus } from 'mine-sweeper-type';
+import {
+  Coord,
+  GameInfo,
+} from 'mine-sweeper-type';
 import ClickLeftOrWheelHandler from './click_leftorwheel_handler';
 
 interface WheelClickInterFace {
@@ -8,31 +11,26 @@ interface WheelClickInterFace {
 export default class WheelClickHandler
   extends ClickLeftOrWheelHandler
   implements WheelClickInterFace {
-  public process(): ClickRenderStatus {
-    let numofExtraCell = 0;
+  public process(gameInfo: GameInfo): GameInfo {
+    let countOfExtraCell = 0;
     const { cellData } = this;
     const { y, x }: Coord = this.coord;
-
-    const noRender: ClickRenderStatus = {
-      render: false,
-      clickBomb: false,
-      removeCell: 0,
-    };
-
-    const gameOver: ClickRenderStatus = {
-      render: true,
-      clickBomb: true,
-      removeCell: 987654321,
-    };
 
     if (cellData[y][x].neighbor < 0
       || cellData[y][x].flaged === true
       || cellData[y][x].visited === false) {
-      return noRender;
+      return gameInfo;
     }
 
     let numofHit = 0;
     let numofAroundFlag = 0;
+
+    const gameOver = {
+      ...gameInfo,
+      extraCell: 0,
+      gameClearSuccess: false,
+      isGameOver: true,
+    };
 
     for (let row = y - 1; row <= y + 1; row += 1) {
       for (let col = x - 1; col <= x + 1; col += 1) {
@@ -60,7 +58,7 @@ export default class WheelClickHandler
     }
 
     if (numofHit !== cellData[y][x].neighbor) {
-      return noRender;
+      return gameInfo;
     }
 
     for (let row = y - 1; row <= y + 1; row += 1) {
@@ -76,18 +74,18 @@ export default class WheelClickHandler
         if (cellData[row][col].neighbor > 0) {
           cellData[row][col].visible = cellData[row][col].neighbor;
           cellData[row][col].visited = true;
-          numofExtraCell += 1;
+          countOfExtraCell += 1;
           // eslint-disable-next-line
           continue;
         }
-        numofExtraCell += this.depthFirstSearch({ y: row, x: col });
+        countOfExtraCell += this.depthFirstSearch({ y: row, x: col });
       }
     }
 
     return {
-      render: true,
-      clickBomb: false,
-      removeCell: numofExtraCell,
+      ...gameInfo,
+      extraCell: gameInfo.extraCell - countOfExtraCell,
+      gameClearSuccess: gameInfo.extraCell - countOfExtraCell <= 0,
     };
   }
 

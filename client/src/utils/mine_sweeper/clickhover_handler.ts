@@ -1,12 +1,11 @@
 import {
   Coord,
-  ClickRenderStatus,
-  WheelClickDown,
+  GameInfo,
 } from 'mine-sweeper-type';
 import ClickHandler from './click_handler';
 
 export default class ClickHoverHandler extends ClickHandler {
-  public process(): ClickRenderStatus {
+  public process(gameInfo: GameInfo): GameInfo {
     const { y, x }: Coord = this.coord;
 
     for (let row = y - 1; row <= y + 1; row += 1) {
@@ -22,10 +21,6 @@ export default class ClickHoverHandler extends ClickHandler {
       }
     }
 
-    return {
-      render: true,
-      clickBomb: false,
-      removeCell: 0,
-    };
+    return gameInfo;
   }
 }

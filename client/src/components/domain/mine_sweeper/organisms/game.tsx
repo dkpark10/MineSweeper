@@ -1,12 +1,10 @@
 import React, {
-  useEffect, useRef, useState, useCallback,
+  useEffect, useRef, useState, useCallback, useMemo,
 } from 'react';
 import styled from 'styled-components';
 import {
-  Level,
   Coord,
   CellData,
-  ClickRenderStatus,
   LevelType,
   WheelClickDown,
   GameInfo,
@@ -18,6 +16,7 @@ import ModalContent from './modal_content';
 
 import createClickFactory from '../../../../utils/mine_sweeper/click_factory';
 import CellHandler from '../../../../utils/mine_sweeper/cell_handler';
+import levelList from '../../../../utils/mine_sweeper/level';
 import ClickHoverHandler from '../../../../utils/mine_sweeper/clickhover_handler';
 
 const MineSweeperWrapper = styled.main`
@@ -39,66 +38,45 @@ const BoardWrapper = styled.div<{ row: number, col: number }>`
 
 interface Props {
   level: LevelType;
+  initCells: CellData[][];
 }
 
 export default function MineSweeper({
   level,
+  initCells,
 }: Props) {
-  const levelList: { [key in LevelType]: Level } = {
-    easy: { row: 9, col: 9, countOfMine: 10 },
-    normal: { row: 16, col: 16, countOfMine: 40 },
-    hard: { row: 16, col: 30, countOfMine: 99 },
-  };
-
   const { row, col, countOfMine } = levelList[level];
 
-  const [cellData, setCellData] = useState<CellData[][]>([]);
-
-  const [firstClick, setFirstClick] = useState<boolean>(true);
-  const [countOfFlag, setCountOfFlag] = useState<number>(countOfMine);
-  const [isGameOver, setGameOver] = useState<boolean>(false);
-  const [gameReset, setGameReset] = useState<boolean>(false);
-  const [gameClearSuccess, setGameClearSuccess] = useState<boolean>(false);
-
-  const [wheelClickDown, setWheelClickDown] = useState<WheelClickDown>({
+  const [cellData, setCellData] = useState<CellData[][]>(initCells);
+  const initwheelClickDown: WheelClickDown = useMemo(() => ({
     isWheelClickDown: false,
     prevHoverY: -1,
     prevHoverX: -1,
-  });
+  }), []);
+
+  const initGameInfo: GameInfo = useMemo(() => ({
+    firstClick: true,
+    countOfFlag: countOfMine,
+    isGameOver: false,
+    gameReset: false,
+    gameClearSuccess: false,
+    extraCell: (row * col) - countOfMine,
+  }), [row, col, countOfMine]);
+
+  const [wheelClickDown, setWheelClickDown] = useState<WheelClickDown>(initwheelClickDown);
+  const [gameInfo, setGameInfo] = useState<GameInfo>(initGameInfo);
 
   const beginTime = useRef<number>(0);
   const endTime = useRef<number>(0);
-  const extraCell = useRef<number>(0);
   enum CLICKTYPE { LEFTCLICK = 0, WHEELCLICK, RIGHTCLICK }
 
   useEffect(() => {
-    setCellData(new CellHandler({ row, col }, countOfMine).getCellData());
-    setFirstClick(true);
-    setCountOfFlag(countOfMine);
-    setGameOver(false);
-    setGameClearSuccess(false);
-    setWheelClickDown(() => ({
-      isWheelClickDown: false,
-      prevHoverY: -1,
-      prevHoverX: -1,
-    }));
-
-    extraCell.current = (row * col) - countOfMine;
-  }, [gameReset, row, col, countOfMine]);
-
-  const onFirstClick = (buttonType: number, coord: Coord) => {
-    const { y, x } = coord;
-
-    if (firstClick === true && buttonType === CLICKTYPE.LEFTCLICK) {
-      setFirstClick(false);
-      beginTime.current = new Date().getTime();
-
-      if (cellData[y][x].mine === true) {
-        cellData[y][x].mine = false;
-        setCellData(new CellHandler({ row, col }, countOfMine).getCellData());
-      }
+    if (gameInfo.gameReset === true) {
+      setCellData(new CellHandler({ row, col }, countOfMine).getCellData());
+      setWheelClickDown(initwheelClickDown);
+      setGameInfo(initGameInfo);
     }
-  };
+  }, [gameInfo.gameReset, row, col, countOfMine, initwheelClickDown, initGameInfo]);
 
   // useeffect를 사용하여 액션발행을 하고 GameInfo 컴포넌트의 렌더링을 방해하지 않도록 한다.
   // useeffect의 내부 수행로직은 렌더링이 된 후 수행을 보장한다.
@@ -106,14 +84,10 @@ export default function MineSweeper({
   // 보장한다. 그 후에 GameInfo를 렌더링한다.
   const onWheelClickDown = ({ y, x }: Coord) => {
     const clickHoverHandler = new ClickHoverHandler(cellData, { y, x });
-    const render: ClickRenderStatus = clickHoverHandler
+    clickHoverHandler
       .removePrevHoverCoord(wheelClickDown)
-      .process();
+      .process(gameInfo);
     const newCellData = clickHoverHandler.getCellData();
-
-    if (render.render === false) {
-      return;
-    }
 
     setWheelClickDown((prev) => ({
       ...prev,
@@ -142,6 +116,18 @@ export default function MineSweeper({
     onWheelClickDown({ y, x });
   };
 
+  const onFirstClick = (buttonType: number, coord: Coord) => {
+    const { y, x } = coord;
+
+    if (gameInfo.firstClick === true && buttonType === CLICKTYPE.LEFTCLICK) {
+      beginTime.current = new Date().getTime();
+
+      if (cellData[y][x].mine === true) {
+        setCellData(new CellHandler({ row, col }, 1, [...cellData]).getCellData());
+      }
+    }
+  };
+
   const onCellClickUp = (e: React.MouseEvent<HTMLDivElement>, { y, x }: Coord) => {
     onFirstClick(e.button, { y, x });
     setWheelClickDown((prev) => ({
@@ -150,58 +136,47 @@ export default function MineSweeper({
     }));
 
     const clickController = createClickFactory(e.button, [...cellData], { y, x }, { row, col });
-    const clickResult: ClickRenderStatus = clickController
+    const clickResult: GameInfo = clickController
       .removePrevHoverCoord(wheelClickDown)
-      .process();
+      .process(gameInfo);
+
     const newCellData = clickController.getCellData();
-
-    if (clickResult.render === false) {
-      return;
-    }
-
-    if (e.button === CLICKTYPE.RIGHTCLICK) {
-      if (newCellData[y][x].flaged === true) {
-        setCountOfFlag(countOfFlag - 1);
-      } else {
-        setCountOfFlag(countOfFlag + 1);
-      }
-    }
-
-    // 게임 종료 시
-    if (extraCell.current - clickResult.removeCell <= 0) {
+    if (clickResult.extraCell <= 0) {
       endTime.current = new Date().getTime();
-      setGameOver(true);
-      if (clickResult.clickBomb === false) {
-        setGameClearSuccess(true);
-      }
     }
 
-    extraCell.current -= clickResult.removeCell;
+    setGameInfo(() => ({
+      ...clickResult,
+      isGameOver: clickResult.extraCell <= 0,
+    }));
     setCellData(newCellData);
   };
 
   const clickGameReset = useCallback(() => {
-    setGameReset((prev) => !prev);
+    setGameInfo((prev) => ({
+      ...prev,
+      gameReset: true,
+    }));
   }, []);
 
   return (
     <>
-      {isGameOver
+      {gameInfo.isGameOver
         && (
           <ModalWrapper>
             <ModalContent
               takenTime={endTime.current - beginTime.current}
               level={level}
-              isGameSuccess={gameClearSuccess}
+              isGameSuccess={gameInfo.gameClearSuccess}
               onMouseClick={clickGameReset}
             />
           </ModalWrapper>
         )}
       <MineSweeperWrapper>
         <GameHeader
-          firstClick={firstClick}
-          countOfFlag={countOfFlag}
-          isGameOver={isGameOver}
+          firstClick={gameInfo.firstClick}
+          countOfFlag={gameInfo.countOfFlag}
+          isGameOver={gameInfo.isGameOver}
           gameReset={clickGameReset}
         />
         <BoardWrapper
@@ -212,7 +187,7 @@ export default function MineSweeper({
             <Cell
               key={cell.primaryIndex}
               isLock={cell.visited}
-              value={cell.mine && isGameOver ? '💣' : cell.visible}
+              value={cell.mine && gameInfo.isGameOver ? '💣' : cell.visible}
               isPointerHover={cell.isPointerHover}
               onMouseOver={() => onCellMouseOver({ y, x })}
               onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => onCellClickDown(e, { y, x })}

@@ -4,13 +4,13 @@ import defaultComponent from './default';
 describe('메인 게임 테스트', () => {
   const levelList = {
     easy: {
-      row: 9, col: 9, countOfMine: 10, width: '294',
+      row: 9, col: 9, countOfMine: 10,
     },
     normal: {
-      row: 16, col: 16, countOfMine: 40, width: '444',
+      row: 16, col: 16, countOfMine: 40,
     },
     hard: {
-      row: 16, col: 30, countOfMine: 99, width: '794',
+      row: 16, col: 30, countOfMine: 99,
     },
   };
 
@@ -55,10 +55,14 @@ describe('메인 게임 테스트', () => {
     const { container } = render(defaultComponent());
 
     const cells = container.getElementsByClassName('cell');
-    fireEvent.mouseDown(cells.item(5));
+    fireEvent.mouseUp(cells.item(5), { button: 0 });
 
     // 첫클릭은 폭탄이 아니다
     expect(cells.item(5).textContent).not.toBe('💣');
+    fireEvent.mouseUp(cells.item(4), { button: 0 });
+    if (cells.item(4).textContent === '💣') {
+      expect(cells.item(4).textContent).toBe('💣');
+    }
   });
 
   test('우클릭 테스트', async () => {
@@ -68,18 +72,18 @@ describe('메인 게임 테스트', () => {
 
     const cells = container.getElementsByClassName('cell');
 
-    const currentCountOfFlag = getByText(/🚩/);
+    const currentCountOfFlag = getByText(levelList[level].countOfMine);
     const countOfFlag = levelList[level].countOfMine;
 
-    fireEvent.mouseDown(cells.item(20), { button: 2 });
-    fireEvent.mouseDown(cells.item(21), { button: 2 });
+    fireEvent.mouseUp(cells.item(20), { button: 2 });
+    fireEvent.mouseUp(cells.item(21), { button: 2 });
 
-    expect(currentCountOfFlag.textContent).toBe(` 🚩${countOfFlag - 2} `);
+    expect(currentCountOfFlag.textContent).toBe(`${countOfFlag - 2}`);
 
-    fireEvent.mouseDown(cells.item(20), { button: 2 });
-    fireEvent.mouseDown(cells.item(21), { button: 2 });
+    fireEvent.mouseUp(cells.item(20), { button: 2 });
+    fireEvent.mouseUp(cells.item(21), { button: 2 });
 
-    expect(currentCountOfFlag.textContent).toBe(` 🚩${countOfFlag} `);
+    expect(currentCountOfFlag.textContent).toBe(`${countOfFlag}`);
   });
 
   test('타이머 테스트', async () => {
