@@ -1,20 +1,24 @@
-import { Coord, ClickRenderStatus } from 'mine-sweeper-type';
+import {
+  Coord,
+  ClickRenderStatus,
+  WheelClickDown,
+} from 'mine-sweeper-type';
 import ClickHandler from './click_handler';
 
 export default class ClickHoverHandler extends ClickHandler {
   public process(): ClickRenderStatus {
     const { y, x }: Coord = this.coord;
 
-    for (let i = y - 1; i <= y + 1; i += 1) {
-      for (let j = x - 1; j <= x + 1; j += 1) {
-        if (this.checkOutRange(i, j)
-          || this.cellData[i][j].visited === true
-          || this.cellData[i][j].flaged === true) {
+    for (let row = y - 1; row <= y + 1; row += 1) {
+      for (let col = x - 1; col <= x + 1; col += 1) {
+        if (this.checkOutRange(row, col)
+          || this.cellData[row][col].visited === true
+          || this.cellData[row][col].flaged === true) {
           // eslint-disable-next-line
           continue;
         }
 
-        this.cellData[i][j].isPointerHover = true;
+        this.cellData[row][col].isPointerHover = true;
       }
     }
 

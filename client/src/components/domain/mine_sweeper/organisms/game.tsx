@@ -8,6 +8,8 @@ import {
   CellData,
   ClickRenderStatus,
   LevelType,
+  WheelClickDown,
+  GameInfo,
 } from 'mine-sweeper-type';
 import Cell from '../atoms/cell';
 import GameHeader from '../molecules/game_header';
@@ -54,48 +56,46 @@ export default function MineSweeper({
 
   const [firstClick, setFirstClick] = useState<boolean>(true);
   const [countOfFlag, setCountOfFlag] = useState<number>(countOfMine);
-  const [extraCell, setExtraCell] = useState<number>((row * col) - countOfMine);
   const [isGameOver, setGameOver] = useState<boolean>(false);
   const [gameReset, setGameReset] = useState<boolean>(false);
-  const [wheelClickDown, setWheelClickDown] = useState<boolean>(false);
   const [gameClearSuccess, setGameClearSuccess] = useState<boolean>(false);
+
+  const [wheelClickDown, setWheelClickDown] = useState<WheelClickDown>({
+    isWheelClickDown: false,
+    prevHoverY: -1,
+    prevHoverX: -1,
+  });
 
   const beginTime = useRef<number>(0);
   const endTime = useRef<number>(0);
-  const LEFTCLICK = 0;
-  const WHEELCLICK = 1;
-  const RIGHTLICK = 2;
+  const extraCell = useRef<number>(0);
+  enum CLICKTYPE { LEFTCLICK = 0, WHEELCLICK, RIGHTCLICK }
 
   useEffect(() => {
-    const init: CellData[][] = Array.from({ length: row }, (v1, y) => (
-      Array.from({ length: col }, (v2, x) => ({
-        primaryIndex: (y * row) + x,
-        mine: false,
-        neighbor: 0,
-        visited: false,
-        flaged: false,
-        visible: ' ',
-        isPointerHover: false,
-      }))));
-
-    setCellData(new CellHandler(init, { row, col }, countOfMine).getCellData());
+    setCellData(new CellHandler({ row, col }, countOfMine).getCellData());
     setFirstClick(true);
     setCountOfFlag(countOfMine);
-    setExtraCell((row * col) - countOfMine);
     setGameOver(false);
     setGameClearSuccess(false);
+    setWheelClickDown(() => ({
+      isWheelClickDown: false,
+      prevHoverY: -1,
+      prevHoverX: -1,
+    }));
+
+    extraCell.current = (row * col) - countOfMine;
   }, [gameReset, row, col, countOfMine]);
 
   const onFirstClick = (buttonType: number, coord: Coord) => {
     const { y, x } = coord;
 
-    if (firstClick === true && buttonType === LEFTCLICK) {
+    if (firstClick === true && buttonType === CLICKTYPE.LEFTCLICK) {
       setFirstClick(false);
       beginTime.current = new Date().getTime();
 
       if (cellData[y][x].mine === true) {
         cellData[y][x].mine = false;
-        setCellData(new CellHandler([...cellData], { row, col }, 1).getCellData());
+        setCellData(new CellHandler({ row, col }, countOfMine).getCellData());
       }
     }
   };
@@ -104,44 +104,63 @@ export default function MineSweeper({
   // useeffect의 내부 수행로직은 렌더링이 된 후 수행을 보장한다.
   // 그럼으로 setFlag액션을 발행하면 Board가 렌더링이 되었다는 것을
   // 보장한다. 그 후에 GameInfo를 렌더링한다.
-  const onCellClickDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.button !== WHEELCLICK) {
-      return;
-    }
-
-    setWheelClickDown(true);
-  };
-
-  const onCellMouseOver = ({ y, x }: Coord) => {
-    if (wheelClickDown === false) {
-      return;
-    }
-
+  const onWheelClickDown = ({ y, x }: Coord) => {
     const clickHoverHandler = new ClickHoverHandler(cellData, { y, x });
-    const render: ClickRenderStatus = clickHoverHandler.process();
+    const render: ClickRenderStatus = clickHoverHandler
+      .removePrevHoverCoord(wheelClickDown)
+      .process();
     const newCellData = clickHoverHandler.getCellData();
 
     if (render.render === false) {
       return;
     }
 
+    setWheelClickDown((prev) => ({
+      ...prev,
+      prevHoverY: y,
+      prevHoverX: x,
+    }));
     setCellData(newCellData);
+  };
+
+  const onCellClickDown = (e: React.MouseEvent<HTMLDivElement>, { y, x }: Coord) => {
+    if (e.button !== CLICKTYPE.WHEELCLICK) {
+      return;
+    }
+
+    setWheelClickDown((prev) => ({
+      ...prev,
+      isWheelClickDown: true,
+    }));
+    onWheelClickDown({ y, x });
+  };
+
+  const onCellMouseOver = ({ y, x }: Coord) => {
+    if (wheelClickDown.isWheelClickDown === false) {
+      return;
+    }
+    onWheelClickDown({ y, x });
   };
 
   const onCellClickUp = (e: React.MouseEvent<HTMLDivElement>, { y, x }: Coord) => {
     onFirstClick(e.button, { y, x });
-    setWheelClickDown(false);
+    setWheelClickDown((prev) => ({
+      ...prev,
+      isWheelClickDown: false,
+    }));
 
     const clickController = createClickFactory(e.button, [...cellData], { y, x }, { row, col });
-    const clickResult: ClickRenderStatus = clickController.process();
+    const clickResult: ClickRenderStatus = clickController
+      .removePrevHoverCoord(wheelClickDown)
+      .process();
     const newCellData = clickController.getCellData();
 
     if (clickResult.render === false) {
       return;
     }
 
-    if (e.button === RIGHTLICK) {
-      if (newCellData[y][x].flaged) {
+    if (e.button === CLICKTYPE.RIGHTCLICK) {
+      if (newCellData[y][x].flaged === true) {
         setCountOfFlag(countOfFlag - 1);
       } else {
         setCountOfFlag(countOfFlag + 1);
@@ -149,7 +168,7 @@ export default function MineSweeper({
     }
 
     // 게임 종료 시
-    if (extraCell - clickResult.removeCell <= 0) {
+    if (extraCell.current - clickResult.removeCell <= 0) {
       endTime.current = new Date().getTime();
       setGameOver(true);
       if (clickResult.clickBomb === false) {
@@ -157,7 +176,7 @@ export default function MineSweeper({
       }
     }
 
-    setExtraCell(extraCell - clickResult.removeCell);
+    extraCell.current -= clickResult.removeCell;
     setCellData(newCellData);
   };
 
@@ -196,7 +215,7 @@ export default function MineSweeper({
               value={cell.mine && isGameOver ? '💣' : cell.visible}
               isPointerHover={cell.isPointerHover}
               onMouseOver={() => onCellMouseOver({ y, x })}
-              onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => onCellClickDown(e)}
+              onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => onCellClickDown(e, { y, x })}
               onMouseUp={(e: React.MouseEvent<HTMLDivElement>) => onCellClickUp(e, { y, x })}
               onContextMenu={(e: React.MouseEvent<HTMLDivElement>) => e.preventDefault()}
             />

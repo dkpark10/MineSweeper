@@ -40,5 +40,11 @@ declare module 'mine-sweeper-type' {
     removeCell: number;
   }
 
+  export interface WheelClickDown {
+    isWheelClickDown: boolean;
+    prevHoverY: number;
+    prevHoverX: number;
+  }
+
   export type LevelType = 'easy' | 'normal' | 'hard';
 }

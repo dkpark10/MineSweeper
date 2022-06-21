@@ -7,10 +7,19 @@ export default class CellHandler {
 
   private readonly countOfMine: number;
 
-  constructor(cd: CellData[][], bs: BoardSize, cntMine: number) {
-    this.cellData = cd;
+  constructor(bs: BoardSize, cntMine: number) {
     this.boardSize = bs;
     this.countOfMine = cntMine;
+    this.cellData = Array.from({ length: bs.row }, (v1, y) => (
+      Array.from({ length: bs.col }, (v2, x) => ({
+        primaryIndex: (y * bs.row) + x,
+        mine: false,
+        neighbor: 0,
+        visited: false,
+        flaged: false,
+        visible: ' ',
+        isPointerHover: false,
+      }))));
 
     this.plantMine();
     this.getNeighbor();

@@ -34,16 +34,16 @@ export default class WheelClickHandler
     let numofHit = 0;
     let numofAroundFlag = 0;
 
-    for (let i = y - 1; i <= y + 1; i += 1) {
-      for (let j = x - 1; j <= x + 1; j += 1) {
-        if (this.checkOutRange(i, j)) {
+    for (let row = y - 1; row <= y + 1; row += 1) {
+      for (let col = x - 1; col <= x + 1; col += 1) {
+        if (this.checkOutRange(row, col)) {
           // eslint-disable-next-line
           continue;
         }
-        if (cellData[i][j].flaged === true) {
+        if (cellData[row][col].flaged === true) {
           numofAroundFlag += 1;
         }
-        if (this.isFlagonMine(i, j)) {
+        if (this.isFlagonMine(row, col)) {
           numofHit += 1;
         }
       }
@@ -63,24 +63,24 @@ export default class WheelClickHandler
       return noRender;
     }
 
-    for (let i = y - 1; i <= y + 1; i += 1) {
-      for (let j = x - 1; j <= x + 1; j += 1) {
-        if (this.checkOutRange(i, j)) {
+    for (let row = y - 1; row <= y + 1; row += 1) {
+      for (let col = x - 1; col <= x + 1; col += 1) {
+        if (this.checkOutRange(row, col)) {
           // eslint-disable-next-line
           continue;
         }
-        if (cellData[i][j].flaged === true || cellData[i][j].visited === true) {
+        if (cellData[row][col].flaged === true || cellData[row][col].visited === true) {
           // eslint-disable-next-line
           continue;
         }
-        if (cellData[i][j].neighbor > 0) {
-          cellData[i][j].visible = cellData[i][j].neighbor;
-          cellData[i][j].visited = true;
+        if (cellData[row][col].neighbor > 0) {
+          cellData[row][col].visible = cellData[row][col].neighbor;
+          cellData[row][col].visited = true;
           numofExtraCell += 1;
           // eslint-disable-next-line
           continue;
         }
-        numofExtraCell += this.depthFirstSearch({ y: i, x: j });
+        numofExtraCell += this.depthFirstSearch({ y: row, x: col });
       }
     }
 

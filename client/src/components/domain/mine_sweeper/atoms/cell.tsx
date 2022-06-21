@@ -21,15 +21,20 @@ const CellStyle = styled.div<Partial<Props>>`
   display: inline-block;
   border-radius: 2px;
   position: relative;
+  box-shadow: inset 2px 2px 0.5px #303030,
+          inset -1px -1px 0.5px #484848;
 
-  ${({ isLock }) => (isLock === true
-    ? `background: #3b3b3b;
-          box-shadow: inset 2px 2px 0.5px #303030,
-          inset -1px -1px 0.5px #484848;`
-    : `background: #4e4e50;
-          box-shadow: inset 2px 2px 5px #464649,
-          inset -1px -1px 0.5px #6e6e73;`)}
+  ${({ isLock, isPointerHover }) => {
+    if (isLock === true) {
+      return 'background: #3b3b3b';
+    }
+    if (isPointerHover === true) {
+      return 'background: #717180';
+    }
 
+    return 'background: #4e4e50';
+  }};
+          
   &:hover{
     ${({ isLock }) => (isLock ? '' : 'background-color: #717180')};
   }
