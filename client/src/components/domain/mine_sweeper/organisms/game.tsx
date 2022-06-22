@@ -82,7 +82,7 @@ export default function MineSweeper({
   // useeffect의 내부 수행로직은 렌더링이 된 후 수행을 보장한다.
   // 그럼으로 setFlag액션을 발행하면 Board가 렌더링이 되었다는 것을
   // 보장한다. 그 후에 GameInfo를 렌더링한다.
-  const onWheelClickDown = ({ y, x }: Coord) => {
+  const onWheelClickOver = ({ y, x }: Coord) => {
     const clickHoverHandler = new ClickHoverHandler(cellData, { y, x });
     clickHoverHandler
       .removePrevHoverCoord(wheelClickDown)
@@ -106,14 +106,14 @@ export default function MineSweeper({
       ...prev,
       isWheelClickDown: true,
     }));
-    onWheelClickDown({ y, x });
+    onWheelClickOver({ y, x });
   };
 
   const onCellMouseOver = ({ y, x }: Coord) => {
     if (wheelClickDown.isWheelClickDown === false) {
       return;
     }
-    onWheelClickDown({ y, x });
+    onWheelClickOver({ y, x });
   };
 
   const onFirstClick = (buttonType: number, coord: Coord) => {
