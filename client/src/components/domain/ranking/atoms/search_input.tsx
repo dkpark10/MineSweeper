@@ -56,7 +56,7 @@ export default function UserSearchInput({
             onChange={setValue}
           />
           <Button
-            width='20%'
+            width='18%'
             height='100%'
             backgroundColor='white'
           >
