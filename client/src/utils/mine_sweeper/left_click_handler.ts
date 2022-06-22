@@ -1,34 +1,28 @@
-import { Coord, ClickRenderStatus } from 'mine-sweeper-type';
-import ClickHandler from './click_handler';
+import {
+  Coord,
+  GameInfo,
+} from 'mine-sweeper-type';
+import ClickLeftOrWheelHandler from './click_leftorwheel_handler';
 
-const noRender: ClickRenderStatus = {
-  render: false,
-  clickBomb: false,
-  removeCell: 0,
-};
-
-class LeftClickHandler extends ClickHandler {
-  public process(): ClickRenderStatus {
+export default class LeftClickHandler extends ClickLeftOrWheelHandler {
+  public process(gameInfo: GameInfo): GameInfo {
     const { y, x }: Coord = this.coord;
     const { cellData } = this;
 
-    // 방문한 곳은 클릭할 수 없다.
-    if (cellData[y][x].visited === true) {
-      return noRender;
-    }
-
-    // 깃발은 클릭할 수 없다.
-    if (cellData[y][x].flaged === true) {
-      return noRender;
+    // 방문한 곳 or 깃발
+    if (cellData[y][x].visited === true
+      || cellData[y][x].flaged === true) {
+      return gameInfo;
     }
 
     // 지뢰면 게임오버다.
     if (cellData[y][x].mine === true) {
       cellData[y][x].visible = '💣';
       return {
-        render: true,
-        clickBomb: true,
-        removeCell: 987654321,
+        ...gameInfo,
+        extraCell: 0,
+        gameClearSuccess: false,
+        isGameOver: true,
       };
     }
 
@@ -36,21 +30,21 @@ class LeftClickHandler extends ClickHandler {
     if (cellData[y][x].neighbor > 0) {
       cellData[y][x].visible = cellData[y][x].neighbor;
       cellData[y][x].visited = true;
+
       return {
-        render: true,
-        clickBomb: false,
-        removeCell: 1,
+        ...gameInfo,
+        firstClick: false,
+        extraCell: gameInfo.extraCell - 1,
       };
     }
 
     const numofRemoveCell: number = this.depthFirstSearch({ y, x });
 
     return {
-      render: true,
-      clickBomb: false,
-      removeCell: numofRemoveCell,
+      ...gameInfo,
+      firstClick: false,
+      extraCell: gameInfo.extraCell - numofRemoveCell,
+      gameClearSuccess: gameInfo.extraCell - numofRemoveCell <= 0,
     };
   }
 }
-
-export default LeftClickHandler;

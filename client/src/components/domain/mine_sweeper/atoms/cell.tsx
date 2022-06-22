@@ -1,14 +1,17 @@
 import React, { ReactText } from 'react';
 import styled from 'styled-components';
-import Image from '../../../common/atoms/image';
 import flagimage from '../../../../assets/flag.png';
 import { AbsoluteCenterWrapper } from '../../../common/atoms/wrapper';
+import Image from '../../../common/atoms/image';
 
 interface Props {
   value: ReactText;
   isLock: boolean;
+  onMouseOver: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown: React.MouseEventHandler<HTMLDivElement>;
+  onMouseUp: React.MouseEventHandler<HTMLDivElement>;
   onContextMenu: React.MouseEventHandler<HTMLDivElement>;
+  isPointerHover: boolean;
 }
 
 const CellStyle = styled.div<Partial<Props>>`
@@ -18,15 +21,20 @@ const CellStyle = styled.div<Partial<Props>>`
   display: inline-block;
   border-radius: 2px;
   position: relative;
+  box-shadow: inset 2px 2px 0.5px #303030,
+          inset -1px -1px 0.5px #484848;
 
-  ${({ isLock }) => (isLock === true
-    ? `background: #3b3b3b;
-          box-shadow: inset 2px 2px 0.5px #303030,
-          inset -1px -1px 0.5px #484848;`
-    : `background: #4e4e50;
-          box-shadow: inset 2px 2px 5px #464649,
-          inset -1px -1px 0.5px #6e6e73;`)}
+  ${({ isLock, isPointerHover }) => {
+    if (isLock === true) {
+      return 'background: #3b3b3b';
+    }
+    if (isPointerHover === true) {
+      return 'background: #717180';
+    }
 
+    return 'background: #4e4e50';
+  }};
+          
   &:hover{
     ${({ isLock }) => (isLock ? '' : 'background-color: #717180')};
   }
@@ -43,8 +51,11 @@ const CellTextStyle = styled(AbsoluteCenterWrapper) <{
 export default function Cell({
   isLock,
   value,
+  onMouseOver,
   onMouseDown,
+  onMouseUp,
   onContextMenu,
+  isPointerHover,
 }: Props) {
   const colorofButtonNumber: string[] = [
     '',
@@ -62,8 +73,11 @@ export default function Cell({
     <CellStyle
       className='cell'
       isLock={isLock}
+      onMouseOver={onMouseOver}
       onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
       onContextMenu={onContextMenu}
+      isPointerHover={isPointerHover}
     >
       {value === 'flag'
         ? (
@@ -72,7 +86,7 @@ export default function Cell({
               width='100%'
               height='100%'
               src={flagimage}
-              alt='깃발'
+              alt='flag'
             />
           </AbsoluteCenterWrapper>
         )

@@ -1,30 +1,28 @@
-import { Coord, ClickRenderStatus } from 'mine-sweeper-type';
+import {
+  Coord,
+  GameInfo,
+} from 'mine-sweeper-type';
 import ClickHandler from './click_handler';
 
-class RightClickHandler extends ClickHandler {
-  public process(): ClickRenderStatus {
+export default class RightClickHandler extends ClickHandler {
+  public process(gameInfo: GameInfo): GameInfo {
     const { cellData } = this;
     const { y, x }: Coord = this.coord;
 
     if (cellData[y][x].visited === true
       && (cellData[y][x].neighbor > 0
         || cellData[y][x].neighbor <= 0)) {
-      return {
-        render: false,
-        clickBomb: false,
-        removeCell: 0,
-      };
+      return gameInfo;
     }
 
     cellData[y][x].flaged = !cellData[y][x].flaged;
     cellData[y][x].visible = cellData[y][x].flaged === true ? 'flag' : ' ';
 
     return {
-      render: true,
-      clickBomb: false,
-      removeCell: 0,
+      ...gameInfo,
+      countOfFlag: cellData[y][x].flaged
+        ? gameInfo.countOfFlag - 1
+        : gameInfo.countOfFlag + 1,
     };
   }
 }
-
-export default RightClickHandler;

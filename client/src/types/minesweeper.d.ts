@@ -12,6 +12,16 @@ declare module 'mine-sweeper-type' {
     visited: boolean;
     flaged: boolean;
     visible: number | string;
+    isPointerHover: boolean;
+  }
+
+  export interface GameInfo {
+    firstClick: boolean;
+    countOfFlag: number;
+    extraCell: number;
+    isGameOver: boolean;
+    gameReset: boolean;
+    gameClearSuccess: boolean;
   }
 
   export interface Coord {
@@ -24,10 +34,10 @@ declare module 'mine-sweeper-type' {
     col: number
   }
 
-  export interface ClickRenderStatus {
-    render: boolean;
-    clickBomb: boolean;
-    removeCell: number;
+  export interface WheelClickDown {
+    isWheelClickDown: boolean;
+    prevHoverY: number;
+    prevHoverX: number;
   }
 
   export type LevelType = 'easy' | 'normal' | 'hard';
