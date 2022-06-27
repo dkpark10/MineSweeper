@@ -13,9 +13,12 @@ const useLocalStorage = (
   validator: (val: string) => boolean,
 ): ReturnType => {
   const [localValue, setLocalValue] = useState<string | null>(localStorage.getItem(key));
-  if (!localValue || validator(localValue as string) === false) {
+  if (!localValue || validator(localValue) === false) {
+    localStorage.setItem(key, defaultValue);
     setLocalValue(defaultValue);
+    return [defaultValue, setLocalValue];
   }
+
   return [localValue, setLocalValue];
 };
 

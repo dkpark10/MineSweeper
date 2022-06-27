@@ -42,12 +42,10 @@ function DefaultComponents() {
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <App>
-            <MineSweeper>
-              <Game
-                level={level}
-                initCells={initCells}
-              />
-            </MineSweeper>
+            <Game
+              level={level}
+              initCells={initCells}
+            />
           </App>
         </ThemeProvider>
       </Provider>
