@@ -14,55 +14,22 @@ describe('메인 게임 테스트', () => {
     },
   };
 
-  test('쉬움 난이도 테스트', async () => {
-    global.localStorage.setItem('difficulty', 'easy');
-    const level = global.localStorage.getItem('difficulty');
-
-    const { container } = render(defaultComponent());
-
-    await waitFor(() => {
-      const cells = container.getElementsByClassName('cell');
-      expect(cells.length).toBe(levelList[level].row * levelList[level].col);
-    });
-  });
-
-  test('보통 길이 테스트', async () => {
-    global.localStorage.setItem('difficulty', 'normal');
-    const level = global.localStorage.getItem('difficulty');
-
-    const { container } = render(defaultComponent());
-
-    await waitFor(() => {
-      const cells = container.getElementsByClassName('cell');
-      expect(cells.length).toBe(levelList[level].row * levelList[level].col);
-    });
-  });
-
-  test('어려움 길이 테스트', async () => {
-    global.localStorage.setItem('difficulty', 'hard');
-    const level = global.localStorage.getItem('difficulty');
-
-    const { container } = render(defaultComponent());
-
-    await waitFor(() => {
-      const cells = container.getElementsByClassName('cell');
-      expect(cells.length).toBe(levelList[level].row * levelList[level].col);
-    });
-  });
-
   test('첫 클릭 폭탄 테스트', async () => {
     global.localStorage.setItem('difficulty', 'easy');
     const { container } = render(defaultComponent());
 
     const cells = container.getElementsByClassName('cell');
-    fireEvent.mouseUp(cells.item(5), { button: 0 });
+    await waitFor(() => {
+      fireEvent.mouseUp(cells.item(5), { button: 0 });
 
-    // 첫클릭은 폭탄이 아니다
-    expect(cells.item(5).textContent).not.toBe('💣');
-    fireEvent.mouseUp(cells.item(4), { button: 0 });
-    if (cells.item(4).textContent === '💣') {
-      expect(cells.item(4).textContent).toBe('💣');
-    }
+      // 첫클릭은 폭탄이 아니다
+      expect(cells.item(5).textContent).not.toBe('💣');
+      fireEvent.mouseUp(cells.item(4), { button: 0 });
+
+      if (cells.item(4).textContent === '💣') {
+        expect(cells.item(4).textContent).toBe('💣');
+      }
+    });
   });
 
   test('우클릭 테스트', async () => {
