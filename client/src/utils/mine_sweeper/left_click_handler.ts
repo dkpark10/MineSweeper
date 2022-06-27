@@ -26,7 +26,6 @@ export default class LeftClickHandler extends ClickLeftOrWheelHandler {
       };
     }
 
-    // 주위 연쇄충돌
     if (cellData[y][x].neighbor > 0) {
       cellData[y][x].visible = cellData[y][x].neighbor;
       cellData[y][x].visited = true;
@@ -35,6 +34,7 @@ export default class LeftClickHandler extends ClickLeftOrWheelHandler {
         ...gameInfo,
         firstClick: false,
         extraCell: gameInfo.extraCell - 1,
+        gameClearSuccess: gameInfo.extraCell - 1 <= 0,
       };
     }
 
