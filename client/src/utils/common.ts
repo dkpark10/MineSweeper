@@ -63,3 +63,14 @@ export const calculNextButtonBeginPage = ({
     ? lastPage
     : currentPage + countPageShow
 );
+
+export const getCount = (count: number) => {
+  if (count < 10) {
+    return `00${count}`;
+  } if (count >= 10 && count < 100) {
+    return `0${count}`;
+  } if (count >= 100 && count <= 999) {
+    return `${count}`;
+  }
+  return '999';
+};

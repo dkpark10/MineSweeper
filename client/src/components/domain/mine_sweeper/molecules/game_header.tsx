@@ -10,6 +10,7 @@ import {
   Image,
   Button,
 } from '../../../common/atoms/index';
+import { getCount } from '../../../../utils/common';
 
 interface Props {
   firstClick: boolean;
@@ -44,17 +45,6 @@ export default function GameHeader({
   isGameOver,
 }: Props) {
   const [count, setCount] = useState<number>(0);
-
-  const getCount = (time: number): string => {
-    if (time < 10) {
-      return `00${time}`;
-    } if (time >= 10 && time < 100) {
-      return `0${time}`;
-    } if (time >= 100 && time <= 999) {
-      return `${time}`;
-    }
-    return '999';
-  };
 
   useInterval(() => {
     if (firstClick === false && isGameOver === false) {

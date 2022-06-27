@@ -13,22 +13,21 @@ import MineSweeper from '../components/domain/mine_sweeper/page/index';
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware()));
 
 function DefaultComponents() {
-  const levelList = {
-    easy: {
-      row: 9, col: 9, countOfMine: 10,
-    },
-    normal: {
-      row: 16, col: 16, countOfMine: 40,
-    },
-    hard: {
-      row: 16, col: 30, countOfMine: 99,
-    },
-  };
+  return (
+    <BrowserRouter>
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <App />
+        </ThemeProvider>
+      </Provider>
+    </BrowserRouter>
+  );
+}
 
-  const level = global.localStorage.getItem('difficulty');
-  const initCells = Array.from({ length: levelList[level].row }, (v1, y) => (
-    Array.from({ length: levelList[level].col }, (v2, x) => ({
-      primaryIndex: (y * levelList[level].row) + x,
+export const gameRender = () => {
+  const initCells = Array.from({ length: 9 }, (v1, y) => (
+    Array.from({ length: 9 }, (v2, x) => ({
+      primaryIndex: (y * 9) + x,
       mine: y === 0,
       neighbor: 0,
       visited: false,
@@ -38,19 +37,11 @@ function DefaultComponents() {
     }))));
 
   return (
-    <BrowserRouter>
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <App>
-            <Game
-              level={level}
-              initCells={initCells}
-            />
-          </App>
-        </ThemeProvider>
-      </Provider>
-    </BrowserRouter>
+    <Game
+      level='easy'
+      initCells={initCells}
+    />
   );
-}
+};
 
 export default DefaultComponents;

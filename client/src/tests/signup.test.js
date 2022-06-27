@@ -15,33 +15,34 @@ describe('회원가입 입력 검증 테스트', () => {
 
     fireEvent.change(inputId, { target: { value: 'asd' } });
     await waitFor(() => {
-      const failMessage = container.querySelector('#invalid_id');
+      const failMessage = getByText(invalidMessage.id[0]);
       expect(failMessage.textContent).toBe(invalidMessage.id[0]);
     });
 
     fireEvent.change(inputEmail, { target: { value: 'asd' } });
     await waitFor(() => {
-      const failMessage = container.querySelector('#invalid_email');
+      const failMessage = getByText(invalidMessage.email[0]);
       expect(failMessage.textContent).toBe(invalidMessage.email[0]);
     });
   });
 
   test('비밀번호 입력 검증', async () => {
-    const { container } = render(defaultComponent());
+    const { container, getByText } = render(defaultComponent());
 
     const inputPassword = container.querySelector('#password');
     const inputRepeatPassword = container.querySelector('#repeat-password');
 
     fireEvent.change(inputPassword, { target: { value: 'asd' } });
     await waitFor(() => {
-      const failMessage = container.querySelector('#invalid_password');
+      const failMessage = getByText(invalidMessage.password);
       expect(failMessage.textContent).toBe(invalidMessage.password);
     });
 
     fireEvent.change(inputPassword, { target: { value: 'abc123456' } });
     fireEvent.change(inputRepeatPassword, { target: { value: '123456' } });
+
     await waitFor(() => {
-      const failMessage = container.querySelector('#invalid_repeat_password');
+      const failMessage = getByText(invalidMessage.repeatPassword);
       expect(failMessage.textContent).toBe(invalidMessage.repeatPassword);
     });
   });

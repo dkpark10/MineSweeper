@@ -27,4 +27,12 @@ describe('타일 길이 테스트', () => {
     const cells = container.getElementsByClassName('cell');
     expect(cells.length).toBe(16 * 30);
   });
+
+  test('유효하지 않은 키값 테스트', async () => {
+    global.localStorage.setItem('difficulty', 'voejsojesojeowqlmdf');
+    const { container } = render(defaultComponent());
+
+    const cells = container.getElementsByClassName('cell');
+    expect(cells.length).toBe(9 * 9);
+  });
 });

@@ -149,6 +149,7 @@ export default function MineSweeper({
       ...clickResult,
       isGameOver: clickResult.extraCell <= 0,
     }));
+
     setCellData(newCellData);
   };
 

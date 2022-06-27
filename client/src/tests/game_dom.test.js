@@ -1,5 +1,7 @@
+import '@testing-library/jest-dom/extend-expect';
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import defaultComponent from './default';
+import defaultComponent, { gameRender } from './default';
+import { getCount } from '../utils/common';
 
 describe('메인 게임 테스트', () => {
   const levelList = {
@@ -14,22 +16,27 @@ describe('메인 게임 테스트', () => {
     },
   };
 
-  test('첫 클릭 폭탄 테스트', async () => {
+  test('폭탄 클릭 테스트', async () => {
     global.localStorage.setItem('difficulty', 'easy');
-    const { container } = render(defaultComponent());
+    const { container, getByText } = render(defaultComponent());
 
     const cells = container.getElementsByClassName('cell');
     await waitFor(() => {
-      fireEvent.mouseUp(cells.item(5), { button: 0 });
+      fireEvent.mouseUp(cells.item(0), { button: 0 });
 
       // 첫클릭은 폭탄이 아니다
       expect(cells.item(5).textContent).not.toBe('💣');
-      fireEvent.mouseUp(cells.item(4), { button: 0 });
-
-      if (cells.item(4).textContent === '💣') {
-        expect(cells.item(4).textContent).toBe('💣');
-      }
     });
+
+    for (let i = 1; i < 81; i += 1) {
+      fireEvent.mouseUp(cells.item(i), { button: 0 });
+      if (cells.item(i).textContent === '💣') {
+        break;
+      }
+    }
+
+    const modal = getByText('실패');
+    expect(modal).toBeInTheDocument();
   });
 
   test('우클릭 테스트', async () => {
@@ -54,17 +61,6 @@ describe('메인 게임 테스트', () => {
   });
 
   test('타이머 테스트', async () => {
-    const getCount = (count) => {
-      if (count < 10) {
-        return `00${count}`;
-      } if (count >= 10 && count < 100) {
-        return `0${count}`;
-      } if (count >= 100 && count <= 999) {
-        return `${count}`;
-      }
-      return '999';
-    };
-
     expect(getCount(4)).toBe('004');
     expect(getCount(53)).toBe('053');
     expect(getCount(834)).toBe('834');
