@@ -48,7 +48,7 @@ export default function Post({
   const { postid } = match.params;
   const { state: { page } } = useLocation<State>();
   const [response] = useAxios<PostProps[]>(`/api/posts?page=${page}`, []);
-  const widthRatio = ['68%', '20%', '12%'];
+  const widthRatio = ['64%', '20%', '16%'];
 
   return (
     <>

@@ -81,14 +81,14 @@ export default function PostCardItem({
       </PostItem>
       <PostItem
         width={widthRatio[1]}
-        fontSize='0.75rem'
+        fontSize='0.68rem'
         center={false}
       >
         {author}
       </PostItem>
       <PostItem
         width={widthRatio[2]}
-        fontSize='0.75rem'
+        fontSize='0.68rem'
         center={false}
       >
         {date}

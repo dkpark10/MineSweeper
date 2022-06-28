@@ -29,7 +29,7 @@ export const DefaultBulletinWrapper = styled.main`
 
   @media screen and (${({ theme }) => theme.mobile}){
     width:100vw;
-    height: 100vh;
+    padding:0px;
   }
 `;
 
