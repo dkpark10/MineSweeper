@@ -143,16 +143,15 @@ export default function SignUp({ history }: RouteComponentProps) {
         </Link>
         <form onSubmit={submintHandler}>
           <div>
-            <Label htmlFor='id'>
-              <Input
-                type='text'
-                placeholder='아이디'
-                name='id'
-                id='id'
-                value={value.id}
-                onChange={changeValue}
-              />
-            </Label>
+            <Label htmlFor='id' />
+            <Input
+              type='text'
+              placeholder='아이디'
+              name='id'
+              id='id'
+              value={value.id}
+              onChange={changeValue}
+            />
             <WarningMessage
               show={validator.id.result === false && value.id.length > 0}
             >
@@ -160,16 +159,15 @@ export default function SignUp({ history }: RouteComponentProps) {
             </WarningMessage>
           </div>
           <div>
-            <Label htmlFor='email'>
-              <Input
-                type='eamil'
-                placeholder='이메일'
-                name='email'
-                id='email'
-                value={value.email}
-                onChange={changeValue}
-              />
-            </Label>
+            <Label htmlFor='email' />
+            <Input
+              type='eamil'
+              placeholder='이메일'
+              name='email'
+              id='email'
+              value={value.email}
+              onChange={changeValue}
+            />
             <WarningMessage
               show={validator.email.result === false && value.email.length > 0}
             >
@@ -177,16 +175,15 @@ export default function SignUp({ history }: RouteComponentProps) {
             </WarningMessage>
           </div>
           <div>
-            <Label htmlFor='password'>
-              <Input
-                type='password'
-                placeholder='비밀번호'
-                name='password'
-                id='password'
-                value={value.password}
-                onChange={changeValue}
-              />
-            </Label>
+            <Label htmlFor='password' />
+            <Input
+              type='password'
+              placeholder='비밀번호'
+              name='password'
+              id='password'
+              value={value.password}
+              onChange={changeValue}
+            />
             <WarningMessage
               show={validator.password.result === false && value.password.length > 0}
             >
@@ -194,16 +191,15 @@ export default function SignUp({ history }: RouteComponentProps) {
             </WarningMessage>
           </div>
           <div>
-            <Label htmlFor='repeat-password'>
-              <Input
-                type='password'
-                placeholder='비밀번호 확인'
-                name='repeatPassword'
-                id='repeat-password'
-                value={value.repeatPassword}
-                onChange={changeValue}
-              />
-            </Label>
+            <Label htmlFor='repeat password' />
+            <Input
+              type='password'
+              placeholder='비밀번호 확인'
+              name='repeatPassword'
+              id='repeat-password'
+              value={value.repeatPassword}
+              onChange={changeValue}
+            />
             <WarningMessage
               show={validator.repeatPassword.result === false && value.repeatPassword.length > 0}
             >

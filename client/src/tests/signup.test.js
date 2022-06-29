@@ -4,14 +4,14 @@ import { invalidMessage } from '../utils/static_data';
 
 describe('회원가입 입력 검증 테스트', () => {
   test('아이디 이메일 입력 검증', async () => {
-    const { container, getByText } = render(defaultComponent());
+    const { getByText, getByPlaceholderText } = render(defaultComponent());
 
     await waitFor(() => {
       fireEvent.click(getByText('회원가입'));
     });
 
-    const inputId = container.querySelector('#id');
-    const inputEmail = container.querySelector('#email');
+    const inputId = getByPlaceholderText('아이디');
+    const inputEmail = getByPlaceholderText('이메일');
 
     fireEvent.change(inputId, { target: { value: 'asd' } });
     await waitFor(() => {
@@ -27,10 +27,10 @@ describe('회원가입 입력 검증 테스트', () => {
   });
 
   test('비밀번호 입력 검증', async () => {
-    const { container, getByText } = render(defaultComponent());
+    const { getByText, getByPlaceholderText } = render(defaultComponent());
 
-    const inputPassword = container.querySelector('#password');
-    const inputRepeatPassword = container.querySelector('#repeat-password');
+    const inputPassword = getByPlaceholderText('비밀번호');
+    const inputRepeatPassword = getByPlaceholderText('비밀번호 확인');
 
     fireEvent.change(inputPassword, { target: { value: 'asd' } });
     await waitFor(() => {

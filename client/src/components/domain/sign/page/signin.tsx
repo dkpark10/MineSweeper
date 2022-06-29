@@ -8,7 +8,7 @@ import { useObjectInput } from '../../../custom_hooks/useinput';
 import axiosInstance from '../../../../utils/default_axios';
 import { setLogin } from '../../../../reducers/login';
 
-import Input from '../atoms/input';
+import Input, { Label } from '../atoms/input';
 
 import {
   Title,
@@ -88,20 +88,26 @@ export default function SignIn({ history }: RouteComponentProps) {
           </Title>
         </Link>
         <form onSubmit={submintHandler}>
-          <Input
-            type='text'
-            placeholder='아이디'
-            name='userid'
-            value={value.userid}
-            onChange={changeValue}
-          />
-          <Input
-            type='password'
-            placeholder='비밀번호'
-            name='password'
-            value={value.password}
-            onChange={changeValue}
-          />
+          <div>
+            <Label htmlFor='id' />
+            <Input
+              type='text'
+              placeholder='아이디'
+              name='userid'
+              value={value.userid}
+              onChange={changeValue}
+            />
+          </div>
+          <div>
+            <Label htmlFor='password' />
+            <Input
+              type='password'
+              placeholder='비밀번호'
+              name='password'
+              value={value.password}
+              onChange={changeValue}
+            />
+          </div>
           <ForgetHelp>
             <Button
               width='100%'

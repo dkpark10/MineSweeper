@@ -12,7 +12,7 @@ const Input = styled('input').attrs(({ type, value }: Props) => ({
   },
 })) <Props>`
   font-family: "Noto Sans KR", sans-serif;
-  width: 95%;
+  width: 100%;
   height:38px;
   border:none;
   outline:none;
