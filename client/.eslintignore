@@ -2,3 +2,4 @@
 /node_modules
 /**/*.d.ts
 src/tests/
+/root/webpack/*.js

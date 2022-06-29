@@ -1,8 +1,8 @@
-import { merge } from 'webpack-merge';
-import path from 'path';
-import common from './webpack.common.js';
+const { merge } = require('webpack-merge');
+const common = require('./webpack.common');
+const path = require('path');
 
-export default merge(common, {
+module.exports = merge(common, {
   mode: 'production',
   output: {
     path: path.resolve('build/'),

@@ -1,10 +1,10 @@
-import HtmlWebpackPlugin from 'html-webpack-plugin';
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 // Typescript(타입스크립트)를 빌드할 때 성능을 향상시키기 위한 플러그인를 불러오기
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 // 정적 파일 복사 플러그인
-import CopyWebpackPlugin from 'copy-webpack-plugin';
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-export default {
+module.exports = {
   entry: './src/index.tsx',
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],

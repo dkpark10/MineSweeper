@@ -4,7 +4,7 @@ import flagimage from '../../../../assets/flag.png';
 import { AbsoluteCenterWrapper } from '../../../common/atoms/wrapper';
 import Image from '../../../common/atoms/image';
 
-interface Props {
+export interface Props {
   value: ReactText;
   isLock: boolean;
   onMouseOver: React.MouseEventHandler<HTMLDivElement>;
