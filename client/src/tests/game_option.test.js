@@ -8,7 +8,7 @@ describe('타일 길이 테스트', () => {
 
     await waitFor(() => {
       const cells = container.getElementsByClassName('cell');
-      expect(cells.length).toBe(9 * 9);
+      expect(cells).toHaveLength(9 * 9);
     });
   });
 
@@ -17,7 +17,7 @@ describe('타일 길이 테스트', () => {
     const { container } = render(defaultComponent());
 
     const cells = container.getElementsByClassName('cell');
-    expect(cells.length).toBe(16 * 16);
+    expect(cells).toHaveLength(16 * 16);
   });
 
   test('어려움 테스트', async () => {
@@ -25,7 +25,7 @@ describe('타일 길이 테스트', () => {
     const { container } = render(defaultComponent());
 
     const cells = container.getElementsByClassName('cell');
-    expect(cells.length).toBe(16 * 30);
+    expect(cells).toHaveLength(16 * 30);
   });
 
   test('유효하지 않은 키값 테스트', async () => {

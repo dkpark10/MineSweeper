@@ -116,26 +116,28 @@ export default function MineSweeper({
     onWheelClickOver({ y, x });
   };
 
-  const onFirstClick = (buttonType: number, coord: Coord) => {
+  const onFirstClickMine = (buttonType: number, coord: Coord) => {
     const { y, x } = coord;
 
     if (gameInfo.firstClick === true && buttonType === CLICKTYPE.LEFTCLICK) {
       beginTime.current = new Date().getTime();
 
       if (cellData[y][x].mine === true) {
-        setCellData(new CellHandler({ row, col }, 1, [...cellData]).getCellData());
+        cellData[y][x].mine = false;
+        return new CellHandler({ row, col }, 1, [...cellData]).getCellData();
       }
     }
+    return [...cellData];
   };
 
   const onCellClickUp = (e: React.MouseEvent<HTMLDivElement>, { y, x }: Coord) => {
-    onFirstClick(e.button, { y, x });
+    const currentCellData = onFirstClickMine(e.button, { y, x });
     setWheelClickDown((prev) => ({
       ...prev,
       isWheelClickDown: false,
     }));
 
-    const clickController = createClickFactory(e.button, [...cellData], { y, x }, { row, col });
+    const clickController = createClickFactory(e.button, currentCellData, { y, x }, { row, col });
     const clickResult: GameInfo = clickController
       .removePrevHoverCoord(wheelClickDown)
       .process(gameInfo);
@@ -189,6 +191,7 @@ export default function MineSweeper({
               key={cell.primaryIndex}
               isLock={cell.visited}
               value={cell.mine && gameInfo.isGameOver ? '💣' : cell.visible}
+              // value={cell.mine ? '💣' : cell.visible}
               isPointerHover={cell.isPointerHover}
               onMouseOver={() => onCellMouseOver({ y, x })}
               onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => onCellClickDown(e, { y, x })}

@@ -1,3 +1,4 @@
+import '@testing-library/jest-dom/extend-expect';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import defaultComponent from './default';
 import { invalidMessage } from '../utils/static_data';
