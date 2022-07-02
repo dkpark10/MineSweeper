@@ -31,6 +31,7 @@ export default function Statistics({
     hardGameWinCount,
     hardBestRecord,
   } = data;
+  const keys = [1, 2, 3];
 
   return (
     <>
@@ -55,9 +56,9 @@ export default function Statistics({
         <ContentWrapper>
           {[easyGameTotalCount,
             normalGameTotalCount,
-            hardGameTotalCount].map((totalItemCount) => (
+            hardGameTotalCount].map((totalItemCount, idx) => (
               <StatisticsContent
-                key={totalItemCount}
+                key={keys[idx]}
                 fontSize='0.9rem'
               >
                 {totalItemCount}
@@ -72,9 +73,9 @@ export default function Statistics({
         <ContentWrapper>
           {[easyGameWinCount,
             normalGameWinCount,
-            hardGameWinCount].map((winCount) => (
+            hardGameWinCount].map((winCount, idx) => (
               <StatisticsContent
-                key={winCount}
+                key={keys[idx]}
                 fontSize='0.9rem'
               >
                 {winCount}
@@ -89,9 +90,9 @@ export default function Statistics({
         <ContentWrapper>
           {[easyBestRecord,
             normalBestRecord,
-            hardBestRecord].map((bestRecord) => (
+            hardBestRecord].map((bestRecord, idx) => (
               <StatisticsContent
-                key={bestRecord}
+                key={keys[idx]}
                 fontSize='0.9rem'
               >
                 {bestRecord === null ? '기록없음' : bestRecord}

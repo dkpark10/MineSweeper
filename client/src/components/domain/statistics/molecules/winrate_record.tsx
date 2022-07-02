@@ -35,6 +35,7 @@ export default function WinRateRecord({ gameRecord }: Props) {
     hardGameWinCount,
   } = gameRecord;
 
+  const keys = [1, 2, 3];
   const winRateList = [
     Math.floor((easyGameWinCount / easyGameTotalCount) * 100),
     Math.floor((normalGameWinCount / normalGameTotalCount) * 100),
@@ -43,8 +44,8 @@ export default function WinRateRecord({ gameRecord }: Props) {
 
   return (
     <WinRateRecordWrapper>
-      {winRateList.map((winRate) => (
-        <WinRateRecordItem key={winRate}>
+      {winRateList.map((winRate, idx) => (
+        <WinRateRecordItem key={keys[idx]}>
           <WinRateText>
             {Number.isNaN(winRate) ? '0%' : `${winRate}%`}
           </WinRateText>

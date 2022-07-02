@@ -43,14 +43,18 @@ export default function Ranking({
 }: RouteComponentProps<MatchParams>) {
   const { page } = queryString.parse(location.search);
   const { level } = match.params;
-  const INITURL = `/api/game/${level}?page=${page}`;
-  const [rankData, loading, error, setRankData] = useAxios<GameProps[]>(INITURL);
+  const [url, setUrl] = useState(`/api/game/${level}?page=${page}`);
+  const [rankData, loading, error, setRankData] = useAxios<GameProps[]>(url);
   const [value, setValue] = useStringInput('');
   const [searchLoading, setSearchLoading] = useState(false);
 
   const searchUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const url = value.length === 0 ? INITURL : `/api/game/${level}?user=${value}`;
+    if (value.length === 0) {
+      setUrl(`/api/game/${level}?page=${page}`);
+    } else {
+      setUrl(`/api/game/${level}?user=${value}`);
+    }
 
     try {
       setSearchLoading(true);
@@ -90,7 +94,15 @@ export default function Ranking({
           <ul>
             {rankData.map((rank, idx) => (
               <li key={rank.ranking}>
-                <Link to={`/mypage/${rank.id}`} replace>
+                <Link
+                  to={{
+                    pathname: `/mypage/${rank.id}`,
+                    state: {
+                      userid: rank.id,
+                    },
+                  }}
+                  replace
+                >
                   <RankItem
                     rank={Number(page) + idx}
                     id={rank.id}
