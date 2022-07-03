@@ -35,7 +35,7 @@ export const useStringInput = (
   const [data, setData] = useState<string>(init);
   const change = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setData(e.target.value);
+    setData(value);
 
     if (callback) {
       callback({

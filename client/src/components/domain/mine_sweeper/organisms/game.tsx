@@ -191,7 +191,6 @@ export default function MineSweeper({
               key={cell.primaryIndex}
               isLock={cell.visited}
               value={cell.mine && gameInfo.isGameOver ? '💣' : cell.visible}
-              // value={cell.mine ? '💣' : cell.visible}
               isPointerHover={cell.isPointerHover}
               onMouseOver={() => onCellMouseOver({ y, x })}
               onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => onCellClickDown(e, { y, x })}

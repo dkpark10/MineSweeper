@@ -12,6 +12,7 @@ const Bulletin = lazy(() => import('./components/domain/bulletin/router/index'))
 const MyPage = lazy(() => import('./components/domain/statistics/router/index'));
 const Ranking = lazy(() => import('./components/domain/ranking/page/index'));
 const Option = lazy(() => import('./components/domain/options/page/index'));
+const Test = lazy(() => import('./components/graffiti/mock_component'));
 
 export default function App() {
   useSlientLogin();

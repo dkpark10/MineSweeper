@@ -46,7 +46,6 @@ export default function Ranking({
   const [url, setUrl] = useState(`/api/game/${level}?page=${page}`);
   const [rankData, loading, error, setRankData] = useAxios<GameProps[]>(url);
   const [value, setValue] = useStringInput('');
-  const [searchLoading, setSearchLoading] = useState(false);
 
   const searchUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -57,7 +56,6 @@ export default function Ranking({
     }
 
     try {
-      setSearchLoading(true);
       const { data }: AxiosResponse<GameProps[]> = await axiosInstance.get(url);
       setRankData(data.map((item) => ({
         ...item,
@@ -66,10 +64,9 @@ export default function Ranking({
     } catch (err) {
       // empty
     }
-    setSearchLoading(false);
   };
 
-  if (loading || searchLoading) {
+  if (loading) {
     return <Loading />;
   }
 

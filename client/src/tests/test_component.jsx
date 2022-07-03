@@ -23,7 +23,6 @@ export default function App() {
   }, []);
 
   if (loading) return <div>로딩중..</div>;
-
   if (!userData) return null;
 
   return (

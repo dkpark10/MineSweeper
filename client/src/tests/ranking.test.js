@@ -5,7 +5,8 @@ import MockAdapter from 'axios-mock-adapter';
 import defaultComponent from './default';
 
 describe('랭킹 페이지 테스트', () => {
-  const rankData = [
+  const mock = new MockAdapter(axios, { delayResponse: 200 });
+  mock.onGet('http://localhost:8080/api/game/easy?page=1').reply(200, [
     {
       id: 'dkpark10',
       record: '9.849',
@@ -66,10 +67,7 @@ describe('랭킹 페이지 테스트', () => {
       ranking: 10,
       totalItemCount: 10,
     },
-  ];
-
-  const mock = new MockAdapter(axios);
-  mock.onGet('http://localhost:8080/api/game/easy?page=1').reply(200, rankData);
+  ]);
 
   test('랭킹 데이터 가져오기', async () => {
     const { container, getByText } = render(defaultComponent());
@@ -79,9 +77,7 @@ describe('랭킹 페이지 테스트', () => {
       fireEvent.click(rankingNavi);
     });
 
-    await waitFor(() => {
-      const one = getByText('9.849');
-      expect(one.textContent).toBe('9.849');
-    });
+    const one = getByText('dkpark10');
+    expect(one).toBeInTheDocument();
   });
 });
