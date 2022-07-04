@@ -1,12 +1,12 @@
 import '@testing-library/jest-dom/extend-expect';
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import defaultComponent from './default';
+import axiosInstance from '../utils/default_axios';
 
 describe('랭킹 페이지 테스트', () => {
-  const mock = new MockAdapter(axios, { delayResponse: 200 });
-  mock.onGet('http://localhost:8080/api/game/easy?page=1').reply(200, [
+  const mock = new MockAdapter(axiosInstance, { delayResponse: 200 });
+  mock.onGet('/api/game/easy?page=1').reply(200, [
     {
       id: 'dkpark10',
       record: '9.849',
@@ -70,14 +70,16 @@ describe('랭킹 페이지 테스트', () => {
   ]);
 
   test('랭킹 데이터 가져오기', async () => {
-    const { container, getByText } = render(defaultComponent());
+    const { getByText, getByTestId } = render(defaultComponent());
 
     await waitFor(() => {
       const rankingNavi = getByText('랭킹');
       fireEvent.click(rankingNavi);
     });
 
-    const one = getByText('dkpark10');
-    expect(one).toBeInTheDocument();
+    await waitFor(() => {
+      const one = getByText('9.849');
+      expect(one).toBeInTheDocument();
+    });
   });
 });

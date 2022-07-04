@@ -45,7 +45,7 @@ const LoadingStyle = styled.div`
 
 export default function Loading() {
   return (
-    <LoadingStyle>
+    <LoadingStyle data-testid='loading'>
       <div className='lds-ring'>
         <div />
         <div />

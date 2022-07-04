@@ -4,12 +4,14 @@ import Loading from '../common/atoms/loading';
 import useAxios from '../custom_hooks/useaxios';
 
 interface Data {
-  rank: number;
   id: string;
+  record: string;
+  ranking: number;
+  totalItemCount: number;
 }
 
 function App() {
-  const [rankData, load, error, setRankData] = useAxios<Data[]>('/rank');
+  const [rankData, load, error, setRankData] = useAxios<Data[]>('/api/game/easy?page=1');
   // const [rankData, setUserData] = useState<Data[]>([]);
   // const [load, setLoading] = useState(false);
 
@@ -28,14 +30,16 @@ function App() {
   //   getUser();
   // }, []);
 
-  if (load) return <div>로딩중...</div>;
+  if (load) {
+    return <Loading />;
+  }
 
   return (
     <div>
       {rankData.map((ele) => (
-        <div key={ele.rank}>
+        <div key={ele.ranking}>
           RANK:
-          {ele.rank}
+          {ele.ranking}
           ID:
           {ele.id}
         </div>
