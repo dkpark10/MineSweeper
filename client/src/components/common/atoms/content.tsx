@@ -6,6 +6,7 @@ interface Props {
   bold?: boolean;
   fontColor?: boolean;
   margin?:string;
+  center?: boolean;
 }
 
 export default styled.span<Props>`
@@ -14,6 +15,7 @@ export default styled.span<Props>`
   font-size: ${({ fontSize }) => fontSize || '0.9rem'};
   font-weight: ${({ bold }) => (bold === true ? 'bold' : '')};
   margin: ${({ margin }) => margin};
+  text-align: ${({ center }) => (center ? 'center' : '')};
 
   &:hover{
     color: ${({ hoverFontColor }) => hoverFontColor};

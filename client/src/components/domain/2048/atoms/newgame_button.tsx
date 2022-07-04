@@ -20,9 +20,7 @@ const NewGameInput = styled.input.attrs(() => ({
              -3px -3px 5px #383636;
   &:hover{
     border: none;
-    background: linear-gradient(145deg, #ce6e00, #ff8e00);
-    box-shadow:  1px 1px 15px #c66900,
-             -3px -3px 5px #ffa100;
+    background: linear-gradient(145deg, #266eff, #264a93);
   }
 `;
 

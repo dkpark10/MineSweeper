@@ -5,7 +5,8 @@ import useSlientLogin from './components/custom_hooks/useslient_login';
 import Loading from './components/common/atoms/loading';
 import NotFound from './components/common/page/notfound';
 
-const Game = lazy(() => import('./components/domain/mine_sweeper/page/index'));
+const Home = lazy(() => import('./components/domain/home/page/index'));
+const MineSweeper = lazy(() => import('./components/domain/mine_sweeper/page/index'));
 const Game2048 = lazy(() => import('./components/domain/2048/page/index'));
 const SignIn = lazy(() => import('./components/domain/sign/page/signin'));
 const SignUp = lazy(() => import('./components/domain/sign/page/signup'));
@@ -21,7 +22,9 @@ export default function App() {
   return (
     <Suspense fallback={<Loading />}>
       <Switch>
-        <Route exact path='/' component={Game2048} />
+        <Route exact path='/' component={Home} />
+        <Route path='/minesweeper' component={MineSweeper} />
+        <Route path='/2048' component={Game2048} />
         <Route path='/signin' component={SignIn} />
         <Route path='/signup' component={SignUp} />
         <Route path='/ranking/:level' component={Ranking} />

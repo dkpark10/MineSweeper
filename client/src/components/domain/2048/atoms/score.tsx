@@ -2,7 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 
 const StyleScore = styled.header`
-  font-size:1.8rem;
+  font-size:1.6rem;
+  font-weight: bold;
   color: ${({ theme }) => theme.mainColor};
   text-align:center;
   margin-bottom: 20px;
