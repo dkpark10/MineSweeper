@@ -53,8 +53,7 @@ const getInitValue = () => (
 );
 
 type NewTile = { y: number, x: number, value: number };
-
-const makeTile = (board: number[][], cnt: number): NewTile[] => {
+const createTile = (board: number[][], cnt: number): NewTile[] => {
   const noTileList: number[] = [];
   const result: NewTile[] = [];
 
@@ -86,26 +85,26 @@ const makeTile = (board: number[][], cnt: number): NewTile[] => {
 
 const moveTile = (board: number[][], dir: string): NewTileResult => {
   if (dir === 'ArrowRight') {
-    return new RightMoveTileHandler(board, 0)
+    return new RightMoveTileHandler(board)
       .move()
       .getResult();
   }
   if (dir === 'ArrowLeft') {
-    return new LeftMoveTileHandler(board, 1)
+    return new LeftMoveTileHandler(board)
       .move()
       .getResult();
   }
   if (dir === 'ArrowUp') {
-    return new UpMoveTileHandler(board, 2)
+    return new UpMoveTileHandler(board)
       .move()
       .getResult();
   }
 
-  return new DownMoveTileHandler(board, 3)
+  return new DownMoveTileHandler(board)
     .move()
     .getResult();
 };
 
 export {
-  makeTile, moveTile, isGameOver, isFullBoard,
+  createTile, moveTile, isGameOver, isFullBoard,
 };

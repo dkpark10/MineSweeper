@@ -10,7 +10,6 @@ const NewGameInput = styled.input.attrs(() => ({
   width:89px;
   height:26px;
   border-radius: 5px;
-  font-weight: bold;
   margin-top:12px;
   cursor:pointer;
   color:white;

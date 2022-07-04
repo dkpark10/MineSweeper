@@ -12,7 +12,7 @@ export default abstract class TileHandler {
 
   protected score: number = 0;
 
-  constructor(origin: number[][], d: number) {
+  constructor(origin: number[][]) {
     this.origin = origin;
     this.newBoard = Array.from({ length: 4 }, (v, i) => new Array(4).fill(0));
   }
@@ -24,10 +24,9 @@ export default abstract class TileHandler {
     };
   }
 
-  public combine(list: number[]): number[] {
+  public combine(list: number[]) {
+    const ret = [...list];
     let idx = 0;
-    const ret = Array(4).fill(0);
-
     while (idx < list.length - 1) {
       if (list[idx] === list[idx + 1]) {
         this.score += list[idx + 1] * 2;

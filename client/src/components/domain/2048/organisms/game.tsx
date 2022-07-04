@@ -1,8 +1,16 @@
 import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
-import { makeTile, moveTile, isGameOver, isFullBoard } from '../module/tile_handler';
-import { calculMoveDistance, AnimationTile } from '../module/animation_calcul';
-import { NewTileResult } from '../module/move_tile';
+import {
+  createTile,
+  moveTile,
+  isGameOver,
+  isFullBoard,
+} from '../../../../utils/2048/tile_handler';
+import {
+  calculMoveDistance,
+  AnimationTile,
+} from '../../../../utils/2048/animation_calcul';
+import { NewTileResult } from '../../../../utils/2048/move_tile';
 
 import Tile from '../atoms/tile';
 import NewGameButton from '../atoms/newgame_button';
@@ -49,18 +57,15 @@ export default function Game2048(): JSX.Element {
     }, e.key);
 
     if (JSON.stringify(newTileResult.board) !== JSON.stringify(board.current)) {
-      // 새 좌표와 값 리스트를 리턴
-      const newTileData = makeTile(newTileResult.board, 1);
-      newTileData.forEach((element) => {
-        const { y, x, value } = element;
-        newTileResult.board[y][x] = value;
-        moveAnimationTile[y][x].value = value;
-        moveAnimationTile[y][x].isNew = true;
-      });
+      const newTileData = createTile(newTileResult.board, 1);
+      const { y, x, value } = newTileData[0];
+      newTileResult.board[y][x] = value;
+      moveAnimationTile[y][x].value = value;
+      moveAnimationTile[y][x].isNew = true;
 
       board.current = newTileResult.board;
       setScore((prev) => prev + newTileResult.score);
-      setAnimationTile(animationTile);
+      setAnimationTile(moveAnimationTile);
 
       if (isFullBoard(newTileResult.board) && isGameOver(newTileResult.board)) {
         setGameOver(true);
@@ -69,11 +74,8 @@ export default function Game2048(): JSX.Element {
   };
 
   const initialze = () => {
-    setGameOver(false);
-    setScore(0);
-
     const init = Array.from(Array(4), () => Array(4).fill(0));
-    const newTileData = makeTile(init, 2);
+    const newTileData = createTile(init, 2);
     newTileData.forEach((element) => {
       const { y, x, value } = element;
       init[y][x] = value;
@@ -87,11 +89,15 @@ export default function Game2048(): JSX.Element {
       (_1, row) => Array.from({ length }, (_2, col) => ({
         y: 0,
         x: 0,
-        value: init[row][col],
+        value: board.current[row][col],
         isDelete: false,
-        isNew: false,
-      })));
+        isNew: board.current[row][col] > 0,
+        primaryIndex: row * 4 + col,
+      })),
+    );
 
+    setGameOver(false);
+    setScore(0);
     setAnimationTile(initAnimationTile);
   };
 
@@ -106,7 +112,7 @@ export default function Game2048(): JSX.Element {
         <BoardWrapper>
           {animationTile.map((row, rowidx) => row.map((data, colidx) => (
             <Tile
-              key={rowidx * 4 + colidx}
+              key={data.primaryIndex}
               data={data}
               newValue={board.current[rowidx][colidx]}
             />

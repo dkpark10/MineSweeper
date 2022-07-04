@@ -6,6 +6,7 @@ export interface AnimationTile {
   value: number;
   isDelete: boolean;
   isNew: boolean;
+  primaryIndex: number;
 }
 
 interface Params {
@@ -28,6 +29,7 @@ export const calculMoveDistance = ({ prev, next }: Params, dir: string): Animati
       value: result[row][col] !== 0 ? prev[row][col] : next[row][col],
       isDelete: result[row][col] !== 0,
       isNew: next[row][col] !== 0,
+      primaryIndex: row * 4 + col,
     })),
   );
 

@@ -42,7 +42,7 @@ export default class DistanceCalculator {
 
   // 옆으로 뒤집는다.
   public turnSide(arr: number[][]) {
-    const n = this.prev.length;
+    const n = this.result.length;
     const ret = Array.from(Array(n), () => new Array(n));
     for (let i = 0; i < n; i += 1) {
       for (let j = 0; j < n; j += 1) {
@@ -53,7 +53,7 @@ export default class DistanceCalculator {
   }
 
   public rotate270(arr: number[][]) {
-    const n = this.prev.length;
+    const n = this.result.length;
     const ret = Array.from(Array(n), () => new Array(n));
     for (let i = 0; i < n; i += 1) {
       for (let j = 0; j < n; j += 1) {
@@ -64,7 +64,7 @@ export default class DistanceCalculator {
   }
 
   public rotate90(arr: number[][]) {
-    const n = this.prev.length;
+    const n = this.result.length;
     const ret = Array.from(Array(n), () => new Array(n));
     for (let i = 0; i < n; i += 1) {
       for (let j = 0; j < n; j += 1) {

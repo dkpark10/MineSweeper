@@ -1,6 +1,11 @@
 import TileHandler from './move_tile';
 
 export default class DownMoveTileHandler extends TileHandler {
+  // eslint-disable-next-line
+  constructor(origin: number[][]) {
+    super(origin);
+  }
+
   public move(): this {
     for (let row = 0; row < this.BOARD_SIZE; row += 1) {
       const tmp: number[] = [];
@@ -11,21 +16,21 @@ export default class DownMoveTileHandler extends TileHandler {
       }
 
       if (tmp.length === 1) {
-        const [, value] = tmp;
+        const [value] = tmp;
         this.newBoard[this.BOARD_SIZE - 1][row] = value;
         // eslint-disable-next-line
         continue;
       }
 
-      this.combine(tmp);
+      const combinedBoard = this.combine(tmp);
 
       let idx = this.BOARD_SIZE - 1;
-      for (let i = 0; i < tmp.length; i += 1) {
-        if (tmp[i] === 0) {
-        // eslint-disable-next-line
+      for (let i = 0; i < combinedBoard.length; i += 1) {
+        if (combinedBoard[i] === 0) {
+          // eslint-disable-next-line
           continue;
         }
-        this.newBoard[idx][row] = tmp[i];
+        this.newBoard[idx][row] = combinedBoard[i];
         idx -= 1;
       }
     }

@@ -3,9 +3,8 @@ import styled from 'styled-components';
 
 const StyleScore = styled.header`
   font-size:1.8rem;
-  color: #fb8500;
+  color: ${({ theme }) => theme.mainColor};
   text-align:center;
-  font-weight:bold;
   margin-bottom: 20px;
 `;
 

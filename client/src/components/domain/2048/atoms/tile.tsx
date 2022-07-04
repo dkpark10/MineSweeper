@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
-import tileData from '../module/tile_color';
-import { AnimationTile } from '../module/animation_calcul';
 import { Tween, Timeline } from 'react-gsap';
+import tileData from '../../../../utils/2048/tile_color';
+import { AnimationTile } from '../../../../utils/2048/animation_calcul';
 
 interface Props {
   data: AnimationTile;
@@ -26,7 +26,7 @@ const BackgroundTile = styled(DefaultTile)`
               inset -3px -3px 16px #2f2e2e;
 `;
 
-const RealTile = styled(DefaultTile) <Partial<AnimationTile>>`
+const RealTile = styled(DefaultTile) <{ value: number }>`
   z-index: 1;
   position:absolute;
   background: ${({ value }) => tileData[value].backColor};

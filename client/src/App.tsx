@@ -6,6 +6,7 @@ import Loading from './components/common/atoms/loading';
 import NotFound from './components/common/page/notfound';
 
 const Game = lazy(() => import('./components/domain/mine_sweeper/page/index'));
+const Game2048 = lazy(() => import('./components/domain/2048/page/index'));
 const SignIn = lazy(() => import('./components/domain/sign/page/signin'));
 const SignUp = lazy(() => import('./components/domain/sign/page/signup'));
 const Bulletin = lazy(() => import('./components/domain/bulletin/router/index'));
@@ -20,7 +21,7 @@ export default function App() {
   return (
     <Suspense fallback={<Loading />}>
       <Switch>
-        <Route exact path='/' component={Game} />
+        <Route exact path='/' component={Game2048} />
         <Route path='/signin' component={SignIn} />
         <Route path='/signup' component={SignUp} />
         <Route path='/ranking/:level' component={Ranking} />
