@@ -48,8 +48,8 @@ export default function Ranking({
   const [value, setValue] = useStringInput('');
 
   useEffect(() => {
-    setUrl(`/api/game/${level}?page=1`);
-  }, [level]);
+    setUrl(`/api/game/${level}?page=${page}`);
+  }, [level, page]);
 
   const searchUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
