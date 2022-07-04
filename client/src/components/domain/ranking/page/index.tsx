@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { RouteComponentProps, Link } from 'react-router-dom';
 import queryString from 'query-string';
 
@@ -46,6 +46,10 @@ export default function Ranking({
   const [url, setUrl] = useState(`/api/game/${level}?page=${page}`);
   const [rankData, loading, error, setRankData] = useAxios<GameProps[]>(url);
   const [value, setValue] = useStringInput('');
+
+  useEffect(() => {
+    setUrl(`/api/game/${level}?page=1`);
+  }, [level]);
 
   const searchUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
