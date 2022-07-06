@@ -45,14 +45,14 @@ export default function Ranking({
   const { level } = match.params;
   const [url, setUrl] = useState(`/api/game/minesweeper/${level}?page=${page}`);
   const [rankData, loading, error, setRankData] = useFetch<GameProps[]>(url);
-  const [value, setValue] = useStringInput('');
+  const [userToFind, setUserToFind] = useStringInput('');
 
   const searchUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (value.length === 0) {
+    if (userToFind.length === 0) {
       setUrl(`/api/game/minesweeper/${level}?page=${page}`);
     } else {
-      setUrl(`/api/game/minesweeper${level}?user=${value}`);
+      setUrl(`/api/game/minesweeper${level}?user=${userToFind}`);
     }
 
     try {
@@ -83,8 +83,8 @@ export default function Ranking({
             currentLevel={level}
           />
           <SearchInput
-            value={value}
-            setValue={setValue}
+            value={userToFind}
+            setValue={setUserToFind}
             search={searchUser}
           />
           <RankItem />

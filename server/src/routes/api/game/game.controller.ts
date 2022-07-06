@@ -64,7 +64,24 @@ export const recordAnonymousGame = async (request: Request<{}, {}, GameRecord>, 
       success: success
     }
 
-    const result = await model.game.insertGameRecord(gameRecord);
+    const result = await model.game.insertMineSweeperGameLog(gameRecord);
+    response.status(201).send(result)
+  }
+  catch (e) {
+    response.status(202).send(e);
+  }
+}
+
+export const record2048GameLog = async(request: Request, response: Response) => {
+  try {
+    const { id, record } = request.body;
+
+    const gameRecord = {
+      id,
+      record: Number(record),
+    }
+
+    const result = await model.game.insert2048GameLog(gameRecord);
     response.status(201).send(result)
   }
   catch (e) {
@@ -82,7 +99,7 @@ export const recordUserGame = async (request: Request<{}, {}, GameRecord>, respo
       success: success
     }
 
-    const result = await model.game.insertGameRecord(gameRecord);
+    const result = await model.game.insertMineSweeperGameLog(gameRecord);
     response.status(201).send(result)
   }
   catch (e) {

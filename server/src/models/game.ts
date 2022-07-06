@@ -28,12 +28,26 @@ export default class GameModel extends Model {
     super(c, r);
   }
 
-  public insertGameRecord({ id, record, success, level }: GameRecord): Promise<boolean | QueryError> {
+  public insertMineSweeperGameLog({ id, record, success, level }: GameRecord): Promise<boolean | QueryError> {
     const query = `INSERT INTO ${level}game (GAMENUM, ID, RECORD, DATE, SUCCESS)
                   VALUES (?,?,?,NOW(),?)`;
 
     return new Promise((resolve, reject) => {
       this.connection.query(query, [null, id, record, success === "success" ? 1 : 0], (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(true);
+        }
+      });
+    })
+  }
+
+  public insert2048GameLog({ id, record }: Partial<GameRecord>): Promise<boolean | QueryError> {
+    const query = `INSERT INTO 2048 (GAMENUM, ID, RECORD, DATE) VALUES (?,?,?,NOW())`;
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, [null, id, record], (err) => {
         if (err) {
           reject(err);
         } else {
