@@ -65,12 +65,15 @@ const createTile = (board: number[][], cnt: number): NewTile[] => {
     }
   }
 
+  let prevY, prevX;
   while (cnt) {
     const newTileIndex = Math.floor(Math.random() * noTileList.length);
     const newY = Math.floor(noTileList[newTileIndex] / BOARD_SIZE);
     const newX = noTileList[newTileIndex] % BOARD_SIZE;
 
-    if (board[newY][newX] === 0) {
+    if (board[newY][newX] === 0 && prevY !== newY && prevX !== newX) {
+      prevY = newY;
+      prevX = newX;
       result.push({
         y: newY,
         x: newX,

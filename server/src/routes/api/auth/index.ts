@@ -15,7 +15,7 @@ import userIdentification from "../../../middlewares/user_identification";
 
 const router: Router = Router();
 
-router.post("/game", recordAnonymousGame);
+router.post("/game/minesweeper", recordAnonymousGame);
 
 // 로그인 토큰검증 미들웨어
 router.use(async (request: Request, response: Response, next: NextFunction) => {
@@ -40,7 +40,7 @@ router.delete("/posts/:postid", deletePost);
 router.post("/posts", insertPost);
 router.patch("/posts", updatePost);
 router.post("/logout", logout);
-router.post("/game", recordUserGame);
+router.post("/game/minesweeper", recordUserGame);
 
 router.get("/test", async (req: Request, res: Response) => {
   res.status(200).send("....");

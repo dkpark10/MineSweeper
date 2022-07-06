@@ -1,17 +1,12 @@
 import { Router } from 'express';
-import auth from './auth';
+import authRouter from './auth';
+import gameRouter from './game/index';
 import {
   login,
   isExistUser,
   registUser,
   slientLogin,
 } from './user/user.controller';
-
-import {
-  getGameInfo,
-  getUserGame,
-  getUserGameSearch
-} from './game/game.controller';
 
 import {
   getPostListperPage,
@@ -25,7 +20,8 @@ import {
 
 const router: Router = Router();
 
-router.use('/auth', auth);
+router.use('/auth', authRouter);
+router.use('/game', gameRouter);
 
 router.post('/login', login);
 router.post('/slientlogin', slientLogin);
@@ -36,8 +32,7 @@ router.post('/user', registUser);
 router.get('/posts', getPostListperPage);
 router.get('/posts/:postid', getPost);
 
-router.get('/game', getUserGame);
-router.get('/game/:level', getGameInfo, getUserGameSearch);
+// router.get('/game/:level', getGameInfo, getUserGameSearch);
 
 router.get('/droptest', dropTest);
 router.get('/test/:testid', testRun);

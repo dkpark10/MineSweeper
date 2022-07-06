@@ -127,6 +127,7 @@ export default function Game2048(): JSX.Element {
         gameOver && (
           <Modal
             score={score}
+            onReset={initialze}
           />
         )
       }

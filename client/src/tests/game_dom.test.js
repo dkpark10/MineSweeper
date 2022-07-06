@@ -23,7 +23,11 @@ describe('메인 게임 테스트', () => {
   test('우클릭 테스트', async () => {
     global.localStorage.setItem('difficulty', 'easy');
     const level = global.localStorage.getItem('difficulty');
-    const { container, getByText } = render(defaultComponent());
+    const { container, getByText, getByTestId } = render(defaultComponent());
+
+    await waitFor(() => {
+      fireEvent.click(getByTestId('지뢰찾기'));
+    });
 
     const cells = container.getElementsByClassName('cell');
 

@@ -33,6 +33,7 @@ export default function GameHome() {
         <GameSelectWrapper>
           <Link to='/minesweeper'>
             <GameIcon
+              testid='지뢰찾기'
               backgroundColor={theme.mainColor}
             >
               💣
@@ -40,6 +41,7 @@ export default function GameHome() {
           </Link>
           <Link to='/2048'>
             <GameIcon
+              testid='2048'
               backgroundColor='#fb8500'
             >
               2048

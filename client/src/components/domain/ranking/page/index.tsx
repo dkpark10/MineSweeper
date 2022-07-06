@@ -22,7 +22,7 @@ import RankItem from '../molecules/rank_item';
 import SearchInput from '../atoms/search_input';
 
 import axiosInstance from '../../../../utils/default_axios';
-import useAxios from '../../../custom_hooks/useaxios';
+import useFetch from '../../../custom_hooks/usefetch';
 import { useStringInput } from '../../../custom_hooks/useinput';
 
 interface MatchParams {
@@ -43,16 +43,16 @@ export default function Ranking({
 }: RouteComponentProps<MatchParams>) {
   const { page } = queryString.parse(location.search);
   const { level } = match.params;
-  const [url, setUrl] = useState(`/api/game/${level}?page=${page}`);
-  const [rankData, loading, error, setRankData] = useAxios<GameProps[]>(url);
+  const [url, setUrl] = useState(`/api/game/minesweeper/${level}?page=${page}`);
+  const [rankData, loading, error, setRankData] = useFetch<GameProps[]>(url);
   const [value, setValue] = useStringInput('');
 
   const searchUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (value.length === 0) {
-      setUrl(`/api/game/${level}?page=${page}`);
+      setUrl(`/api/game/minesweeper/${level}?page=${page}`);
     } else {
-      setUrl(`/api/game/${level}?user=${value}`);
+      setUrl(`/api/game/minesweeper${level}?user=${value}`);
     }
 
     try {

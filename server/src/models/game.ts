@@ -164,4 +164,23 @@ export default class GameModel extends Model {
       });
     });
   }
+
+  public getGame2048Lank({ begin, end }: { [key: string]: number }) {
+    const query = `
+      SELECT id, record, RANK() over(ORDER BY record) AS 'ranking',
+      (SELECT COUNT(*) FROM 2048) AS totalItemCount
+      FROM 2048
+      ORDER BY record
+      LIMIT ?,?`;
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, [begin, end], (err, data) => {
+        if (err || !data) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  }
 }

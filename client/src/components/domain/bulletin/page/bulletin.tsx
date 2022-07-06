@@ -19,7 +19,7 @@ import { DefaultBulletinWrapper } from '../atoms/bulletin_wrapper';
 import PostCardHeader from '../molecules/post_card_header';
 import PostList from '../molecules/post_list';
 import BuelltinNavi from '../molecules/post_navigator';
-import useAxios from '../../../custom_hooks/useaxios';
+import useFetch from '../../../custom_hooks/usefetch';
 
 interface PostProps {
   id: number;
@@ -36,7 +36,7 @@ export default function Bulletion({
   match,
 }: RouteComponentProps) {
   const { page } = queryString.parse(location.search);
-  const [response, loading, error] = useAxios<PostProps[]>(`/api/posts?page=${page}`, []);
+  const [response, loading, error] = useFetch<PostProps[]>(`/api/posts?page=${page}`, []);
   const widthRatio = ['64%', '20%', '16%'];
 
   if (loading) {

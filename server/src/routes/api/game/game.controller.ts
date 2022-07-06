@@ -4,7 +4,7 @@ import shortid from 'shortid';
 import model from '../../../models';
 import { GameRecord } from '../../../models/game';
 
-export const getGameInfo = async (request: Request, response: Response, next: NextFunction) => {
+export const getGameRankData = async (request: Request, response: Response, next: NextFunction) => {
   try {
     const { page, user } = request.query;
     if (user) {
@@ -90,7 +90,7 @@ export const recordUserGame = async (request: Request<{}, {}, GameRecord>, respo
   }
 }
 
-export const getUserGame = async (request: Request, response: Response) => {
+export const getUserGameData = async (request: Request, response: Response) => {
   try {
     const { userid } = request.query;
 
@@ -101,5 +101,26 @@ export const getUserGame = async (request: Request, response: Response) => {
 
   } catch (e) {
     response.status(202).send({ result: true, message: e });
+  }
+}
+
+export const get2048RankData = async (request: Request, response: Response, next: NextFunction) => {
+  try {
+    const { page, user } = request.query;
+    if (user) {
+      return next();
+    }
+
+    if (isNaN(Number(page)))
+      throw '숫자가 아닙니다.';
+
+    const end = Number(page) * request.app.get('itemCountPerPage');
+    const begin = end - request.app.get('itemCountPerPage');
+    const data = await model.game.getGame2048Lank({ begin, end });
+
+    response.status(200).send(data);
+  }
+  catch (e) {
+    response.status(202).send([]);
   }
 }

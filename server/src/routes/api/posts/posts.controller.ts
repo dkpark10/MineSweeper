@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import model from '../../../models';
 
 export const getPostListperPage = async (request: Request, response: Response) => {

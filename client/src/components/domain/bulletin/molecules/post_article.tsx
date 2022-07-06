@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import parse from 'html-react-parser';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-import useAxios from '../../../custom_hooks/useaxios';
+import useFetch from '../../../custom_hooks/usefetch';
 
 import {
   Loading,
@@ -52,7 +52,7 @@ interface PostProps {
 export default function PostArticle({
   postid,
 }: Props) {
-  const [response, loading] = useAxios<PostProps>(`api/posts/${postid}`);
+  const [response, loading] = useFetch<PostProps>(`api/posts/${postid}`);
   const loginedUser = useSelector((state: RootState) => state.login.id);
 
   if (loading) {
