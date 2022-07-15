@@ -14,9 +14,6 @@ const DefaultTile = styled.div`
   height:65px;
   border-radius:5px;
   text-align:center;
-  display:flex;
-  justify-content:center;
-  align-items:center;
 `;
 
 const BackgroundTile = styled(DefaultTile)`
@@ -35,6 +32,13 @@ const RealTile = styled(DefaultTile) <{ value: number }>`
     color:white;
     font-size:${({ value }) => tileData[value].fontSize};
     font-weight:bold;
+  }
+
+  .text {
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
   }
 `;
 
@@ -66,9 +70,7 @@ export default function Tile({
               className='hidden'
               value={value}
               ref={ref}
-            >
-              {value}
-            </RealTile>
+            />
           )}
         >
           <Tween
@@ -89,7 +91,9 @@ export default function Tile({
               className='new_tile'
               value={newValue}
             >
-              {newValue}
+              <span className='text'>
+                {newValue}
+              </span>
             </RealTile>
           )}
         >
