@@ -19,7 +19,7 @@ const SearchInputWrapper = styled.div`
   background-color: white;
 
   @media screen and (${({ theme }) => theme.minTablet}) {  
-    width: 555px;
+    width: 455px;
     border-radius: 8px;
   }
 

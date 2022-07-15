@@ -1,15 +1,20 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import PageNationItem from '../../../common/atoms/page_nation_item';
 
-interface Props {
-  currentLevel: string;
-}
+const RankNavigationWrapper = styled.div`
+  position:relative;
+`;
 
-const LevelNationWrapper = styled.div<Props>`
+const RankNavigation = styled.div`
+  position:absolute;
+  left: 50%;
+  transform:translateX(-50%);
   display:flex;
   justify-content: space-around;
   align-items: center;
+  width: 322px;
   height:51px;
   position: relative;
   background-color: white;
@@ -18,34 +23,48 @@ const LevelNationWrapper = styled.div<Props>`
 
   a{
     font-size:1.05rem;
-    color:${({ theme }) => theme.fontColor};
     text-decoration: none;
     font-weight:bold;
   }
-
-  a:hover{
-    color:${({ theme }) => theme.mainColor};
-  }
 `;
 
+interface Props {
+  currentGame: string;
+}
+
 export default function RankNavigator({
-  currentLevel,
+  currentGame,
 }: Props) {
-  const levels = ['easy', 'normal', 'hard'];
+  const LinkItem = [
+    {
+      content: '지뢰찾기',
+      name: 'minesweeper',
+      url: 'minesweeper?page=1&level=easy',
+    },
+    {
+      content: '2048',
+      name: '2048',
+      url: '2048?page=1',
+    },
+  ];
 
   return (
-    <LevelNationWrapper
-      currentLevel={currentLevel}
-    >
-      {['쉬움', '보통', '어려움'].map((item, idx) => (
-        <PageNationItem
-          key={item}
-          value={item}
-          url={`${levels[idx]}?page=1`}
-          currentPage={currentLevel === levels[idx]}
-          fontSize='1.0rem'
-        />
-      ))}
-    </LevelNationWrapper>
+    <RankNavigationWrapper>
+      <RankNavigation>
+        {LinkItem.map((item) => (
+          <Link
+            to={item.url}
+            key={item.content}
+            replace
+          >
+            <PageNationItem
+              value={item.content}
+              currentPage={currentGame === item.name}
+              fontSize='1.0rem'
+            />
+          </Link>
+        ))}
+      </RankNavigation>
+    </RankNavigationWrapper>
   );
 }

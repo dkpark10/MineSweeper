@@ -21,7 +21,6 @@ export interface PostResponse {
 }
 
 export default class PostModel extends Model {
-
   private readonly table = 'posts';
   constructor(c: mysql.Connection, r: redis.RedisClient) {
     super(c, r);

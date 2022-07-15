@@ -8,7 +8,7 @@ import {
 
 const router = Router();
 
-router.get('/minesweeper/:level', getGameRankData, getUserGameSearch);
+router.get('/minesweeper', getGameRankData, getUserGameSearch);
 router.get('/2048', get2048RankData);
 router.get('/', getUserGameData);
 

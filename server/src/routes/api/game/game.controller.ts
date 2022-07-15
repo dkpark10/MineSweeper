@@ -6,7 +6,7 @@ import { GameRecord } from '../../../models/game';
 
 export const getGameRankData = async (request: Request, response: Response, next: NextFunction) => {
   try {
-    const { page, user } = request.query;
+    const { page, level, user } = request.query;
     if (user) {
       return next();
     }
@@ -16,7 +16,7 @@ export const getGameRankData = async (request: Request, response: Response, next
 
     const end = Number(page) * request.app.get('itemCountPerPage');
     const begin = end - request.app.get('itemCountPerPage');
-    const data = await model.game.getGameLank(request.params.level, { begin, end });
+    const data = await model.game.getGameLank(level as string, { begin, end });
 
     response.status(200).send(data);
   }
@@ -72,7 +72,40 @@ export const recordAnonymousGame = async (request: Request<{}, {}, GameRecord>, 
   }
 }
 
-export const record2048GameLog = async(request: Request, response: Response) => {
+export const recordAnonymousGame2048 = async (request: Request<{}, {}, GameRecord>, response: Response, next: NextFunction) => {
+  try {
+    const { id, record, clientAnonymousKey } = request.body;
+    const anonymousKey = request.app.get('secret-key').anonymousKey;
+
+    if (id !== 'anonymous') {
+      return next();
+    }
+
+    if (clientAnonymousKey !== anonymousKey) {
+      throw '유요하지 않은 요청입니다';
+    }
+
+    const clientIp = requestIp.getClientIp(request) as string;
+    let anonymousId = await model.user.getRedisValue(clientIp);
+
+    if (anonymousId === null) {
+      anonymousId = `익명_${shortid.generate()}`;
+      model.user.setRedisValue(clientIp, anonymousId);
+    }
+
+    const gameRecord: Partial<GameRecord> = {
+      id: anonymousId as string,
+      record: Number(record),
+    }
+
+    const result = await model.game.insert2048GameLog(gameRecord);
+    response.status(201).send(result)
+  } catch (e) {
+    response.status(202).send(e);
+  }
+}
+
+export const record2048GameLog = async (request: Request, response: Response) => {
   try {
     const { id, record } = request.body;
 
@@ -124,12 +157,14 @@ export const getUserGameData = async (request: Request, response: Response) => {
 export const get2048RankData = async (request: Request, response: Response, next: NextFunction) => {
   try {
     const { page, user } = request.query;
+
     if (user) {
       return next();
     }
 
-    if (isNaN(Number(page)))
+    if (isNaN(Number(page))){
       throw '숫자가 아닙니다.';
+    }
 
     const end = Number(page) * request.app.get('itemCountPerPage');
     const begin = end - request.app.get('itemCountPerPage');

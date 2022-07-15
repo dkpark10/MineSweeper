@@ -27,7 +27,7 @@ export default function App() {
         <Route path='/2048' component={Game2048} />
         <Route path='/signin' component={SignIn} />
         <Route path='/signup' component={SignUp} />
-        <Route path='/ranking/:level' component={Ranking} />
+        <Route path='/ranking/:game' component={Ranking} />
         <Route path='/community' component={Bulletin} />
         <Route path='/mypage' component={MyPage} />
         <Route path='/option' component={Option} />

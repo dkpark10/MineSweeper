@@ -22,16 +22,10 @@ const RankItem = styled.span<{ width: string, center?: boolean, fontColor?: bool
 `;
 
 interface Props {
-  rank?: number | string;
-  id?: string;
-  record?: string;
+  rank: number | string;
+  id: string;
+  record: string;
 }
-
-const defaultProps: Props = {
-  rank: '순위',
-  id: '아이디',
-  record: '기록',
-};
 
 export default function RankNavigator({
   rank,
@@ -60,5 +54,3 @@ export default function RankNavigator({
     </RankItemWrapper>
   );
 }
-
-RankNavigator.defaultProps = defaultProps;

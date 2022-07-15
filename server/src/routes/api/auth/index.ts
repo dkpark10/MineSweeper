@@ -9,6 +9,7 @@ import {
   recordAnonymousGame,
   recordUserGame,
   record2048GameLog,
+  recordAnonymousGame2048,
 } from "../game/game.controller";
 
 import { logout } from "../user/user.controller";
@@ -17,7 +18,7 @@ import userIdentification from "../../../middlewares/user_identification";
 const router: Router = Router();
 
 router.post("/game/minesweeper", recordAnonymousGame);
-// router.post("/game/2048", recordAnonymousGame);
+router.post("/game/2048", recordAnonymousGame2048);
 
 // 로그인 토큰검증 미들웨어
 router.use(async (request: Request, response: Response, next: NextFunction) => {

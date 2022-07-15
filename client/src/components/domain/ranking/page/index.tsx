@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { RouteComponentProps, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import queryString from 'query-string';
 
+import { GameProps } from 'rankpage-type';
 import { AxiosResponse } from 'axios';
 import {
   Header,
@@ -18,41 +19,45 @@ import {
 
 import RankWrapper from '../atoms/rank_wrapper';
 import RankNavigator from '../molecules/rank_navigator';
-import RankItem from '../molecules/rank_item';
+import RankHeader from '../molecules/rank_table_header';
+import RankList from '../molecules/rank_table_list';
 import SearchInput from '../atoms/search_input';
+import Select from '../atoms/select';
 
 import axiosInstance from '../../../../utils/default_axios';
 import useFetch from '../../../custom_hooks/usefetch';
 import { useStringInput } from '../../../custom_hooks/useinput';
 
 interface MatchParams {
-  level: string;
+  game: string;
   page: string;
-}
-
-interface GameProps {
-  id: string;
-  record: string;
-  ranking: number;
-  totalItemCount: number;
 }
 
 export default function Ranking({
   match,
   location,
 }: RouteComponentProps<MatchParams>) {
-  const { page } = queryString.parse(location.search);
-  const { level } = match.params;
-  const [url, setUrl] = useState(`/api/game/minesweeper/${level}?page=${page}`);
+  const { page, level } = queryString.parse(location.search);
+  const { game } = match.params;
+
+  const [url, setUrl] = useState(`/api/game/${game}?page=${page}&level=${level}`);
   const [rankData, loading, error, setRankData] = useFetch<GameProps[]>(url);
   const [userToFind, setUserToFind] = useStringInput('');
+
+  useEffect(() => {
+    if (game === 'minesweeper') {
+      setUrl(`/api/game/${game}?page=${page}&level=${level}`);
+    } else {
+      setUrl(`/api/game/${game}?page=${page}`);
+    }
+  }, [game, page, level]);
 
   const searchUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (userToFind.length === 0) {
       setUrl(`/api/game/minesweeper/${level}?page=${page}`);
     } else {
-      setUrl(`/api/game/minesweeper${level}?user=${userToFind}`);
+      setUrl(`/api/game/minesweeper/${level}?user=${userToFind}`);
     }
 
     try {
@@ -80,35 +85,21 @@ export default function Ranking({
       <div>
         <RankWrapper>
           <RankNavigator
-            currentLevel={level}
+            currentGame={game}
           />
           <SearchInput
             value={userToFind}
             setValue={setUserToFind}
             search={searchUser}
           />
-          <RankItem />
-          <ul>
-            {rankData.map((rank, idx) => (
-              <li key={rank.ranking}>
-                <Link
-                  to={{
-                    pathname: `/mypage/${rank.id}`,
-                    state: {
-                      userid: rank.id,
-                    },
-                  }}
-                  replace
-                >
-                  <RankItem
-                    rank={Number(page) + idx}
-                    id={rank.id}
-                    record={rank.record}
-                  />
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <Select
+            currentGame={game}
+          />
+          <RankHeader />
+          <RankList
+            rankData={rankData}
+            page={page as string}
+          />
           <PageNation
             url={match.url}
             totalItemCount={rankData.length === 0 ? 1 : rankData[0].totalItemCount}

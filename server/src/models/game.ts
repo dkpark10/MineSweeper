@@ -23,6 +23,7 @@ export type GameRecordType = RowDataPacket & {
 }
 
 export default class GameModel extends Model {
+  private readonly table2048 = 'game2048';
 
   constructor(c: mysql.Connection, r: redis.RedisClient) {
     super(c, r);
@@ -44,7 +45,7 @@ export default class GameModel extends Model {
   }
 
   public insert2048GameLog({ id, record }: Partial<GameRecord>): Promise<boolean | QueryError> {
-    const query = `INSERT INTO 2048 (GAMENUM, ID, RECORD, DATE) VALUES (?,?,?,NOW())`;
+    const query = `INSERT INTO ${this.table2048} (GAMENUM, ID, RECORD, DATE) VALUES (?,?,?,NOW())`;
 
     return new Promise((resolve, reject) => {
       this.connection.query(query, [null, id, record], (err) => {
@@ -182,8 +183,8 @@ export default class GameModel extends Model {
   public getGame2048Lank({ begin, end }: { [key: string]: number }) {
     const query = `
       SELECT id, record, RANK() over(ORDER BY record) AS 'ranking',
-      (SELECT COUNT(*) FROM 2048) AS totalItemCount
-      FROM 2048
+      (SELECT COUNT(*) FROM ${this.table2048}) AS totalItemCount
+      FROM ${this.table2048}
       ORDER BY record
       LIMIT ?,?`;
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import PageNationItem from '../atoms/page_nation_item';
 import {
   calculBeginPage,
@@ -55,23 +56,32 @@ export default function PageNation({
   return (
     <PageNationWrapper>
       <PageNationStyle>
-        <PageNationItem
-          value='◀'
-          url={`${url}?page=${calculPrevButtonBeginPage({ countPageShow, currentPage })}`}
-        />
+        <Link
+          to={`${url}?page=${calculPrevButtonBeginPage({ countPageShow, currentPage })}`}
+        >
+          <PageNationItem
+            value='◀'
+          />
+        </Link>
         {Array.from({ length: countPageShow }, (_, i) => i + beginPage)
           .map((page) => (
-            <PageNationItem
+            <Link
               key={page}
-              value={String(page)}
-              url={`${url}?page=${page}`}
-              currentPage={currentPage === page}
-            />
+              to={`${url}?page=${page}`}
+            >
+              <PageNationItem
+                value={String(page)}
+                currentPage={currentPage === page}
+              />
+            </Link>
           ))}
-        <PageNationItem
-          value='▶'
-          url={`${url}?page=${calculNextButtonBeginPage({ countPageShow, currentPage, lastPage })}`}
-        />
+        <Link
+          to={`${url}?page=${calculNextButtonBeginPage({ countPageShow, currentPage, lastPage })}`}
+        >
+          <PageNationItem
+            value='▶'
+          />
+        </Link>
       </PageNationStyle>
     </PageNationWrapper>
   );
