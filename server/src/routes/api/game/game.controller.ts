@@ -4,7 +4,7 @@ import shortid from 'shortid';
 import model from '../../../models';
 import { GameRecord } from '../../../models/game';
 
-export const getGameRankData = async (request: Request, response: Response, next: NextFunction) => {
+export const getMineSweeperRankData = async (request: Request, response: Response, next: NextFunction) => {
   try {
     const { page, level, user } = request.query;
     if (user) {
@@ -16,7 +16,7 @@ export const getGameRankData = async (request: Request, response: Response, next
 
     const end = Number(page) * request.app.get('itemCountPerPage');
     const begin = end - request.app.get('itemCountPerPage');
-    const data = await model.game.getGameLank(level as string, { begin, end });
+    const data = await model.game.getMineSweeperLank(level as string, { begin, end });
 
     response.status(200).send(data);
   }
@@ -25,11 +25,10 @@ export const getGameRankData = async (request: Request, response: Response, next
   }
 }
 
-export const getUserGameSearch = async (request: Request, response: Response) => {
+export const getUserSearchMineSweeper = async (request: Request, response: Response) => {
   try {
-    const level = request.params.level;
-    const { user } = request.query;
-    const data = await model.game.getUserRankInfo(user as string, level);
+    const { user, level } = request.query;
+    const data = await model.game.getUserRankInfoMineSweeper(user as string, level as string);
     response.status(200).send(data);
   } catch (e) {
     response.status(201).send(e);
@@ -174,5 +173,15 @@ export const get2048RankData = async (request: Request, response: Response, next
   }
   catch (e) {
     response.status(202).send([]);
+  }
+}
+
+export const getUserSearch2048 = async (request: Request, response: Response) => {
+  try {
+    const { user } = request.query;
+    const data = await model.game.getUserRankInfo2048(user as string);
+    response.status(200).send(data);
+  } catch (e) {
+    response.status(201).send(e);
   }
 }

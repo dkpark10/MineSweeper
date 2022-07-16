@@ -1,15 +1,16 @@
-import { Router, Request, Response, NextFunction } from "express";
+import { Router } from "express";
 import {
   getUserGameData,
-  getGameRankData,
-  getUserGameSearch,
+  getMineSweeperRankData,
+  getUserSearchMineSweeper,
+  getUserSearch2048,
   get2048RankData,
 } from './game.controller';
 
 const router = Router();
 
-router.get('/minesweeper', getGameRankData, getUserGameSearch);
-router.get('/2048', get2048RankData);
+router.get('/minesweeper', getMineSweeperRankData, getUserSearchMineSweeper);
+router.get('/2048', get2048RankData, getUserSearch2048);
 router.get('/', getUserGameData);
 
 export default router;

@@ -42,7 +42,7 @@ export default function GameHome() {
           <Link to='/2048'>
             <GameIcon
               testid='2048'
-              backgroundColor='#fb8500'
+              backgroundColor={theme.orangeColor}
             >
               2048
             </GameIcon>

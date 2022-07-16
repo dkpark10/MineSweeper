@@ -25,6 +25,7 @@ const PageNationStyle = styled.nav`
   background-color: white;
   height:100%;
   box-shadow: 5px 5px 16px -2px rgb(175, 175, 175);
+  border-radius: 8px;
 
   @media screen and (${({ theme }) => theme.mobile}){
     width:100vw;

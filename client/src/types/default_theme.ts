@@ -10,8 +10,9 @@ declare module 'styled-components' {
     HeaderFont: string;
     BodyFont: string;
     mobile: string;
-    minTablet:string;
-    maxTablet:string;
-    desktop:string;
+    minTablet: string;
+    maxTablet: string;
+    desktop: string;
+    orangeColor: string;
   }
 }

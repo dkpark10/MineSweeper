@@ -76,7 +76,7 @@ export default class GameModel extends Model {
     });
   }
 
-  public getGameLank(level: string, { begin, end }: { [key: string]: number }) {
+  public getMineSweeperLank(level: string, { begin, end }: { [key: string]: number }) {
     const query =
       `SELECT id, record, RANK() over(ORDER BY record) AS 'ranking',
         (SELECT COUNT(*) 
@@ -155,7 +155,7 @@ export default class GameModel extends Model {
     });
   }
 
-  public getUserRankInfo(userid: string, level: string): Promise<GameRecord> {
+  public getUserRankInfoMineSweeper(userid: string, level: string): Promise<GameRecord> {
     const query = `
     SELECT id, record, ranking,
     (SELECT COUNT(*) FROM 
@@ -197,5 +197,29 @@ export default class GameModel extends Model {
         }
       });
     });
+  }
+
+  public getUserRankInfo2048(user: string) {
+    const query = `
+      SELECT id, record, ranking,
+      (SELECT COUNT(*) FROM 
+        (SELECT ID FROM ${this.table2048} WHERE id=? LIMIT ?)AS a
+      ) AS totalItemCount
+      FROM (
+        SELECT id, record, RANK() over(ORDER BY record) AS 'ranking'
+        FROM ${this.table2048}
+      )ranked
+      WHERE id=?
+      LIMIT ?,?`;
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, [user, 20, user, 0, 20], (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    })
   }
 }

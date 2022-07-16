@@ -41,4 +41,5 @@ declare module 'mine-sweeper-type' {
   }
 
   export type LevelType = 'easy' | 'normal' | 'hard';
+  export type LevelTypeKR = '쉬움' | '보통' | '어려움';
 }

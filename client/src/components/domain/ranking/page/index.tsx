@@ -41,8 +41,8 @@ export default function Ranking({
   const { game } = match.params;
 
   const [url, setUrl] = useState(`/api/game/${game}?page=${page}&level=${level}`);
-  const [rankData, loading, error, setRankData] = useFetch<GameProps[]>(url);
-  const [userToFind, setUserToFind] = useStringInput('');
+  const [rankData, loading, error] = useFetch<GameProps[]>(url);
+  const [userToFind, onChangeUserToFind, setUserToFind] = useStringInput('');
 
   useEffect(() => {
     if (game === 'minesweeper') {
@@ -55,19 +55,9 @@ export default function Ranking({
   const searchUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (userToFind.length === 0) {
-      setUrl(`/api/game/minesweeper/${level}?page=${page}`);
+      setUrl(`/api/game/${game}?level=${level}&page=${page}`);
     } else {
-      setUrl(`/api/game/minesweeper/${level}?user=${userToFind}`);
-    }
-
-    try {
-      const { data }: AxiosResponse<GameProps[]> = await axiosInstance.get(url);
-      setRankData(data.map((item) => ({
-        ...item,
-        totalItemCount: data.length,
-      })));
-    } catch (err) {
-      // empty
+      setUrl(`/api/game/${game}?level=${level}&user=${userToFind}`);
     }
   };
 
@@ -89,11 +79,15 @@ export default function Ranking({
           />
           <SearchInput
             value={userToFind}
-            setValue={setUserToFind}
+            setValue={onChangeUserToFind}
             search={searchUser}
           />
           <Select
-            currentGame={game}
+            disabled={game !== 'minesweeper'}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+              setUrl(`/api/game/minesweeper?level=${e.target.value}&page=1`);
+              setUserToFind('');
+            }}
           />
           <RankHeader />
           <RankList
