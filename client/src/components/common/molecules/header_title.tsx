@@ -28,7 +28,7 @@ export default function HeaderTitle({
         <Title
           fontColor
         >
-          Mine Sweeper
+          Game World
         </Title>
       </Link>
     </HeaderTitleWrapper>

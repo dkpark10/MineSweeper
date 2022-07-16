@@ -15,7 +15,6 @@ import axiosInstance from '../../../utils/default_axios';
 
 const HeaderWrapper = styled.header`
   position: relative;
-  width:100%;
   height:59px;
   font-family: 'Noto Sans KR', sans-serif;
   background-color: ${({ theme }) => theme.grayMainColor};
@@ -56,7 +55,8 @@ const NavigatorWrapper = styled.nav<{ show: boolean }>`
     z-index:98;
     font-size:1.25rem;
     animation: ${({ show }) => (show === true
-    ? css`${MenuMoveAnimation(0)} 0.1s linear forwards` : '')};
+    ? css`${MenuMoveAnimation(0)} 0.1s linear forwards`
+    : '')};
 
     .menu_content{
       position:relative;

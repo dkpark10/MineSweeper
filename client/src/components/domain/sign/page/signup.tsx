@@ -2,6 +2,8 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { RouteComponentProps, Link } from 'react-router-dom';
 import { AxiosResponse } from 'axios';
 import { debounce } from 'lodash';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../reducers/index';
 
 import Input, { Label } from '../atoms/input';
 import Title from '../../../common/atoms/title';
@@ -20,6 +22,7 @@ interface InputProps {
 }
 
 export default function SignUp({ history }: RouteComponentProps) {
+  const titleHeader = useSelector(({ title }: RootState) => title.title);
   const [validator, setValidator] = useState({
     id: { result: false, msg: '' },
     email: { result: false, msg: '' },
@@ -138,7 +141,7 @@ export default function SignUp({ history }: RouteComponentProps) {
             fontColor
             margin='1.2rem 0px'
           >
-            Mine Sweeper
+            {titleHeader}
           </Title>
         </Link>
         <form onSubmit={submintHandler}>

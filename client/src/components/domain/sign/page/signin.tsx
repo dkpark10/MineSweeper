@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { RouteComponentProps, Link } from 'react-router-dom';
-import { AxiosResponse } from 'axios';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Response, LoginInfo } from 'response-type';
 import { useObjectInput } from '../../../custom_hooks/useinput';
-import axiosInstance from '../../../../utils/default_axios';
+import axiosInstance, { MyResponses } from '../../../../utils/default_axios';
+
 import { setLogin } from '../../../../reducers/login';
+import { RootState } from '../../../../reducers/index';
 
 import Input, { Label } from '../atoms/input';
 
@@ -31,6 +32,7 @@ interface InputProps {
 
 export default function SignIn({ history }: RouteComponentProps) {
   const dispatch = useDispatch();
+  const titleHeader = useSelector(({ title }: RootState) => title.title);
   const [value, changeValue, setChangeValue] = useObjectInput<InputProps>({
     userid: '',
     password: '',
@@ -44,7 +46,7 @@ export default function SignIn({ history }: RouteComponentProps) {
     }
 
     try {
-      const { status, data }: AxiosResponse<Response> = await axiosInstance.post('/api/login', {
+      const { status, data }: MyResponses<Response> = await axiosInstance.post('/api/login', {
         userid: value.userid,
         password: value.password,
       });
@@ -84,7 +86,7 @@ export default function SignIn({ history }: RouteComponentProps) {
             fontColor
             margin='1.2rem 0px'
           >
-            Mine Sweeper
+            {titleHeader}
           </Title>
         </Link>
         <form onSubmit={submintHandler}>

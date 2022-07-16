@@ -1,13 +1,13 @@
 import '@testing-library/jest-dom/extend-expect';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import axios from 'axios';
-import axiosInstance from '../utils/default_axios';
 import MockAdapter from 'axios-mock-adapter';
+import axiosInstance from '../utils/default_axios';
 import defaultComponent from './default';
 
 describe('랭킹 페이지 테스트', () => {
   const mock = new MockAdapter(axiosInstance, { delayResponse: 200 });
-  mock.onGet('/api/game/minesweeper/easy?page=1').reply(200, [
+  mock.onGet('/api/game/minesweeper?page=1&level=easy').reply(200, [
     {
       id: 'dkpark10',
       record: '9.849',
