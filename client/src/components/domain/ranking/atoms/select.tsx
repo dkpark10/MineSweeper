@@ -1,11 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { LevelType, LevelTypeKR } from 'mine-sweeper-type';
 
-const Select = styled.select`
-  width: 8rem;
-  height: 1.9rem;
-  border-radius: .25em;
+import {
+  LevelType,
+  LevelTypeKR,
+} from 'mine-sweeper-type';
+import {
+  Button,
+  Overlay,
+} from '../../../common/atoms/index';
+
+interface OptionProps {
+  width: string;
+  height: string;
+  radius: string;
+}
+
+const SelectWrapper = styled.div`
+  width:8rem;
+  @media screen and (${({ theme }) => theme.mobile}) {
+    width:28vw;
+  }
+`;
+
+const SelectButton = styled(Button)`
   overflow: hidden;
   background-color: ${({ theme }) => theme.grayMainColor};
   text-align:center;
@@ -13,9 +32,41 @@ const Select = styled.select`
   cursor:pointer;
 `;
 
+const OptionItem = styled.ul<OptionProps>`
+  border-radius: ${({ radius }) => radius};
+  background-color: ${({ theme }) => theme.grayMainColor};
+  position:absolute;
+  width: ${({ width }) => width};
+  list-style: none;
+
+  @media screen and (${({ theme }) => theme.mobile}) {
+    width:28vw;
+  }
+
+  li{
+    height: ${({ height }) => height};
+    font-family: inherit;
+    font-size:0.8rem;
+    text-align:center;
+    color:white;
+    cursor:pointer;
+    position:relative;
+  }
+
+  li .content {
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+  }
+
+  li:hover{
+    background-color: ${({ theme }) => theme.mainColor};
+  }
+`;
+
 interface Props {
   disabled: boolean;
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 type LevelItem = {
@@ -25,9 +76,10 @@ type LevelItem = {
 
 export default function RankSelect({
   disabled,
-  onChange,
 }: Props) {
-  const levelItem: LevelItem[] = [
+  const [optionOpen, setOptionOpen] = useState(false);
+  const [currentValue, setCurrentValue] = useState('쉬움');
+  const levelItems: LevelItem[] = [
     {
       value: 'easy',
       text: '쉬움',
@@ -42,20 +94,57 @@ export default function RankSelect({
     },
   ];
 
+  const click = () => {
+    setOptionOpen(!optionOpen);
+  };
+
   return (
-    <Select
-      name='minesweeper_level_rank'
-      onChange={onChange}
-    >
-      {levelItem.map(({ value, text }) => (
-        <option
-          key={value}
-          disabled={disabled}
-          value={value}
-        >
-          {text}
-        </option>
-      ))}
-    </Select>
+    <SelectWrapper>
+      <SelectButton
+        width='100%'
+        radius='4px'
+        height='1.9rem'
+        onClick={click}
+        disabled={disabled}
+        className='select_button'
+      >
+        {currentValue}
+      </SelectButton>
+      {optionOpen
+        && (
+          <OptionItem
+            width='8rem'
+            height='1.9rem'
+            radius='4px'
+          >
+            {levelItems.map((levelItem) => (
+              levelItem.text !== currentValue
+                ? (
+                  <Link
+                    key={levelItem.value}
+                    to={`minesweeper?page=1&level=${levelItem.value}`}
+                    onClick={() => {
+                      setOptionOpen(false);
+                      setCurrentValue(levelItem.text);
+                    }}
+                  >
+                    <li>
+                      <span className='content'>
+                        {levelItem.text}
+                      </span>
+                    </li>
+                  </Link>
+                )
+                : (
+                  <li key={levelItem.value}>
+                    <span className='content'>
+                      {levelItem.text}
+                    </span>
+                  </li>
+                )
+            ))}
+          </OptionItem>
+        )}
+    </SelectWrapper>
   );
 }

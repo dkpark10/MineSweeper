@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import queryString from 'query-string';
 
 import { GameProps } from 'rankpage-type';
-import { AxiosResponse } from 'axios';
 import {
   Header,
   Footer,
@@ -17,16 +16,14 @@ import {
   Loading,
 } from '../../../common/atoms/index';
 
-import RankWrapper from '../atoms/rank_wrapper';
+import RankWrapper, { RankListWrapper } from '../atoms/rank_wrapper';
 import RankNavigator from '../molecules/rank_navigator';
 import RankHeader from '../molecules/rank_table_header';
 import RankList from '../molecules/rank_table_list';
 import SearchInput from '../atoms/search_input';
 import Select from '../atoms/select';
 
-import axiosInstance from '../../../../utils/default_axios';
 import useFetch from '../../../custom_hooks/usefetch';
-import { useStringInput } from '../../../custom_hooks/useinput';
 
 interface MatchParams {
   game: string;
@@ -42,7 +39,7 @@ export default function Ranking({
 
   const [url, setUrl] = useState(`/api/game/${game}?page=${page}&level=${level}`);
   const [rankData, loading, error] = useFetch<GameProps[]>(url);
-  const [userToFind, onChangeUserToFind, setUserToFind] = useStringInput('');
+  const searchUserInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (game === 'minesweeper') {
@@ -54,10 +51,11 @@ export default function Ranking({
 
   const searchUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (userToFind.length === 0) {
+    const user = searchUserInput.current?.value;
+    if (user?.length === 0) {
       setUrl(`/api/game/${game}?level=${level}&page=${page}`);
     } else {
-      setUrl(`/api/game/${game}?level=${level}&user=${userToFind}`);
+      setUrl(`/api/game/${game}?level=${level}&user=${user}`);
     }
   };
 
@@ -78,22 +76,19 @@ export default function Ranking({
             currentGame={game}
           />
           <SearchInput
-            value={userToFind}
-            setValue={onChangeUserToFind}
+            ref={searchUserInput}
             search={searchUser}
           />
           <Select
             disabled={game !== 'minesweeper'}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-              setUrl(`/api/game/minesweeper?level=${e.target.value}&page=1`);
-              setUserToFind('');
-            }}
           />
-          <RankHeader />
-          <RankList
-            rankData={rankData}
-            page={page as string}
-          />
+          <RankListWrapper>
+            <RankHeader />
+            <RankList
+              rankData={rankData}
+              page={page as string}
+            />
+          </RankListWrapper>
           <PageNation
             url={match.url}
             totalItemCount={rankData.length === 0 ? 1 : rankData[0].totalItemCount}

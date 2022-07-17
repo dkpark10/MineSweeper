@@ -33,6 +33,12 @@ const DefaultTile = styled.div<{ backgroundColor: string }>`
   &:hover{
     animation: ${expand} 1s;
   }
+
+  @media screen and (${({ theme }) => theme.mobile}){
+    width:114px;
+    height:114px;
+    font-size:2.6rem;
+  }
 `;
 
 export default function Tile({

@@ -26,6 +26,10 @@ const RankNavigation = styled.div`
     text-decoration: none;
     font-weight:bold;
   }
+
+  @media screen and (${({ theme }) => theme.mobile}) {
+    width: 100%;
+  }
 `;
 
 interface Props {

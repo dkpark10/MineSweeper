@@ -1,7 +1,24 @@
 import React from 'react';
+import styled from 'styled-components';
 import { GameProps } from 'rankpage-type';
 import { Link } from 'react-router-dom';
 import RankItem from './rank_table_item';
+
+const RankListWrapper = styled.ul`
+  list-style: none;
+
+  li:nth-child(odd) {
+    background-color: white;
+  }
+
+  li:last-child{
+    margin-bottom: 10px;
+  }
+
+  a {
+    text-decoration: none;
+  }
+`;
 
 interface Props {
   rankData: GameProps[];
@@ -13,10 +30,10 @@ export default function RankList({
   page,
 }: Props) {
   return (
-    <ul>
+    <RankListWrapper>
       {rankData.map((rank, idx) => (
         <li
-          key={Number(page) + idx}
+          key={rank.ranking}
         >
           <Link
             to={{
@@ -35,6 +52,6 @@ export default function RankList({
           </Link>
         </li>
       ))}
-    </ul>
+    </RankListWrapper>
   );
 }
