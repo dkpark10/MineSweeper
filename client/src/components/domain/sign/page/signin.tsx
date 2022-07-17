@@ -115,7 +115,6 @@ export default function SignIn({ history }: RouteComponentProps) {
               width='100%'
               height='100%'
               backgroundColor='white'
-              type='submit'
               onClick={setGeustId}
             >
               <Content

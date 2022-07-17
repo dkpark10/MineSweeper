@@ -20,6 +20,7 @@ const Input = styled('input').attrs(({ type, value }: Props) => ({
   font-size: 0.85rem;
   border-radius: 8px;
   padding: .8em .9em;
+  font-weight: bold;
   color: ${({ type }) => (type === 'submit' ? 'white' : 'black')};
 
   ${({ type, theme }) => {

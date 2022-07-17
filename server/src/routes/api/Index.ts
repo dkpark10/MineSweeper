@@ -18,6 +18,8 @@ import {
   testRun
 } from './testapi/test.controller';
 
+import userRegistVerify from "../../middlewares/userregist_verify";
+
 const router: Router = Router();
 
 router.use('/auth', authRouter);
@@ -27,7 +29,7 @@ router.post('/login', login);
 router.post('/slientlogin', slientLogin);
 
 router.get('/user', isExistUser);
-router.post('/user', registUser);
+router.post('/user', userRegistVerify, registUser);
 
 router.get('/posts', getPostListperPage);
 router.get('/posts/:postid', getPost);

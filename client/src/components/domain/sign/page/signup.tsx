@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { RouteComponentProps, Link } from 'react-router-dom';
 import { AxiosResponse } from 'axios';
 import { debounce } from 'lodash';
@@ -11,8 +11,13 @@ import { useObjectInput } from '../../../custom_hooks/useinput';
 import SignWrapper from '../atoms/wrapper';
 import WarningMessage from '../atoms/warning_message';
 
+import useCompare from '../../../custom_hooks/usecompare';
+import useVerifyId from '../../../custom_hooks/useverify_id';
+import useVerifyEmail from '../../../custom_hooks/useverify_email';
+import useVerifyPassword from '../../../custom_hooks/useverify_password';
+
 import axiosInstance from '../../../../utils/default_axios';
-import { invalidMessage } from '../../../../utils/static_data';
+import invalidMessage from '../../../../utils/static_data';
 
 interface InputProps {
   id: string;
@@ -23,54 +28,21 @@ interface InputProps {
 
 export default function SignUp({ history }: RouteComponentProps) {
   const titleHeader = useSelector(({ title }: RootState) => title.title);
-  const [validator, setValidator] = useState({
-    id: { result: false, msg: '' },
-    email: { result: false, msg: '' },
-    password: { result: false },
-    repeatPassword: { result: false },
-  });
+  const [idDuplicate, setIdDuplicate] = useState(false);
 
-  const duplicateCheck = useMemo(() => debounce(async ({ name, value }:
+  const duplicateIdCheck = useMemo(() => debounce(async ({ name, value }:
   { name: string, value: string }) => {
-    if (name !== 'id' && name !== 'email') {
-      return;
-    }
-
-    const regList: { [key: string]: RegExp } = {
-      id: /^[A-za-z0-9]{5,15}$/g,
-      email: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
-    };
-
-    if (value && regList[name].exec(value) === null) {
-      setValidator((prev) => ({
-        ...prev,
-        [name]: {
-          result: false,
-          msg: invalidMessage[name][0],
-        },
-      }));
+    if (name !== 'id') {
       return;
     }
 
     const { data }: AxiosResponse<boolean> = await axiosInstance.get(`/api/user?id=${value}`);
     if (value && data === true) {
-      setValidator((prev) => ({
-        ...prev,
-        id: {
-          result: false,
-          msg: invalidMessage[name][1],
-        },
-      }));
+      setIdDuplicate(true);
       return;
     }
 
-    setValidator((prev) => ({
-      ...prev,
-      [name]: {
-        result: value.length !== 0,
-        msg: '',
-      },
-    }));
+    setIdDuplicate(false);
   }, 350), []);
 
   const [value, changeValue] = useObjectInput<InputProps>({
@@ -78,35 +50,45 @@ export default function SignUp({ history }: RouteComponentProps) {
     email: '',
     password: '',
     repeatPassword: '',
-  }, duplicateCheck);
+  }, duplicateIdCheck);
 
-  useEffect(() => {
-    const passwordReg = /^[A-Za-z0-9]{6,15}$/;
-    if (value.password) {
-      setValidator((prev) => ({
-        ...prev,
-        password: {
-          result: passwordReg.exec(value.password) !== null,
-        },
-      }));
-    }
+  const isValidId = useVerifyId(value.id);
+  const isValidEmail = useVerifyEmail(value.email);
+  const isValidPassword = useVerifyPassword(value.password);
+  const passwordSame = useCompare<string>({
+    val1: value.password,
+    val2: value.repeatPassword,
+  });
 
-    if (value.repeatPassword) {
-      setValidator((prev) => ({
-        ...prev,
-        repeatPassword: {
-          result: value.password === value.repeatPassword,
-        },
-      }));
+  const validate = () => {
+    const invalidLength = Object.entries(value)
+      .map((item) => item[1])
+      .filter((val) => val.length <= 0).length > 0;
+
+    if (invalidLength
+      || idDuplicate
+      || !isValidId
+      || !isValidEmail
+      || !isValidPassword
+      || !passwordSame) {
+      return false;
     }
-  }, [value.password, value.repeatPassword]);
+    return true;
+  };
+
+  const getInvalidIdMessage = (): string => {
+    if (isValidId) {
+      if (idDuplicate) {
+        return invalidMessage.idduplicate;
+      }
+      return '';
+    }
+    return invalidMessage.id;
+  };
 
   const submintHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const checkValidValue = Object.entries(validator)
-      .filter(([, validatorElement]) => validatorElement.result === false).length > 0;
-
-    if (checkValidValue) {
+    if (!validate()) {
       // eslint-disable-next-line
       alert('양식에 맞게 다시 작성해 주세요.');
       return;
@@ -156,9 +138,14 @@ export default function SignUp({ history }: RouteComponentProps) {
               onChange={changeValue}
             />
             <WarningMessage
-              show={validator.id.result === false && value.id.length > 0}
+              show={
+                value.id.length > 0
+                && (isValidId === false
+                  || idDuplicate
+                )
+              }
             >
-              {validator.id.msg}
+              {getInvalidIdMessage()}
             </WarningMessage>
           </div>
           <div>
@@ -172,9 +159,12 @@ export default function SignUp({ history }: RouteComponentProps) {
               onChange={changeValue}
             />
             <WarningMessage
-              show={validator.email.result === false && value.email.length > 0}
+              show={
+                value.email.length > 0
+                && isValidEmail === false
+              }
             >
-              {validator.email.msg}
+              {invalidMessage.email}
             </WarningMessage>
           </div>
           <div>
@@ -188,9 +178,12 @@ export default function SignUp({ history }: RouteComponentProps) {
               onChange={changeValue}
             />
             <WarningMessage
-              show={validator.password.result === false && value.password.length > 0}
+              show={
+                value.password.length > 0
+                && isValidPassword === false
+              }
             >
-              {invalidMessage.password as string}
+              {invalidMessage.password}
             </WarningMessage>
           </div>
           <div>
@@ -204,9 +197,12 @@ export default function SignUp({ history }: RouteComponentProps) {
               onChange={changeValue}
             />
             <WarningMessage
-              show={validator.repeatPassword.result === false && value.repeatPassword.length > 0}
+              show={
+                value.repeatPassword.length > 0
+                && passwordSame === false
+              }
             >
-              {invalidMessage.repeatPassword as string}
+              {invalidMessage.repeatPassword}
             </WarningMessage>
           </div>
           <Input
