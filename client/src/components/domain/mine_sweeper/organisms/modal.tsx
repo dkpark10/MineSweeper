@@ -5,13 +5,14 @@ import { LevelType } from 'mine-sweeper-type';
 import { RootState } from '../../../../reducers/index';
 import axiosInstance from '../../../../utils/default_axios';
 import secretKey from '../../../../config/secret_key';
+import ModalWrapper from '../../../common/organisms/modal_wrapper';
 
 import {
   Button,
   Content,
 } from '../../../common/atoms/index';
 
-interface Props {
+export interface Props {
   takenTime: number;
   level: LevelType;
   isGameSuccess: boolean;
@@ -26,7 +27,7 @@ const ModalContentStyle = styled.div`
   text-align: center;
   background-color: white;
   box-shadow:  17px 17px 38px #121212,
-         -1px -1px 3px #ffffff;
+        -1px -1px 3px #ffffff;
 `;
 
 const CloseButton = styled(Button)`
@@ -42,7 +43,7 @@ const CloseButton = styled(Button)`
   }
 `;
 
-export default function ModalContent({
+export default function ModalMineSweeper({
   takenTime,
   level,
   isGameSuccess,
@@ -58,7 +59,7 @@ export default function ModalContent({
   useEffect(() => {
     const request = async () => {
       try {
-        await axiosInstance.post('/api/auth/game', {
+        await axiosInstance.post('/api/auth/game/minesweeper', {
           id: userid === '' ? 'anonymous' : userid,
           record: takenTime / 1000,
           success: isGameSuccess ? 'success' : 'fail',
@@ -74,32 +75,35 @@ export default function ModalContent({
   }, [isGameSuccess, level, takenTime, userid]);
 
   return (
-    <ModalContentStyle>
-      <Content
-        fontColor
-        fontSize='1.15rem'
+    <ModalWrapper>
+      <ModalContentStyle
+        className='modal'
       >
-        {isGameSuccess ? '성공' : '실패'}
-      </Content>
-      <div>
-        {' '}
-        시간 :
-        {(takenTime) / 1000}
-      </div>
-      <div>
-        {' '}
-        레벨 :
-        {levels[level]}
-      </div>
-      <CloseButton
-        width='75px'
-        height='25px'
-        radius='5px'
-        border='none'
-        onClick={onMouseClick}
-      >
-        닫기
-      </CloseButton>
-    </ModalContentStyle>
+        <Content
+          fontColor
+          fontSize='1.15rem'
+        >
+          {isGameSuccess ? '성공' : '실패'}
+        </Content>
+        <div>
+          {' '}
+          {`시간: ${(takenTime) / 1000}`}
+        </div>
+        <div>
+          {' '}
+          레벨 :
+          {levels[level]}
+        </div>
+        <CloseButton
+          width='75px'
+          height='25px'
+          radius='5px'
+          border='none'
+          onClick={onMouseClick}
+        >
+          닫기
+        </CloseButton>
+      </ModalContentStyle>
+    </ModalWrapper>
   );
 }

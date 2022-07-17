@@ -3,10 +3,10 @@ import styled from 'styled-components';
 interface Props {
   width?: string;
   height?: string;
-  children: JSX.Element | string | number;
   border?:string;
   radius?:string;
   backgroundColor?: string;
+  children: JSX.Element | string | number;
 }
 
 export default styled.button<Props>`

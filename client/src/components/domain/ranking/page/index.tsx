@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { RouteComponentProps, Link } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import queryString from 'query-string';
 
-import { AxiosResponse } from 'axios';
+import { GameProps } from 'rankpage-type';
+
 import {
   Header,
   Footer,
@@ -16,57 +17,46 @@ import {
   Loading,
 } from '../../../common/atoms/index';
 
-import RankWrapper from '../atoms/rank_wrapper';
+import RankWrapper, { RankListWrapper } from '../atoms/rank_wrapper';
 import RankNavigator from '../molecules/rank_navigator';
-import RankItem from '../molecules/rank_item';
+import RankHeader from '../molecules/rank_table_header';
+import RankList from '../molecules/rank_table_list';
 import SearchInput from '../atoms/search_input';
+import Select from '../atoms/select';
 
-import axiosInstance from '../../../../utils/default_axios';
-import useAxios from '../../../custom_hooks/useaxios';
-import { useStringInput } from '../../../custom_hooks/useinput';
+import useFetch from '../../../custom_hooks/usefetch';
 
 interface MatchParams {
-  level: string;
+  game: string;
   page: string;
-}
-
-interface GameProps {
-  id: string;
-  record: string;
-  ranking: number;
-  totalItemCount: number;
 }
 
 export default function Ranking({
   match,
   location,
 }: RouteComponentProps<MatchParams>) {
-  const { page } = queryString.parse(location.search);
-  const { level } = match.params;
-  const [url, setUrl] = useState(`/api/game/${level}?page=${page}`);
-  const [rankData, loading, error, setRankData] = useAxios<GameProps[]>(url);
-  const [value, setValue] = useStringInput('');
+  const { page, level } = queryString.parse(location.search);
+  const { game } = match.params;
+
+  const [url, setUrl] = useState(`/api/game/${game}?page=${page}&level=${level}`);
+  const [rankData, loading, error] = useFetch<GameProps[]>(url);
+  const searchUserInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setUrl(`/api/game/${level}?page=${page}`);
-  }, [level, page]);
+    if (game === 'minesweeper') {
+      setUrl(`/api/game/${game}?page=${page}&level=${level}`);
+    } else {
+      setUrl(`/api/game/${game}?page=${page}`);
+    }
+  }, [game, page, level]);
 
   const searchUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (value.length === 0) {
-      setUrl(`/api/game/${level}?page=${page}`);
+    const user = searchUserInput.current?.value;
+    if (user?.length === 0) {
+      setUrl(`/api/game/${game}?level=${level}&page=${page}`);
     } else {
-      setUrl(`/api/game/${level}?user=${value}`);
-    }
-
-    try {
-      const { data }: AxiosResponse<GameProps[]> = await axiosInstance.get(url);
-      setRankData(data.map((item) => ({
-        ...item,
-        totalItemCount: data.length,
-      })));
-    } catch (err) {
-      // empty
+      setUrl(`/api/game/${game}?level=${level}&user=${user}`);
     }
   };
 
@@ -84,35 +74,22 @@ export default function Ranking({
       <div>
         <RankWrapper>
           <RankNavigator
-            currentLevel={level}
+            currentGame={game}
           />
           <SearchInput
-            value={value}
-            setValue={setValue}
+            ref={searchUserInput}
             search={searchUser}
           />
-          <RankItem />
-          <ul>
-            {rankData.map((rank, idx) => (
-              <li key={rank.ranking}>
-                <Link
-                  to={{
-                    pathname: `/mypage/${rank.id}`,
-                    state: {
-                      userid: rank.id,
-                    },
-                  }}
-                  replace
-                >
-                  <RankItem
-                    rank={Number(page) + idx}
-                    id={rank.id}
-                    record={rank.record}
-                  />
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <Select
+            disabled={game !== 'minesweeper'}
+          />
+          <RankListWrapper>
+            <RankHeader />
+            <RankList
+              rankData={rankData}
+              page={page as string}
+            />
+          </RankListWrapper>
           <PageNation
             url={match.url}
             totalItemCount={rankData.length === 0 ? 1 : rankData[0].totalItemCount}

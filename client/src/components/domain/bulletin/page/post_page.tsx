@@ -17,7 +17,7 @@ import PostArticle from '../molecules/post_article';
 import PostCardHeader from '../molecules/post_card_header';
 import PostList from '../molecules/post_list';
 import BuelltinNavi from '../molecules/post_navigator';
-import useAxios from '../../../custom_hooks/useaxios';
+import useFetch from '../../../custom_hooks/usefetch';
 
 interface PostProps {
   id: number;
@@ -47,7 +47,7 @@ export default function Post({
 }: RouteComponentProps<MatchParams>) {
   const { postid } = match.params;
   const { state: { page } } = useLocation<State>();
-  const [response] = useAxios<PostProps[]>(`/api/posts?page=${page}`, []);
+  const [response] = useFetch<PostProps[]>(`/api/posts?page=${page}`, []);
   const widthRatio = ['64%', '20%', '16%'];
 
   return (

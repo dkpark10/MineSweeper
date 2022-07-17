@@ -11,8 +11,7 @@ import {
 } from 'mine-sweeper-type';
 import Cell from '../atoms/cell';
 import GameHeader from '../molecules/game_header';
-import ModalWrapper from '../../../common/organisms/modal_wrapper';
-import ModalContent from './modal_content';
+import Modal from './modal';
 
 import createClickFactory from '../../../../utils/mine_sweeper/click_factory';
 import CellHandler from '../../../../utils/mine_sweeper/cell_handler';
@@ -83,7 +82,7 @@ export default function MineSweeper({
   // 그럼으로 setFlag액션을 발행하면 Board가 렌더링이 되었다는 것을
   // 보장한다. 그 후에 GameInfo를 렌더링한다.
   const onWheelClickOver = ({ y, x }: Coord) => {
-    const clickHoverHandler = new ClickHoverHandler(cellData, { y, x });
+    const clickHoverHandler = new ClickHoverHandler(cellData, { y, x }, { row, col });
     clickHoverHandler
       .removePrevHoverCoord(wheelClickDown)
       .process(gameInfo);
@@ -166,14 +165,12 @@ export default function MineSweeper({
     <>
       {gameInfo.isGameOver
         && (
-          <ModalWrapper>
-            <ModalContent
-              takenTime={endTime.current - beginTime.current}
-              level={level}
-              isGameSuccess={gameInfo.gameClearSuccess}
-              onMouseClick={clickGameReset}
-            />
-          </ModalWrapper>
+          <Modal
+            takenTime={endTime.current - beginTime.current}
+            level={level}
+            isGameSuccess={gameInfo.gameClearSuccess}
+            onMouseClick={clickGameReset}
+          />
         )}
       <MineSweeperWrapper>
         <GameHeader

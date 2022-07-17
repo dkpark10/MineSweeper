@@ -2,12 +2,14 @@ import { Router, Request, Response, NextFunction } from "express";
 import {
   insertPost,
   updatePost,
-  deletePost
+  deletePost,
 } from "../posts/posts.controller";
 
 import {
   recordAnonymousGame,
-  recordUserGame
+  recordUserGame,
+  record2048GameLog,
+  recordAnonymousGame2048,
 } from "../game/game.controller";
 
 import { logout } from "../user/user.controller";
@@ -15,7 +17,8 @@ import userIdentification from "../../../middlewares/user_identification";
 
 const router: Router = Router();
 
-router.post("/game", recordAnonymousGame);
+router.post("/game/minesweeper", recordAnonymousGame);
+router.post("/game/2048", recordAnonymousGame2048);
 
 // 로그인 토큰검증 미들웨어
 router.use(async (request: Request, response: Response, next: NextFunction) => {
@@ -40,7 +43,8 @@ router.delete("/posts/:postid", deletePost);
 router.post("/posts", insertPost);
 router.patch("/posts", updatePost);
 router.post("/logout", logout);
-router.post("/game", recordUserGame);
+router.post("/game/minesweeper", recordUserGame);
+router.post("/game/2048", record2048GameLog);
 
 router.get("/test", async (req: Request, res: Response) => {
   res.status(200).send("....");

@@ -23,17 +23,32 @@ export type GameRecordType = RowDataPacket & {
 }
 
 export default class GameModel extends Model {
+  private readonly table2048 = 'game2048';
 
   constructor(c: mysql.Connection, r: redis.RedisClient) {
     super(c, r);
   }
 
-  public insertGameRecord({ id, record, success, level }: GameRecord): Promise<boolean | QueryError> {
+  public insertMineSweeperGameLog({ id, record, success, level }: GameRecord): Promise<boolean | QueryError> {
     const query = `INSERT INTO ${level}game (GAMENUM, ID, RECORD, DATE, SUCCESS)
                   VALUES (?,?,?,NOW(),?)`;
 
     return new Promise((resolve, reject) => {
       this.connection.query(query, [null, id, record, success === "success" ? 1 : 0], (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(true);
+        }
+      });
+    })
+  }
+
+  public insert2048GameLog({ id, record }: Partial<GameRecord>): Promise<boolean | QueryError> {
+    const query = `INSERT INTO ${this.table2048} (GAMENUM, ID, RECORD, DATE) VALUES (?,?,?,NOW())`;
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, [null, id, record], (err) => {
         if (err) {
           reject(err);
         } else {
@@ -61,7 +76,7 @@ export default class GameModel extends Model {
     });
   }
 
-  public getGameLank(level: string, { begin, end }: { [key: string]: number }) {
+  public getMineSweeperLank(level: string, { begin, end }: { [key: string]: number }) {
     const query =
       `SELECT id, record, RANK() over(ORDER BY record) AS 'ranking',
         (SELECT COUNT(*) 
@@ -140,7 +155,7 @@ export default class GameModel extends Model {
     });
   }
 
-  public getUserRankInfo(userid: string, level: string): Promise<GameRecord> {
+  public getUserRankInfoMineSweeper(userid: string, level: string): Promise<GameRecord> {
     const query = `
     SELECT id, record, ranking,
     (SELECT COUNT(*) FROM 
@@ -163,5 +178,48 @@ export default class GameModel extends Model {
         }
       });
     });
+  }
+
+  public getGame2048Lank({ begin, end }: { [key: string]: number }) {
+    const query = `
+      SELECT id, record, RANK() over(ORDER BY record) AS 'ranking',
+      (SELECT COUNT(*) FROM ${this.table2048}) AS totalItemCount
+      FROM ${this.table2048}
+      ORDER BY record
+      LIMIT ?,?`;
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, [begin, end], (err, data) => {
+        if (err || !data) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  }
+
+  public getUserRankInfo2048(user: string) {
+    const query = `
+      SELECT id, record, ranking,
+      (SELECT COUNT(*) FROM 
+        (SELECT ID FROM ${this.table2048} WHERE id=? LIMIT ?)AS a
+      ) AS totalItemCount
+      FROM (
+        SELECT id, record, RANK() over(ORDER BY record) AS 'ranking'
+        FROM ${this.table2048}
+      )ranked
+      WHERE id=?
+      LIMIT ?,?`;
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, [user, 20, user, 0, 20], (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    })
   }
 }

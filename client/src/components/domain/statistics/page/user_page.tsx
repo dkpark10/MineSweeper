@@ -16,7 +16,7 @@ import Statistics from '../molecules/statistics';
 import PastGameRecord from '../molecules/pastgame_record';
 import WinRateRecord from '../molecules/winrate_record';
 
-import useAxios from '../../../custom_hooks/useaxios';
+import useFetch from '../../../custom_hooks/usefetch';
 import MyPageWrapper from '../atoms/wrapper';
 
 const TitleHeaderStyle = styled.div`
@@ -30,7 +30,7 @@ interface Props {
 export default function MyPage({
   userid,
 }: Props) {
-  const [response, loading] = useAxios<GameStatisticsProps>(`/api/game?userid=${userid}`);
+  const [response, loading] = useFetch<GameStatisticsProps>(`/api/game?userid=${userid}`);
 
   if (loading) {
     return <Loading />;

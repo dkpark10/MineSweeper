@@ -1,10 +1,14 @@
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, fireEvent } from '@testing-library/react';
 import defaultComponent from './default';
 
 describe('타일 길이 테스트', () => {
   test('쉬움 테스트', async () => {
     global.localStorage.setItem('difficulty', 'easy');
-    const { container } = render(defaultComponent());
+    const { container, getByTestId } = render(defaultComponent());
+
+    await waitFor(() => {
+      fireEvent.click(getByTestId('지뢰찾기'));
+    });
 
     await waitFor(() => {
       const cells = container.getElementsByClassName('cell');

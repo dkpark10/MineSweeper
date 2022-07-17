@@ -31,7 +31,7 @@ export const useObjectInput = <T>(init: T, callback?: (props: CallbackProps) => 
 export const useStringInput = (
   init: string,
   callback?: (props: CallbackProps) => void,
-): [string, ChangeReturnType] => {
+): [string, ChangeReturnType, React.Dispatch<React.SetStateAction<string>>] => {
   const [data, setData] = useState<string>(init);
   const change = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -44,5 +44,5 @@ export const useStringInput = (
       });
     }
   };
-  return [data, change];
+  return [data, change, setData];
 };

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Loading from '../common/atoms/loading';
-import useAxios from '../custom_hooks/useaxios';
+import useFetch from '../custom_hooks/usefetch';
 
 interface Data {
   id: string;
@@ -11,7 +11,11 @@ interface Data {
 }
 
 function App() {
+<<<<<<< HEAD
   const [rankData, load, error, setRankData] = useAxios<Data[]>('/api/game/easy?page=1');
+=======
+  const [rankData, load, error, setRankData] = useFetch<Data[]>('/rank');
+>>>>>>> 2048
   // const [rankData, setUserData] = useState<Data[]>([]);
   // const [load, setLoading] = useState(false);
 

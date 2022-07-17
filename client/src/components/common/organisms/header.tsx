@@ -15,7 +15,6 @@ import axiosInstance from '../../../utils/default_axios';
 
 const HeaderWrapper = styled.header`
   position: relative;
-  width:100%;
   height:59px;
   font-family: 'Noto Sans KR', sans-serif;
   background-color: ${({ theme }) => theme.grayMainColor};
@@ -56,7 +55,8 @@ const NavigatorWrapper = styled.nav<{ show: boolean }>`
     z-index:98;
     font-size:1.25rem;
     animation: ${({ show }) => (show === true
-    ? css`${MenuMoveAnimation(0)} 0.1s linear forwards` : '')};
+    ? css`${MenuMoveAnimation(0)} 0.1s linear forwards`
+    : '')};
 
     .menu_content{
       position:relative;
@@ -116,7 +116,7 @@ export default function Header() {
   const [mobileShowMenu, setMobileShowMenu] = useState<boolean>(false);
   const menus = [
     { id: 0, title: '게임', url: '/' },
-    { id: 1, title: '랭킹', url: '/ranking/easy?page=1' },
+    { id: 1, title: '랭킹', url: '/ranking/minesweeper?level=easy&page=1' },
     { id: 2, title: '게시판', url: '/community?page=1' },
     { id: 3, title: '나의 페이지', url: '/mypage' },
     { id: 4, title: '옵션', url: '/option' },

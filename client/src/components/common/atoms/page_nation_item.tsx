@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 
 interface DefaultProps {
   fontSize?: string;
@@ -9,7 +8,6 @@ interface DefaultProps {
 
 interface Props extends DefaultProps {
   value: string;
-  url: string;
 }
 
 const defaultProps: DefaultProps = {
@@ -36,25 +34,25 @@ const PageNationItemWrapper = styled.span<Partial<Props>>`
     : theme.fontColor)};
 
   &:hover{
-    color:${({ theme }) => theme.mainColor};
+    color:${({ theme, currentPage }) => (currentPage === true
+    ? 'white'
+    : theme.mainColor
+  )};
   }
 `;
 
 export default function PageNationItem({
   value,
-  url,
   fontSize,
   currentPage,
 }: Props) {
   return (
-    <Link to={url}>
-      <PageNationItemWrapper
-        fontSize={fontSize}
-        currentPage={currentPage}
-      >
-        {value}
-      </PageNationItemWrapper>
-    </Link>
+    <PageNationItemWrapper
+      fontSize={fontSize}
+      currentPage={currentPage}
+    >
+      {value}
+    </PageNationItemWrapper>
   );
 }
 

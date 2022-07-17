@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import styled from 'styled-components';
 import {
   Button,
@@ -19,7 +19,7 @@ const SearchInputWrapper = styled.div`
   background-color: white;
 
   @media screen and (${({ theme }) => theme.minTablet}) {  
-    width: 555px;
+    width: 455px;
     border-radius: 8px;
   }
 
@@ -33,16 +33,13 @@ const SearchInput = styled(Input)`
 `;
 
 interface Props {
-  value: string;
-  setValue: React.ChangeEventHandler<HTMLInputElement>;
   search: React.FormEventHandler<HTMLFormElement>;
 }
 
-export default function UserSearchInput({
-  value,
-  setValue,
-  search,
-}: Props) {
+function UserSearchInput(
+  { search }: Props,
+  ref: React.RefObject<HTMLInputElement>,
+) {
   return (
     <form onSubmit={search}>
       <BulletionNaviWrapper>
@@ -52,8 +49,7 @@ export default function UserSearchInput({
             name='user_search'
             width='80%'
             height='100%'
-            value={value}
-            onChange={setValue}
+            ref={ref}
           />
           <Button
             width='18%'
@@ -67,3 +63,5 @@ export default function UserSearchInput({
     </form>
   );
 }
+
+export default forwardRef(UserSearchInput);

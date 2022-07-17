@@ -12,6 +12,7 @@ const defaltTheme: DefaultTheme = {
   minTablet: 'min-width : 768px',
   maxTablet: 'max-width : 1220px',
   desktop: 'min-width : 1220px',
+  orangeColor: '#fb8500',
 };
 
 export default defaltTheme;
