@@ -11,11 +11,7 @@ interface Data {
 }
 
 function App() {
-<<<<<<< HEAD
-  const [rankData, load, error, setRankData] = useAxios<Data[]>('/api/game/easy?page=1');
-=======
   const [rankData, load, error, setRankData] = useFetch<Data[]>('/rank');
->>>>>>> 2048
   // const [rankData, setUserData] = useState<Data[]>([]);
   // const [load, setLoading] = useState(false);
 
