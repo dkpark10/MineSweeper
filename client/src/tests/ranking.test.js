@@ -86,6 +86,15 @@ describe('랭킹 페이지 테스트', () => {
         ranking: 1,
         totalItemCount: 1,
       },
+    ])
+    .onGet('/api/game/2048?page=1')
+    .reply(200, [
+      {
+        id: '2048user',
+        record: '2536',
+        ranking: 1,
+        totalItemCount: 1,
+      },
     ]);
 
   test('지뢰찾기 랭킹 데이터 가져오기', async () => {
@@ -146,6 +155,19 @@ describe('랭킹 페이지 테스트', () => {
     await waitFor(() => {
       const normalRankData = getByText('harduser');
       expect(normalRankData).toBeInTheDocument();
+    });
+  });
+
+  test('2048 랭킹 데이터 가져오기', async () => {
+    const { getByText } = render(defaultComponent());
+
+    await waitFor(() => {
+      const Link2048 = getByText('2048');
+      expect(Link2048).toBeInTheDocument();
+      fireEvent.click(Link2048);
+
+      const user2048 = getByText('2048user');
+      expect(user2048).toBeInTheDocument();
     });
   });
 });
