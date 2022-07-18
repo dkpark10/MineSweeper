@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -8,8 +8,8 @@ import {
 } from 'mine-sweeper-type';
 import {
   Button,
-  Overlay,
 } from '../../../common/atoms/index';
+import useOutSideclick from '../../../custom_hooks/useoutside_click';
 
 interface OptionProps {
   width: string;
@@ -17,18 +17,24 @@ interface OptionProps {
   radius: string;
 }
 
-const SelectWrapper = styled.div`
-  width:8rem;
+interface Props {
+  disabled: boolean;
+}
+
+const SelectWrapper = styled.div<{ width: string }>`
+  width:${({ width }) => width};
   @media screen and (${({ theme }) => theme.mobile}) {
     width:28vw;
   }
 `;
 
-const SelectButton = styled(Button)`
+const SelectButton = styled(Button)<Props>`
   overflow: hidden;
   background-color: ${({ theme }) => theme.grayMainColor};
   text-align:center;
-  color:white;
+  color: ${({ disabled }) => (
+    disabled ? '#7b7b7b' : 'white'
+  )};
   cursor:pointer;
 `;
 
@@ -65,10 +71,6 @@ const OptionItem = styled.ul<OptionProps>`
   }
 `;
 
-interface Props {
-  disabled: boolean;
-}
-
 type LevelItem = {
   value: LevelType,
   text: LevelTypeKR,
@@ -77,7 +79,11 @@ type LevelItem = {
 export default function RankSelect({
   disabled,
 }: Props) {
-  const [optionOpen, setOptionOpen] = useState(false);
+  const selectRef = useRef<HTMLDivElement>(null);
+  const [optionOpen, setOptionOpen] = useOutSideclick({
+    ref: selectRef,
+  });
+
   const [currentValue, setCurrentValue] = useState('쉬움');
   const levelItems: LevelItem[] = [
     {
@@ -97,9 +103,13 @@ export default function RankSelect({
   const click = () => {
     setOptionOpen(!optionOpen);
   };
+  const width = '6.4rem';
 
   return (
-    <SelectWrapper>
+    <SelectWrapper
+      ref={selectRef}
+      width={width}
+    >
       <SelectButton
         width='100%'
         radius='4px'
@@ -113,7 +123,7 @@ export default function RankSelect({
       {optionOpen
         && (
           <OptionItem
-            width='8rem'
+            width={width}
             height='1.9rem'
             radius='4px'
           >
