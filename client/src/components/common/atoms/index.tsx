@@ -8,8 +8,6 @@ import RadioButton from './radio_button';
 import Title from './title';
 import UnderLine from './under_line';
 import Image from './image';
-import Select from './select';
-import Overlay from './overlay';
 import {
   AbsoluteCenterWrapper,
   FlexBetweenWrapper,
@@ -28,6 +26,4 @@ export {
   Title,
   UnderLine,
   Image,
-  Select,
-  Overlay,
 };
