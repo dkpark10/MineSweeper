@@ -12,9 +12,9 @@ declare module 'statistics-type' {
 
   export type GameRecordType = {
     [key in AlignmentLevelsProps]: number;
-  }
+  };
 
   export type GameStatisticsProps = GameRecordType & {
     pastGame: PastGame[];
-  }
+  };
 }

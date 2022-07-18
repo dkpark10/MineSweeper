@@ -1,20 +1,12 @@
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
+import { Expand } from '../../../common/atoms/animation';
 
 interface Props {
   backgroundColor: string;
   children: string;
   testid: string;
 }
-
-const expand = keyframes`
-  0% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1.0);
-  }
-`;
 
 const DefaultTile = styled.div<{ backgroundColor: string }>`
   width:194px;
@@ -31,7 +23,7 @@ const DefaultTile = styled.div<{ backgroundColor: string }>`
   margin:20px;
 
   &:hover{
-    animation: ${expand} 1s;
+    animation: ${Expand} 1s;
   }
 
   @media screen and (${({ theme }) => theme.mobile}){
