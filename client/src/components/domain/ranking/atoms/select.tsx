@@ -28,7 +28,7 @@ const SelectWrapper = styled.div<{ width: string }>`
   }
 `;
 
-const SelectButton = styled(Button)<Props>`
+const SelectButton = styled(Button) <Props>`
   overflow: hidden;
   background-color: ${({ theme }) => theme.grayMainColor};
   text-align:center;
@@ -138,7 +138,7 @@ export default function RankSelect({
                       setCurrentValue(levelItem.text);
                     }}
                   >
-                    <li>
+                    <li data-testid={levelItem.value}>
                       <span className='content'>
                         {levelItem.text}
                       </span>
@@ -146,7 +146,10 @@ export default function RankSelect({
                   </Link>
                 )
                 : (
-                  <li key={levelItem.value}>
+                  <li
+                    data-testid={levelItem.value}
+                    key={levelItem.value}
+                  >
                     <span className='content'>
                       {levelItem.text}
                     </span>
