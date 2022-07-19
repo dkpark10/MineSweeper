@@ -172,7 +172,7 @@ export const get2048RankData = async (request: Request, response: Response, next
     response.status(200).send(data);
   }
   catch (e) {
-    response.status(202).send([]);
+    response.status(202).send(e);
   }
 }
 

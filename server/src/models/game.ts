@@ -185,7 +185,7 @@ export default class GameModel extends Model {
       SELECT id, record, RANK() over(ORDER BY record) AS 'ranking',
       (SELECT COUNT(*) FROM ${this.table2048}) AS totalItemCount
       FROM ${this.table2048}
-      ORDER BY record
+      ORDER BY record DESC
       LIMIT ?,?`;
 
     return new Promise((resolve, reject) => {
