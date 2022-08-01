@@ -11,6 +11,7 @@ describe('타일 길이 테스트', () => {
     });
 
     await waitFor(() => {
+      expect(global.localStorage.getItem('difficulty')).toBe('easy');
       const cells = container.getElementsByClassName('cell');
       expect(cells).toHaveLength(9 * 9);
     });
@@ -20,6 +21,7 @@ describe('타일 길이 테스트', () => {
     global.localStorage.setItem('difficulty', 'normal');
     const { container } = render(defaultComponent());
 
+    expect(global.localStorage.getItem('difficulty')).toBe('normal');
     const cells = container.getElementsByClassName('cell');
     expect(cells).toHaveLength(16 * 16);
   });
@@ -28,6 +30,7 @@ describe('타일 길이 테스트', () => {
     global.localStorage.setItem('difficulty', 'hard');
     const { container } = render(defaultComponent());
 
+    expect(global.localStorage.getItem('difficulty')).toBe('hard');
     const cells = container.getElementsByClassName('cell');
     expect(cells).toHaveLength(16 * 30);
   });
@@ -36,6 +39,7 @@ describe('타일 길이 테스트', () => {
     global.localStorage.setItem('difficulty', 'voejsojesojeowqlmdf');
     const { container } = render(defaultComponent());
 
+    expect(global.localStorage.getItem('difficulty')).toBe('easy');
     const cells = container.getElementsByClassName('cell');
     expect(cells.length).toBe(9 * 9);
   });
