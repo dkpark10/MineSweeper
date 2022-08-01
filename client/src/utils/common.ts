@@ -74,3 +74,23 @@ export const getCount = (count: number) => {
   }
   return '999';
 };
+
+interface LocalStorageProps {
+  key: string;
+  defaultValue: string;
+  validator: (val: string) => boolean;
+}
+
+export const getLocalStorageItem = ({
+  key,
+  defaultValue,
+  validator,
+}: LocalStorageProps): string => {
+  const value = localStorage.getItem(key);
+  if (!value || validator(value) === false) {
+    localStorage.setItem(key, defaultValue);
+    return defaultValue;
+  }
+
+  return value;
+};

@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import { LevelType } from 'mine-sweeper-type';
+
 import {
   Content,
   RadioButton,
 } from '../../../common/atoms/index';
-
-import useLocalStorage from '../../../custom_hooks/uselocalstorage';
+import { getLocalStorageItem } from '../../../../utils/common';
 
 interface Props {
   name: string;
@@ -19,16 +20,18 @@ const OptionItem = styled.div`
 export default function OptionCard({
   name,
 }: Props) {
-  const [currentLevel, setCurrentLevel] = useLocalStorage({
+  const levelValue = getLocalStorageItem({
     key: 'difficulty',
     defaultValue: 'easy',
-  }, (val: string) => ['easy', 'normal', 'hard'].filter((ele) => ele === val).length > 0);
+    validator: (val: string) => ['easy', 'normal', 'hard'].filter((ele) => ele === val).length > 0,
+  });
+  const [currentLevel, setCurrentLevel] = useState(levelValue);
 
-  const levels = [
+  const levels: [LevelType, string][] = [
     ['easy', '쉬움 9 X 9 지뢰개수 : 10'],
     ['normal', '보통 16 X 16 지뢰개수 : 40'],
     ['hard', '어려움 30 X 16 지뢰개수 : 99'],
-  ] as const;
+  ];
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     localStorage.setItem('difficulty', e.currentTarget.value);
